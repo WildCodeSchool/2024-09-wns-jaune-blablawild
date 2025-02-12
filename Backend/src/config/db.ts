@@ -1,5 +1,6 @@
 import { DataSource } from "typeorm";
 import { config } from "dotenv";
+import { Trip } from "../entities/trip";
 
 config();
 
@@ -12,6 +13,6 @@ export const dataSource = new DataSource({
   password: DB_PASSWORD,
   database: DB_SCHEMA,
   port: 5432,
-  entities: [],
+  entities: [Trip],
   synchronize: true,
 });

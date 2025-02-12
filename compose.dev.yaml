@@ -23,3 +23,11 @@ services:
   visualizer:
     container_name: visualizer
     image: adminer
+  gateway: 
+    container_name: gateway
+    image: nginx
+    restart: always
+    ports: 
+      - ${GATEWAY_PORT}:80
+    volumes:
+      - ./nginx.dev.conf:/etc/nginx/nginx.conf
