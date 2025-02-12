@@ -1,8 +1,9 @@
-import { DataSource, Transaction } from "typeorm";
+import { DataSource } from "typeorm";
 import { config } from "dotenv";
 import { Trip } from "../entities/trip";
 import { Review } from "../entities/review";
 import { User } from "../entities/user";
+import { Transaction } from "../entities/transaction";
 
 config();
 
