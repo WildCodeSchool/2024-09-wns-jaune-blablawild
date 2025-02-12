@@ -1,0 +1,25 @@
+services:
+  backend:
+    container_name: backend
+    build: ./backend
+    volumes:
+      - ./backend/src:/app/src
+    environment:
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_SCHEMA: ${DB_SCHEMA}
+      DB_USER: ${DB_USER}
+      DB_HOST: ${DB_HOST}
+      APP_SECRET: ${APP_SECRET}
+  database:
+    container_name: database
+    image: postgres
+    volumes:
+      - ./persist/data/:/var/lib/postgresql/data
+    environment:
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_SCHEMA}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_HOST: ${DB_HOST}
+  visualizer:
+    container_name: visualizer
+    image: adminer
