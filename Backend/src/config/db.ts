@@ -1,6 +1,8 @@
-import { DataSource } from "typeorm";
+import { DataSource, Transaction } from "typeorm";
 import { config } from "dotenv";
 import { Trip } from "../entities/trip";
+import { Review } from "../entities/review";
+import { User } from "../entities/user";
 
 config();
 
@@ -13,6 +15,6 @@ export const dataSource = new DataSource({
   password: DB_PASSWORD,
   database: DB_SCHEMA,
   port: 5432,
-  entities: [Trip],
+  entities: [Trip, Review, User, Transaction],
   synchronize: true,
 });
