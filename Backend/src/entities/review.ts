@@ -1,9 +1,13 @@
 import { Field, ID, ObjectType } from "type-graphql";
-import { BaseEntity, Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import {
+  BaseEntity,
+  Column,
+  Entity,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from "typeorm";
 import { User } from "./user";
-import { Trip
-
- } from "./trip";
+import { Trip } from "./trip";
 
 @ObjectType()
 @Entity()
@@ -24,13 +28,15 @@ export class Review extends BaseEntity {
   @Column()
   date!: Date;
 
-  @Field()
-  @ManyToOne(() => User, (user) => user.review)
-  user!: User
+  @Field(() => User)
+  @ManyToOne(() => User, (user) => user.received_review)
+  receiver!: User;
 
-  @Field()
-  @ManyToOne(() => Trip, (trip) => trip.review)
-  trip!: Trip
+  @Field(() => User)
+  @ManyToOne(() => User, (user) => user.sent_review)
+  sender!: User;
 
-
+  @Field(() => Trip)
+  @ManyToOne(() => Trip, (trip) => trip.reviews)
+  trip!: Trip;
 }

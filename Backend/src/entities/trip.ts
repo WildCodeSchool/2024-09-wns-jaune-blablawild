@@ -1,8 +1,17 @@
 import { Field, ID, ObjectType } from "type-graphql";
-import { BaseEntity, Column, Entity, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import {
+  BaseEntity,
+  Column,
+  Entity,
+  JoinTable,
+  ManyToMany,
+  ManyToOne,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from "typeorm";
 import { User } from "./user";
-import {Review} from "./review"
-import {Transaction} from "./transaction"
+import { Review } from "./review";
+import { Transaction } from "./transaction";
 
 @ObjectType()
 @Entity()
@@ -31,20 +40,20 @@ export class Trip extends BaseEntity {
   @Column()
   status!: string;
 
-  @Field({ nullable: true })
+  @Field(() => [User], { nullable: true })
+  @JoinTable()
   @ManyToMany(() => User, (user) => user.passenger_trips)
-  passengers?: User[]
+  passengers?: User[];
 
-  @Field()
+  @Field(() => User)
   @ManyToOne(() => User, (user) => user.driver_trips)
-  driver!: User
+  driver!: User;
 
-  @Field()
+  @Field(() => [Review], { nullable: true })
   @OneToMany(() => Review, (review) => review.trip)
-  review?: Review
+  reviews?: Review[];
 
-  @Field()
-  @OneToMany(()=> Transaction, (transaction) => transaction.trip)
-  transaction?: Transaction
-
+  @Field(() => [Transaction], { nullable: true })
+  @OneToMany(() => Transaction, (transaction) => transaction.trip)
+  transactions?: Transaction[];
 }
