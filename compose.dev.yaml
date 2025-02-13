@@ -2,7 +2,6 @@ services:
   backend:
     container_name: backend
     build: ./backend
-    command: sh -c "CHOKIDAR_USEPOLLING=true npm run start"
     volumes:
       - ./backend/src:/app/src
     environment:
@@ -14,7 +13,6 @@ services:
 
   frontend:
     container_name: frontend
-    command: sh -c "CHOKIDAR_USEPOLLING=true npm run dev"
     build: ./frontend
     volumes:
       - ./frontend/src/:/app/src/
