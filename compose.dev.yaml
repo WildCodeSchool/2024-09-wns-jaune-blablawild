@@ -2,6 +2,7 @@ services:
   backend:
     container_name: backend
     build: ./backend
+    command: sh -c "CHOKIDAR_USEPOLLING=true npm run start"
     volumes:
       - ./backend/src:/app/src
     environment:
@@ -10,13 +11,16 @@ services:
       DB_USER: ${DB_USER}
       DB_HOST: ${DB_HOST}
       APP_SECRET: ${APP_SECRET}
+
   frontend:
     container_name: frontend
+    command: sh -c "CHOKIDAR_USEPOLLING=true npm run dev"
     build: ./frontend
     volumes:
       - ./frontend/src/:/app/src/
     environment:
       VITE_GATEWAY_PORT: ${GATEWAY_PORT}
+
   database:
     container_name: database
     image: postgres
@@ -27,9 +31,11 @@ services:
       POSTGRES_DB: ${DB_SCHEMA}
       POSTGRES_USER: ${DB_USER}
       POSTGRES_HOST: ${DB_HOST}
+
   visualizer:
     container_name: visualizer
     image: adminer
+
   gateway: 
     container_name: gateway
     image: nginx
