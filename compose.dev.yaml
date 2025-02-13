@@ -10,6 +10,13 @@ services:
       DB_USER: ${DB_USER}
       DB_HOST: ${DB_HOST}
       APP_SECRET: ${APP_SECRET}
+  frontend:
+    container_name: frontend
+    build: ./frontend
+    volumes:
+      - ./frontend/src/:/app/src/
+    environment:
+      VITE_GATEWAY_PORT: ${GATEWAY_PORT}
   database:
     container_name: database
     image: postgres
