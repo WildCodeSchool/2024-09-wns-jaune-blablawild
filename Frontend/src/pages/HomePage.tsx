@@ -1,4 +1,5 @@
 import Header from "@/components/Header";
+import { FaqSection } from "@/components/faq-section";
 
 const HomePage = () => {
   return (
@@ -9,6 +10,7 @@ const HomePage = () => {
           <h1 className="text-4xl font-bold">Drive Up</h1>
         </div>
       </div>
+      <FaqSection/>
     </>
   );
 };

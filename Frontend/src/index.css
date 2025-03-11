@@ -78,3 +78,25 @@
     @apply font-heading;
   }
 }
+
+@keyframes slideDown {
+  from { height: 0 }
+  to { height: var(--radix-accordion-content-height) }
+}
+
+@keyframes slideUp {
+  from { height: var(--radix-accordion-content-height) }
+  to { height: 0 }
+}
+
+.accordion-content {
+  overflow: hidden;
+}
+
+.accordion-content[data-state='open'] {
+  animation: slideDown 100ms ease-out;
+}
+
+.accordion-content[data-state='closed'] {
+  animation: slideUp 80ms ease-out;
+}

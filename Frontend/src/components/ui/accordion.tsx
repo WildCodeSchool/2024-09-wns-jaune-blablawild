@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import * as AccordionPrimitive from "@radix-ui/react-accordion";
-import { ChevronDown, ChevronUp } from "lucide-react";
+import { ChevronDown } from "lucide-react";
 
 type AccordionBorderType = "top" | "bottom" | "top-bottom" | "none";
 type RenderableElementType = React.ReactNode | React.JSX.Element;
@@ -52,13 +52,13 @@ export function Accordion({ children, ...props }: AccordionPropsType) {
 
     if (customIcon) {
       return (
-        <div className="accordion-icon">
+        <div>
           {isOpen ? customIcon.active : customIcon.inactive}
         </div>
       );
     }
 
-    return isOpen ? <ChevronUp size={iconSize} /> : <ChevronDown size={iconSize} />;
+    return <ChevronDown size={iconSize} />;
   };
 
   return (
@@ -78,8 +78,8 @@ export function Accordion({ children, ...props }: AccordionPropsType) {
               {displayIcon && <IconComponent />}
             </AccordionPrimitive.Trigger>
           </AccordionPrimitive.Header>
-          <AccordionPrimitive.Content className={`w-full ${contentClassname || ""}`}>
-            <div className="w-full">{children}</div>
+          <AccordionPrimitive.Content className={`accordion-content ${contentClassname || ""}`}>
+            <div>{children}</div>
           </AccordionPrimitive.Content>
         </AccordionPrimitive.Item>
       </AccordionPrimitive.Root>
