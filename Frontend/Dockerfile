@@ -1,8 +1,8 @@
 FROM node:lts-alpine
 
-ENV CHOKIDAR_USEPOLLING=true
-
 RUN npm install -g pnpm
+
+ENV CHOKIDAR_USEPOLLING=true
 
 WORKDIR /app
 COPY package*.json ./
