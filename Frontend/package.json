@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@apollo/client": "^3.12.11",
+    "@radix-ui/react-accordion": "^1.2.3",
     "@radix-ui/react-slot": "^1.1.2",
     "@tailwindcss/vite": "^4.0.6",
     "class-variance-authority": "^0.7.1",
