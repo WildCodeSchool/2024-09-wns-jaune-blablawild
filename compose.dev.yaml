@@ -2,7 +2,6 @@ services:
   backend:
     container_name: backend
     build: ./backend
-    command: sh -c "CHOKIDAR_USEPOLLING=true npm run start"
     volumes:
       - ./backend/src:/app/src
     environment:

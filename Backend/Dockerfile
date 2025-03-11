@@ -1,5 +1,7 @@
 FROM node:lts-alpine
 
+ENV CHOKIDAR_USEPOLLING=true
+
 RUN mkdir /app
 WORKDIR /app
 COPY package*.json ./
