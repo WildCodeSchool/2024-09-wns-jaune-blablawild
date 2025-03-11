@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useState } from "react";
 import * as AccordionPrimitive from "@radix-ui/react-accordion";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, ChevronUp } from "lucide-react";
 
 type AccordionBorderType = "top" | "bottom" | "top-bottom" | "none";
 type RenderableElementType = React.ReactNode | React.JSX.Element;
@@ -36,6 +36,8 @@ export function Accordion({ children, ...props }: AccordionPropsType) {
     border = "none",
   } = props;
 
+  const [isOpen, setIsOpen] = useState<boolean>(initiallyOpen || false);
+
   let borderClass = "";
   if (border === "top-bottom") {
     borderClass = "border-y border-solid border-border";
@@ -49,26 +51,35 @@ export function Accordion({ children, ...props }: AccordionPropsType) {
     if (!displayIcon) return null;
 
     if (customIcon) {
-      return <div className="accordion-icon">{customIcon.inactive}</div>;
+      return (
+        <div className="accordion-icon">
+          {isOpen ? customIcon.active : customIcon.inactive}
+        </div>
+      );
     }
 
-    return <ChevronDown size={iconSize} />;
+    return isOpen ? <ChevronUp size={iconSize} /> : <ChevronDown size={iconSize} />;
   };
 
   return (
     <div className={`${borderClass} w-full`}>
-      <AccordionPrimitive.Root type="single" collapsible defaultValue={initiallyOpen ? "item-1" : undefined}>
+      <AccordionPrimitive.Root
+        type="single"
+        collapsible
+        defaultValue={initiallyOpen ? "item-1" : undefined}
+        onValueChange={(value) => setIsOpen(value === "item-1")}
+      >
         <AccordionPrimitive.Item value="item-1" className="border-none w-full">
           <AccordionPrimitive.Header className="flex w-full">
-            <AccordionPrimitive.Trigger className={`py-6 flex w-full items-center justify-between ${accordionStyle}`}>
+            <AccordionPrimitive.Trigger
+              className={`py-6 flex w-full items-center justify-between ${accordionStyle}`}
+            >
               <span className={titleStyle}>{title}</span>
               {displayIcon && <IconComponent />}
             </AccordionPrimitive.Trigger>
           </AccordionPrimitive.Header>
           <AccordionPrimitive.Content className={`w-full ${contentClassname || ""}`}>
-            <div className="w-full">
-              {children}
-            </div>
+            <div className="w-full">{children}</div>
           </AccordionPrimitive.Content>
         </AccordionPrimitive.Item>
       </AccordionPrimitive.Root>
