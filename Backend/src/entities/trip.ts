@@ -12,6 +12,7 @@ import {
 import { User } from "./user";
 import { Review } from "./review";
 import { Transaction } from "./transaction";
+import { TripStatus } from "../type/tripType";
 
 @ObjectType()
 @Entity()
@@ -36,9 +37,9 @@ export class Trip extends BaseEntity {
   @Column()
   price!: number;
 
-  @Field()
-  @Column()
-  status!: string;
+  @Field(() => TripStatus)
+  @Column({ default: TripStatus.OPEN })
+  status!: TripStatus;
 
   @Field(() => [User], { nullable: true })
   @JoinTable()
