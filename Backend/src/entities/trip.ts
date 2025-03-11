@@ -37,8 +37,8 @@ export class Trip extends BaseEntity {
   price!: number;
 
   @Field()
-  @Column()
-  status!: string;
+  @Column({ default: "OPEN" })
+  status!: "OPEN" | "CLOSE" | "FULL";
 
   @Field(() => [User], { nullable: true })
   @JoinTable()
