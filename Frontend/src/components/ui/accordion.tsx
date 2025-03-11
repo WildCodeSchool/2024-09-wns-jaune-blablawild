@@ -56,17 +56,19 @@ export function Accordion({ children, ...props }: AccordionPropsType) {
   };
 
   return (
-    <div className={borderClass}>
+    <div className={`${borderClass} w-full`}>
       <AccordionPrimitive.Root type="single" collapsible defaultValue={initiallyOpen ? "item-1" : undefined}>
-        <AccordionPrimitive.Item value="item-1" className="border-none">
-          <AccordionPrimitive.Header className="flex">
+        <AccordionPrimitive.Item value="item-1" className="border-none w-full">
+          <AccordionPrimitive.Header className="flex w-full">
             <AccordionPrimitive.Trigger className={`py-6 flex w-full items-center justify-between ${accordionStyle}`}>
               <span className={titleStyle}>{title}</span>
               {displayIcon && <IconComponent />}
             </AccordionPrimitive.Trigger>
           </AccordionPrimitive.Header>
-          <AccordionPrimitive.Content className={contentClassname}>
-            {children}
+          <AccordionPrimitive.Content className={`w-full ${contentClassname || ""}`}>
+            <div className="w-full">
+              {children}
+            </div>
           </AccordionPrimitive.Content>
         </AccordionPrimitive.Item>
       </AccordionPrimitive.Root>
