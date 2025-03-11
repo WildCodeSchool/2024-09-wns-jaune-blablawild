@@ -36,7 +36,7 @@ export function FaqSection() {
         <h1 className="mx-auto my-10 w-full lg:w-3/12 text-accent text-[22px] md:text-[38px] text-center font-semibold">
           Nos Questions fréquentes
         </h1>
-        <div className="mx-6 max-w-[855px] md:m-auto ">
+        <div className="mx-6 max-w-[855px] md:mx-10 lg:m-auto ">
           {faqItems.map((item, index) => (
             <Accordion
               key={`${item.question}-${index}`}
