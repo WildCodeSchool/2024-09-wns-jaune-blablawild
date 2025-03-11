@@ -1,22 +1,17 @@
-import { Badge } from "./components/ui/badge";
-import { Button } from "./components/ui/button";
-import { Input } from "./components/ui/input";
+import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
+import HomePage from "./pages/HomePage";
+import SignInPage from "./pages/SigninPage";
+import SignUpPage from "./pages/SignupPage";
 
 function App() {
   return (
-    <div className="flex flex-col p-4 gap-4 md:gap-8 h-screen items-center justify-center ">
-      <h1 className="text-7xl">Drive Up</h1>
-      <p className="text-lg w-1/2 text-center">
-        sdsdsd
-        </p>
-      <div className="flex gap-4">
-        <Input placeholder="Type something" className="" />
-        <Button size="lg" variant="secondary">
-          Click me
-        </Button>
-        <Badge>Badge</Badge>
-      </div>
-    </div>
+    <Router>
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="signup" element={<SignUpPage />} />
+        <Route path="signin" element={<SignInPage />} />
+      </Routes>
+    </Router>
   );
 }
 
