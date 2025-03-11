@@ -1,5 +1,5 @@
 import { Accordion } from '@/components/ui/accordion';
-import { ChevronDown, ChevronUp } from 'lucide-react';
+import { Minus, Plus } from 'lucide-react';
 
 type FaqType = {
   question: string;
@@ -31,12 +31,12 @@ export function FaqSection() {
   ];
 
   return (
-    <section className="flex flex-col items-center justify-center">
+    <section className="flex flex-col items-center justify-center mb-25">
       <div className="w-full">
-        <h3 className="mx-auto my-10 w-8/12 text-accent text-[22px] md:text-[38px] text-center font-semibold">
+        <h1 className="mx-auto my-10 w-full lg:w-3/12 text-accent text-[22px] md:text-[38px] text-center font-semibold">
           Nos Questions fréquentes
-        </h3>
-        <div className="w-full">
+        </h1>
+        <div className="mx-6 max-w-[855px] md:m-auto ">
           {faqItems.map((item, index) => (
             <Accordion
               key={`${item.question}-${index}`}
@@ -45,8 +45,8 @@ export function FaqSection() {
               contentClassname="pb-4 text-[#414141] w-10/12  text-[12px] lg:text-[15px]"
               titleStyle='text-black font-semibold text-[14px] lg:text-[20px]'
               customIcon={{
-                active: <ChevronUp size={24} />,
-                inactive: <ChevronDown size={24} />,
+                active: <Minus size={18} />,
+                inactive: <Plus size={18} />,
               }}            >
               <p>{item.answer}</p>
             </Accordion>
