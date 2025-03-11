@@ -1,4 +1,14 @@
-import { Field, InputType } from "type-graphql";
+import { Field, InputType, registerEnumType } from "type-graphql";
+
+export enum TripStatus {
+  OPEN = "OPEN",
+  CLOSE = "CLOSE",
+  FULL = "FULL",
+}
+registerEnumType(TripStatus, {
+    name: "TripStatus",
+    description: "Le statut d'un trajet (ouvert, fermé, complet)",
+  });
 
 @InputType()
 export class CreateTripInput {
