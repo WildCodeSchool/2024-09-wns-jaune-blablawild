@@ -9,6 +9,7 @@ export default defineConfig({
   server: {
     allowedHosts: ["frontend"],
     host: true,
+    hmr: { path: "hmr" }
   },
   resolve: {
     alias: {

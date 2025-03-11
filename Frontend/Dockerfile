@@ -1,6 +1,8 @@
 FROM node:lts-alpine
 RUN npm install -g pnpm
 
+ENV CHOKIDAR_USEPOLLING=true
+
 WORKDIR /app
 COPY package*.json ./
 COPY pnpm-lock.yaml ./
