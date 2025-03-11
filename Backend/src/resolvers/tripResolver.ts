@@ -15,6 +15,12 @@ export class TripResolver {
     return trip;
   }
 
+  @Query(() => [Trip])
+  async getTripById(@Arg("tripId") id: string) {
+    const trip = await Trip.findOneOrFail({ where: { id } });
+    return trip;
+  }
+
   @Mutation(() => String)
   async createTrip(@Arg("data") data: CreateTripInput) {
     const driver = await User.findOneBy({ id: data.driverId });
