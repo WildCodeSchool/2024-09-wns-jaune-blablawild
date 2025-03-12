@@ -6,8 +6,6 @@ export default function TripCard() {
   if (loading) return <p>Loading ...</p>;
   if (error) return <p>Error: {error.message}</p>;
 
-  console.log("data", data);
-
   return (
     <section>
       <div>
@@ -19,7 +17,6 @@ export default function TripCard() {
             >
               <p>{new Date(trip.depature_time).toLocaleString("fr-FR")}</p>
               <h1 className="text-2xl mb-4">
-                {" "}
                 {trip.depature_city} + {trip.arrival_city}
               </h1>
               <p>{trip.driver.firstname}</p>
