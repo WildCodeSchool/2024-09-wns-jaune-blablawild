@@ -3,6 +3,7 @@ import HomePage from "./pages/HomePage";
 import SignInPage from "./pages/SignInPage";
 import SignUpPage from "./pages/SignUpPage";
 import TripForm from "./pages/TripForm";
+import TripCard from "./components/TripCard";
 
 function App() {
   return (
@@ -12,6 +13,7 @@ function App() {
         <Route path="signup" element={<SignUpPage />} />
         <Route path="signin" element={<SignInPage />} />
         <Route path="tripform" element={<TripForm />} />
+        <Route path="search-result" element={<TripCard />} />
       </Routes>
     </Router>
   );
