@@ -17,9 +17,3 @@ query GetTrip {
     }
   }
 }
-
-query GetTripById($tripId: String!) {
-  getTripById(tripId: $tripId) {
-    id
-  }
-}
