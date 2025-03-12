@@ -38,13 +38,8 @@ export type MutationCreateTripArgs = {
 
 export type Query = {
   __typename?: 'Query';
+  getPopularTrip: Array<Trip>;
   getTrip: Array<Trip>;
-  getTripById: Trip;
-};
-
-
-export type QueryGetTripByIdArgs = {
-  tripId: Scalars['String']['input'];
 };
 
 export type Review = {
@@ -73,8 +68,8 @@ export type Transaction = {
 export type Trip = {
   __typename?: 'Trip';
   arrival_city: Scalars['String']['output'];
-  depature_city: Scalars['String']['output'];
-  depature_time: Scalars['DateTimeISO']['output'];
+  departure_city: Scalars['String']['output'];
+  departure_time: Scalars['DateTimeISO']['output'];
   driver: User;
   id: Scalars['ID']['output'];
   passengers?: Maybe<Array<User>>;
@@ -109,25 +104,64 @@ export type User = {
   transaction_sent?: Maybe<Array<Transaction>>;
 };
 
+export type GetPopularTripQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetPopularTripQuery = { __typename?: 'Query', getPopularTrip: Array<{ __typename?: 'Trip', departure_city: string, arrival_city: string, price: number }> };
+
 export type GetTripQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetTripQuery = { __typename?: 'Query', getTrip: Array<{ __typename?: 'Trip', id: string, depature_time: any, depature_city: string, arrival_city: string, price: number, driver: { __typename?: 'User', id: string, firstname: string, lastname: string } }> };
-
-export type GetTripByIdQueryVariables = Exact<{
-  tripId: Scalars['String']['input'];
-}>;
+export type GetTripQuery = { __typename?: 'Query', getTrip: Array<{ __typename?: 'Trip', id: string, departure_time: any, departure_city: string, arrival_city: string, price: number, driver: { __typename?: 'User', id: string, firstname: string, lastname: string }, passengers?: Array<{ __typename?: 'User', id: string, firstname: string, lastname: string }> | null }> };
 
 
-export type GetTripByIdQuery = { __typename?: 'Query', getTripById: { __typename?: 'Trip', id: string } };
+export const GetPopularTripDocument = gql`
+    query GetPopularTrip {
+  getPopularTrip {
+    departure_city
+    arrival_city
+    price
+  }
+}
+    `;
 
-
+/**
+ * __useGetPopularTripQuery__
+ *
+ * To run a query within a React component, call `useGetPopularTripQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetPopularTripQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetPopularTripQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetPopularTripQuery(baseOptions?: Apollo.QueryHookOptions<GetPopularTripQuery, GetPopularTripQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetPopularTripQuery, GetPopularTripQueryVariables>(GetPopularTripDocument, options);
+      }
+export function useGetPopularTripLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetPopularTripQuery, GetPopularTripQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetPopularTripQuery, GetPopularTripQueryVariables>(GetPopularTripDocument, options);
+        }
+export function useGetPopularTripSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetPopularTripQuery, GetPopularTripQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetPopularTripQuery, GetPopularTripQueryVariables>(GetPopularTripDocument, options);
+        }
+export type GetPopularTripQueryHookResult = ReturnType<typeof useGetPopularTripQuery>;
+export type GetPopularTripLazyQueryHookResult = ReturnType<typeof useGetPopularTripLazyQuery>;
+export type GetPopularTripSuspenseQueryHookResult = ReturnType<typeof useGetPopularTripSuspenseQuery>;
+export type GetPopularTripQueryResult = Apollo.QueryResult<GetPopularTripQuery, GetPopularTripQueryVariables>;
 export const GetTripDocument = gql`
     query GetTrip {
   getTrip {
     id
-    depature_time
-    depature_city
+    departure_time
+    departure_city
     arrival_city
     driver {
       id
@@ -135,6 +169,11 @@ export const GetTripDocument = gql`
       lastname
     }
     price
+    passengers {
+      id
+      firstname
+      lastname
+    }
   }
 }
     `;
@@ -170,43 +209,3 @@ export type GetTripQueryHookResult = ReturnType<typeof useGetTripQuery>;
 export type GetTripLazyQueryHookResult = ReturnType<typeof useGetTripLazyQuery>;
 export type GetTripSuspenseQueryHookResult = ReturnType<typeof useGetTripSuspenseQuery>;
 export type GetTripQueryResult = Apollo.QueryResult<GetTripQuery, GetTripQueryVariables>;
-export const GetTripByIdDocument = gql`
-    query GetTripById($tripId: String!) {
-  getTripById(tripId: $tripId) {
-    id
-  }
-}
-    `;
-
-/**
- * __useGetTripByIdQuery__
- *
- * To run a query within a React component, call `useGetTripByIdQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetTripByIdQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetTripByIdQuery({
- *   variables: {
- *      tripId: // value for 'tripId'
- *   },
- * });
- */
-export function useGetTripByIdQuery(baseOptions: Apollo.QueryHookOptions<GetTripByIdQuery, GetTripByIdQueryVariables> & ({ variables: GetTripByIdQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<GetTripByIdQuery, GetTripByIdQueryVariables>(GetTripByIdDocument, options);
-      }
-export function useGetTripByIdLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetTripByIdQuery, GetTripByIdQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<GetTripByIdQuery, GetTripByIdQueryVariables>(GetTripByIdDocument, options);
-        }
-export function useGetTripByIdSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetTripByIdQuery, GetTripByIdQueryVariables>) {
-          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
-          return Apollo.useSuspenseQuery<GetTripByIdQuery, GetTripByIdQueryVariables>(GetTripByIdDocument, options);
-        }
-export type GetTripByIdQueryHookResult = ReturnType<typeof useGetTripByIdQuery>;
-export type GetTripByIdLazyQueryHookResult = ReturnType<typeof useGetTripByIdLazyQuery>;
-export type GetTripByIdSuspenseQueryHookResult = ReturnType<typeof useGetTripByIdSuspenseQuery>;
-export type GetTripByIdQueryResult = Apollo.QueryResult<GetTripByIdQuery, GetTripByIdQueryVariables>;
