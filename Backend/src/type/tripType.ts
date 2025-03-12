@@ -13,13 +13,13 @@ registerEnumType(TripStatus, {
 @InputType()
 export class CreateTripInput {
   @Field()
-  depature_city!: string;
+  departure_city!: string;
 
   @Field()
   arrival_city!: string;
 
   @Field()
-  depature_time!: Date;
+  departure_time!: Date;
 
   @Field()
   price!: number;

@@ -7,10 +7,11 @@ import CarrouselTrip from "@/components/CarrouselTrip";
 
 const HomePage = () => {
   return (
+
     <section className="flex flex-col h-screen w-screen gap-6">
       <Header />
-      <section className="relative w-full h-[60%] flex justify-center items-center">
-        <div className="z-1 w-[60%] md:w-[80%] md:h-[45px]">
+      <section className="relative w-full h-[60vh] flex justify-center items-center">
+        <div className="z-1 w-[70%] md:w-[80%] md:h-[45px]">
           <SearchBar />
         </div>
         <img
