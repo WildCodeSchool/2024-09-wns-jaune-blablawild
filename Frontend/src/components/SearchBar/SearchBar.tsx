@@ -119,7 +119,7 @@ export default function SearchBar({ path }: SearchBarProps) {
                     )}
                   </p>
                 ) : (
-                  <p className="text-sm">Date</p>
+                  <p className="md:text-sm">Date</p>
                 )}
               </div>
             </DialogTrigger>
@@ -140,30 +140,61 @@ export default function SearchBar({ path }: SearchBarProps) {
           </Dialog>
         </div>
         <Separator className="md:hidden" />
-        <Popover>
-          <PopoverTrigger asChild>
-            <div className="w-full md:flex-[0.6] flex items-center gap-2 bg-background text-foreground shadow-none cursor-pointer hover:bg-gray-200 md:px-2 md:py-2 px-3 py-4 md:rounded-md">
-              <User className="size-5" />
-              {countPassenger > 0 ? (
-                <p className="md:text-sm">
-                  {countPassenger} {`passager${countPassenger > 1 ? "s" : ""}`}
+        <div className="hidden md:block md:flex-[0.6]">
+          <Popover>
+            <PopoverTrigger asChild>
+              <div className="w-full flex items-center gap-2 bg-background text-foreground shadow-none cursor-pointer hover:bg-gray-200 md:px-2 md:py-2 px-3 py-4 md:rounded-md">
+                <User className="size-5" />
+                {countPassenger > 0 ? (
+                  <p className="md:text-sm">
+                    {countPassenger}{" "}
+                    {`passager${countPassenger > 1 ? "s" : ""}`}
+                  </p>
+                ) : (
+                  <p className="md:text-sm">Passagers</p>
+                )}
+              </div>
+            </PopoverTrigger>
+            <PopoverContent side="bottom" align="end" className="mt-1">
+              <PopoverPassenger
+                count={countPassenger}
+                setCount={setCountPassenger}
+              />
+            </PopoverContent>
+          </Popover>
+        </div>
+        <div className="block md:hidden w-full">
+          <Dialog>
+            <DialogTrigger asChild>
+              <div className="w-full flex items-center gap-2 bg-background text-foreground shadow-none cursor-pointer hover:bg-gray-200 md:px-2 md:py-2 px-3 py-4 md:rounded-md">
+                <User className="size-5" />
+                {countPassenger > 0 ? (
+                  <p className="md:text-sm">
+                    {countPassenger}{" "}
+                    {`passager${countPassenger > 1 ? "s" : ""}`}
+                  </p>
+                ) : (
+                  <p className="md:text-sm">Passagers</p>
+                )}
+              </div>
+            </DialogTrigger>
+            <DialogContent aria-describedby="dialog-passenger">
+              <DialogTitle>
+                <p id="dialog-passenger" className="text-xs">
+                  Sélectionner le nombre de passagers
                 </p>
-              ) : (
-                <p className="md:text-sm">Passagers</p>
-              )}
-            </div>
-          </PopoverTrigger>
-          <PopoverContent side="bottom" align="end" className="mt-1">
-            <PopoverPassenger
-              count={countPassenger}
-              setCount={setCountPassenger}
-            />
-          </PopoverContent>
-        </Popover>
+              </DialogTitle>
+              <PopoverPassenger
+                count={countPassenger}
+                setCount={setCountPassenger}
+              />
+            </DialogContent>
+          </Dialog>
+        </div>
       </section>
       <Button
         type="button"
-        className="w-full h-full text-md md:flex-[0.15] flex justify-center items-center md:justify-start bg-accent rounded-none hover:bg-secondary cursor-pointer"
+        className="w-full m:h-full h-[50px] text-md md:flex-[0.15] flex justify-center items-center md:justify-start bg-accent rounded-none hover:bg-secondary cursor-pointer"
         onClick={handleClick}
       >
         Rechercher
