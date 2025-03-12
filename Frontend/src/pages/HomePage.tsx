@@ -6,10 +6,10 @@ import { InformationSection } from "@/components/Information-section";
 
 const HomePage = () => {
   return (
-    <section className="flex flex-col h-screen">
+    <section className="flex flex-col">
       <Header />
-      <section className="relative w-full h-[60%] flex justify-center items-center">
-        <div className="z-1 w-[60%] md:w-[80%] md:h-[45px]">
+      <section className="relative w-full h-[60vh] flex justify-center items-center">
+        <div className="z-1 w-[70%] md:w-[80%] md:h-[45px]">
           <SearchBar />
         </div>
         <img
@@ -18,12 +18,8 @@ const HomePage = () => {
           className="absolute object-cover top-0 w-full h-full"
         />
       </section>
-      <InformationSection/>
-      <div className="flex-1 flex items-center justify-center">
-        <h1 className="text-4xl font-bold">Drive Up</h1>
-      </div>
-      <FaqSection/>
-    </>
+      <InformationSection />
+      <FaqSection />
     </section>
   );
 };
