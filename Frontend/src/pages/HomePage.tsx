@@ -1,6 +1,7 @@
 import SearchBar from "../components/SearchBar/SearchBar";
 import img from "../assets/home-background.jpg";
 import Header from "@/components/Header";
+import { InformationSection } from "@/components/Information-section";
 
 const HomePage = () => {
   return (
@@ -16,6 +17,7 @@ const HomePage = () => {
           className="absolute object-cover top-0 w-full h-full"
         />
       </section>
+      <InformationSection/>
       <div className="flex-1 flex items-center justify-center">
         <h1 className="text-4xl font-bold">Drive Up</h1>
       </div>
