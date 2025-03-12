@@ -10,7 +10,7 @@ export default function PopoverPassenger({
   setCount,
 }: PopoverPassengerProps) {
   return (
-    <div className="flex justify-between items-center rounded-2xl p-2 h-[40px]">
+    <section className="flex justify-between items-center rounded-2xl p-2 h-[40px]">
       <p className="text-foreground font-semibold">{`Passager${
         count > 1 ? "s" : ""
       }`}</p>
@@ -29,6 +29,6 @@ export default function PopoverPassenger({
           onClick={() => setCount(count + 1)}
         />
       </div>
-    </div>
+    </section>
   );
 }

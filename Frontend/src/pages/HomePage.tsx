@@ -4,7 +4,7 @@ import Header from "@/components/Header";
 
 const HomePage = () => {
   return (
-    <div className="flex flex-col h-screen">
+    <section className="flex flex-col h-screen">
       <Header />
       <section className="relative w-full h-[60%] flex justify-center items-center">
         <div className="z-1 w-[60%] md:w-[80%] md:h-[45px]">
@@ -19,7 +19,7 @@ const HomePage = () => {
       <div className="flex-1 flex items-center justify-center">
         <h1 className="text-4xl font-bold">Drive Up</h1>
       </div>
-    </div>
+    </section>
   );
 };
 
