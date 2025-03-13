@@ -37,6 +37,10 @@ export class Trip extends BaseEntity {
   @Column()
   price!: number;
 
+  @Field()
+  @Column()
+  capacity!: number;
+
   @Field(() => TripStatus)
   @Column({ default: TripStatus.OPEN })
   status!: TripStatus;

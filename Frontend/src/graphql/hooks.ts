@@ -20,10 +20,18 @@ export type Scalars = {
 
 export type CreateTripInput = {
   arrival_city: Scalars['String']['input'];
-  depature_city: Scalars['String']['input'];
-  depature_time: Scalars['DateTimeISO']['input'];
+  departure_city: Scalars['String']['input'];
+  departure_time: Scalars['DateTimeISO']['input'];
   driverId: Scalars['String']['input'];
   price: Scalars['Float']['input'];
+};
+
+export type FilterTripInput = {
+  arrival: Scalars['String']['input'];
+  departure: Scalars['String']['input'];
+  endDate: Scalars['DateTimeISO']['input'];
+  passengers: Scalars['Float']['input'];
+  startDate: Scalars['DateTimeISO']['input'];
 };
 
 export type Mutation = {
@@ -40,6 +48,11 @@ export type Query = {
   __typename?: 'Query';
   getPopularTrip: Array<Trip>;
   getTrip: Array<Trip>;
+};
+
+
+export type QueryGetTripArgs = {
+  data: FilterTripInput;
 };
 
 export type Review = {
@@ -68,6 +81,7 @@ export type Transaction = {
 export type Trip = {
   __typename?: 'Trip';
   arrival_city: Scalars['String']['output'];
+  capacity: Scalars['Float']['output'];
   departure_city: Scalars['String']['output'];
   departure_time: Scalars['DateTimeISO']['output'];
   driver: User;
@@ -109,7 +123,9 @@ export type GetPopularTripQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type GetPopularTripQuery = { __typename?: 'Query', getPopularTrip: Array<{ __typename?: 'Trip', departure_city: string, arrival_city: string, price: number }> };
 
-export type GetTripQueryVariables = Exact<{ [key: string]: never; }>;
+export type GetTripQueryVariables = Exact<{
+  data: FilterTripInput;
+}>;
 
 
 export type GetTripQuery = { __typename?: 'Query', getTrip: Array<{ __typename?: 'Trip', id: string, departure_time: any, departure_city: string, arrival_city: string, price: number, driver: { __typename?: 'User', id: string, firstname: string, lastname: string }, passengers?: Array<{ __typename?: 'User', id: string, firstname: string, lastname: string }> | null }> };
@@ -157,8 +173,8 @@ export type GetPopularTripLazyQueryHookResult = ReturnType<typeof useGetPopularT
 export type GetPopularTripSuspenseQueryHookResult = ReturnType<typeof useGetPopularTripSuspenseQuery>;
 export type GetPopularTripQueryResult = Apollo.QueryResult<GetPopularTripQuery, GetPopularTripQueryVariables>;
 export const GetTripDocument = gql`
-    query GetTrip {
-  getTrip {
+    query GetTrip($data: FilterTripInput!) {
+  getTrip(data: $data) {
     id
     departure_time
     departure_city
@@ -190,10 +206,11 @@ export const GetTripDocument = gql`
  * @example
  * const { data, loading, error } = useGetTripQuery({
  *   variables: {
+ *      data: // value for 'data'
  *   },
  * });
  */
-export function useGetTripQuery(baseOptions?: Apollo.QueryHookOptions<GetTripQuery, GetTripQueryVariables>) {
+export function useGetTripQuery(baseOptions: Apollo.QueryHookOptions<GetTripQuery, GetTripQueryVariables> & ({ variables: GetTripQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
         const options = {...defaultOptions, ...baseOptions}
         return Apollo.useQuery<GetTripQuery, GetTripQueryVariables>(GetTripDocument, options);
       }

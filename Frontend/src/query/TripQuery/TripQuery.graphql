@@ -1,5 +1,5 @@
-query GetTrip {
-  getTrip {
+query GetTrip($data: FilterTripInput!) {
+  getTrip(data: $data) {
     id
     departure_time
     departure_city

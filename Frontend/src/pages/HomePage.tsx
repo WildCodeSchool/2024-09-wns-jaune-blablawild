@@ -8,10 +8,9 @@ import HomePageCarte from "@/assets/pictures/home-page-carte.png";
 const HomePage = () => {
   return (
     <section className="flex flex-col w-screen gap-6">
-      <Header />
       <section className="relative w-full h-[60vh] flex justify-center items-center">
         <div className="z-1 w-[70%] md:w-[80%] md:h-[45px]">
-          <SearchBar />
+          <SearchBar path="/search-result" />
         </div>
         <img
           src={img}
@@ -20,7 +19,11 @@ const HomePage = () => {
         />
       </section>
       <InformationSection />
-      <img src={HomePageCarte} alt="cartographie" className="md:h-[250px] h-[150px]" />
+      <img
+        src={HomePageCarte}
+        alt="cartographie"
+        className="md:h-[250px] h-[150px]"
+      />
       <div className="flex items-center justify-center w-full">
         <CarrouselTrip />
       </div>
