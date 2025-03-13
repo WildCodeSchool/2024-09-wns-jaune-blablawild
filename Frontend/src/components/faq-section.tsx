@@ -36,10 +36,10 @@ export function FaqSection() {
   ];
 
   return (
-    <section className="flex flex-col items-center justify-center mb-25 bg-white pt-10 pb-20">
+    <section className="flex flex-col items-center justify-center bg-white pt-10 pb-20">
       <div className="w-full">
-        <h1 className="mx-auto my-10 w-full lg:w-3/12 text-accent text-[22px] md:text-[38px] text-center font-semibold">
-          Nos Questions fréquentes
+        <h1 className="mx-auto my-10 w-full text-accent md:text-3xl text-2xl text-center font-semibold">
+          Nos questions fréquentes
         </h1>
         <div className="mx-6 max-w-[855px] md:mx-10 lg:m-auto ">
           {faqItems.map((item, index) => (
