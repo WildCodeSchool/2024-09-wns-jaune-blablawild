@@ -1,25 +1,37 @@
 import { ReactElement } from "react";
+import { FilterSideBar } from "./FilterSideBar";
+import { TimeOption } from "@/pages/SearchTrip";
 
 type FilterSideBarWrapperProps = {
-    sidebar: ReactElement,
-    children: ReactElement
-}
+  children: ReactElement;
+  onSortChange: (sort: string | null) => void;
+  onTimeRangeChange: (timeRange: TimeOption | null) => void; 
+  currentSort: string | null;
+  currentTimeRange: TimeOption | null; 
+};
 
-export const FilterSideBarWrapper = ({ sidebar, children }: FilterSideBarWrapperProps) => {
+export const FilterSideBarWrapper = ({
+  children,
+  onSortChange,
+  onTimeRangeChange,
+  currentSort,
+  currentTimeRange,
+}: FilterSideBarWrapperProps) => {
   return (
-    <div className="">
-      <div className="container mx-auto px-4 -mt-10 relative z-10">
-        <div className="flex flex-row gap-6 py-8">
-          <aside className="w-1/4 lg:w-1/5 sticky top-4 self-start">
-            {sidebar}
+    <div className="w-full">
+      <div className="container relative">
+        <div className="flex flex-row">
+          <aside className="shrink-0 md:w-[220px] lg:w-[318px]">
+            <FilterSideBar
+              onSortChange={onSortChange}
+              onTimeRangeChange={onTimeRangeChange}
+              currentSort={currentSort}
+              currentTimeRange={currentTimeRange}
+            />
           </aside>
-          
-          <main className="w-3/4 lg:w-4/5">
-            {children}
-          </main>
+          <main className="flex-grow w-full">{children}</main>
         </div>
       </div>
     </div>
   );
 };
-

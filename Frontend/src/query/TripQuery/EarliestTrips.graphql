@@ -1,0 +1,15 @@
+query GetEarliestTrips($arrivalCity: String) {
+  getEarliestTrips(arrival_city: $arrivalCity) {
+    capacity
+    arrival_city
+    departure_city
+    departure_time
+    id
+    price
+    driver {
+      firstname
+      id
+      image
+    }
+  }
+}
