@@ -17,7 +17,7 @@ export default function CarrouselTrip() {
   if (error) return <p>Error: {error.message}</p>;
 
   return (
-    <section className="flex flex-col items-center w-full gap-10">
+    <section className="flex flex-col items-center w-full gap-15 my-25">
       <h1 className="text-3xl text-center font-semibold">
         Nos itinéraires les plus populaires
       </h1>
@@ -31,8 +31,8 @@ export default function CarrouselTrip() {
           {data?.getPopularTrip.map((trip, index) => (
             <CarouselItem key={index} className="md:basis-1/2 lg:basis-1/3">
               <div className="p-1">
-                <Card className="w-full relative ">
-                  <CardContent className="relative flex flex-col h-[25rem] items-center justify-end p-6 gap-8 overflow-hidden rounded-[15px]">
+                <Card className="w-full relative">
+                  <CardContent className="relative flex flex-col md:h-[33rem] h-[25rem] items-center justify-end p-6 gap-8 overflow-hidden rounded-[15px]">
                     <img
                       src={displayPictureCity(trip.arrival_city)}
                       alt="cities-pictures"
