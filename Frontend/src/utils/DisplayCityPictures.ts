@@ -13,5 +13,5 @@ const cities = [
 ];
 
 export const displayPictureCity = () => {
-  return cities[Math.floor(Math.random() * cities.length)].img;
+  return cities.map((city) => city.img);
 };

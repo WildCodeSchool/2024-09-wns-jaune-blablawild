@@ -24,6 +24,8 @@ export default function CarrouselTrip() {
   const location = useLocation();
   const { loading, error, data } = useGetPopularTripQuery();
 
+  const images = displayPictureCity();
+
   if (loading) return <p>Loading ...</p>;
   if (error) return <p>Error: {error.message}</p>;
 
@@ -53,7 +55,7 @@ export default function CarrouselTrip() {
                 <Card className="w-full relative">
                   <CardContent className="relative flex flex-col md:h-[33rem] h-[25rem] items-center justify-end p-6 gap-8 overflow-hidden rounded-[15px]">
                     <img
-                      src={displayPictureCity()}
+                      src={images[index % images.length]}
                       alt="cities-pictures"
                       className="absolute inset-0 w-full h-full object-cover"
                     />
