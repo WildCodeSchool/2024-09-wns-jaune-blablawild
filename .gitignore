@@ -1,3 +1,4 @@
 **/.env.*
 persist/
 .DS_Store
+.cursor
