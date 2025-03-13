@@ -83,7 +83,6 @@ export default function SearchTrip() {
 
   const handleSortChange = (sort: string | null): void => {
     setCurrentSort(sort);
-
   };
 
   const handleTimeRangeChange = (timeRange: TimeOption | null): void => {
@@ -101,6 +100,14 @@ export default function SearchTrip() {
     setData(newData);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location]);
+
+  const displayNoTrips = () => {
+    return (
+      <section className="p-10">
+        <p className="text-xl ">{`Il n'y a pas encore de trajet disponible de ${data.departure} à ${data.arrival} ce jour là ! `}</p>
+      </section>
+    );
+  };
 
   return (
     <section className="h-screen w-screen">
@@ -125,8 +132,12 @@ export default function SearchTrip() {
         currentTimeRange={currentTimeRange}
         children={
           !isLoading ? (
-           <section>
-             {tripsToShow.length === 0 ? "Aucun trajets n'est disponible pour la période donnée": <TripCard trips={tripsToShow as Trip[]} />}
+            <section>
+              {tripsToShow.length === 0 ? (
+                displayNoTrips()
+              ) : (
+                <TripCard trips={tripsToShow as Trip[]} />
+              )}
             </section>
           ) : (
             <section className="flex justify-center items-center h-64">
