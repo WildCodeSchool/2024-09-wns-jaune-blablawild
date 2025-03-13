@@ -46,9 +46,9 @@ export class Trip extends BaseEntity {
   @ManyToMany(() => User, (user) => user.passenger_trips)
   passengers?: User[];
 
-  @Field(() => User)
+  @Field(() => User, {nullable: true}) // attention remettre a not null dès la création des users
   @ManyToOne(() => User, (user) => user.driver_trips)
-  driver!: User;
+  driver?: User;
 
   @Field(() => [Review], { nullable: true })
   @OneToMany(() => Review, (review) => review.trip)

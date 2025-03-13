@@ -12,22 +12,35 @@ import VanImage from "@/assets/van-image-trip-form.png";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useEffect, useState } from "react";
+import { setHours, setMinutes } from "date-fns";
+import { useCreateTripMutation } from "@/graphql/hooks";
 
 const formSchema = z.object({
   departureCity: z.string(),
-  arrivalCity: z.string(),
+  arrivalCity: z.string({
+    required_error: "Name is required",
+    invalid_type_error: "Name must be a string",
+  }),
   departureDate: z.date(),
-  departureHour: z.number(),
   price: z.number(),
   passengers: z.number(),
 });
 
 export default function TripForm() {
+  const [createTrip] = useCreateTripMutation();
+  const [departureHour, setDepartureHour] = useState(10);
+  const [departureMinutes, setDepartureMinutes] = useState(0);
   const { step, back, next, currentStepIndex, isLastStep } = useMultiStepsForm([
     <Destination />,
     <TravelOrigin />,
     <TripDateSelection />,
-    <DepartureHour />,
+    <DepartureHour
+      departureHour={departureHour}
+      setDepartureHour={setDepartureHour}
+      departureMinutes={departureMinutes}
+      setDepartureMinutes={setDepartureMinutes}
+    />,
     <NumberPassengers />,
     <PriceSelection />,
     <TripSummary />,
@@ -39,14 +52,22 @@ export default function TripForm() {
       departureCity: "",
       arrivalCity: "",
       departureDate: new Date(),
-      departureHour: 0,
       price: 0,
       passengers: 0,
     },
   });
 
+  useEffect(() => {
+    let date = new Date(form.getValues().departureDate);
+    date = setHours(date, departureHour);
+    date = setMinutes(date, departureMinutes);
+    form.setValue("departureDate", date);
+  }, [departureHour, departureMinutes]);
+
   const onSubmit = (data: z.infer<typeof formSchema>) => {
-    console.log(data);
+    createTrip({
+        variables: data
+    })
   };
 
   return (
@@ -55,7 +76,6 @@ export default function TripForm() {
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
             {step}
-            <Button type="submit">Submit</Button>
             <div className="flex gap-5 m-10 justify-center">
               {currentStepIndex !== 0 && (
                 <Button
@@ -66,14 +86,26 @@ export default function TripForm() {
                   Précédent
                 </Button>
               )}
-              <Button onClick={next} className="w-30 bg-accent rounded-3xl p-5">
-                {isLastStep ? "Valdier" : "Continuer"}
-              </Button>
+              {isLastStep ? (
+                <Button
+                  type="submit"
+                  className="w-30 bg-accent rounded-3xl p-5"
+                >
+                  Valider
+                </Button>
+              ) : (
+                <Button
+                  onClick={next}
+                  className="w-30 bg-accent rounded-3xl p-5"
+                >
+                  Continuer
+                </Button>
+              )}
             </div>
           </form>
         </Form>
       </div>
-      <div className="flex-1">
+      <div className="flex-1 md:block hidden">
         <img src={VanImage} alt="car image" className="object-cover h-full" />
       </div>
     </section>

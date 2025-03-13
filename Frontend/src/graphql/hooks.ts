@@ -39,12 +39,6 @@ export type MutationCreateTripArgs = {
 export type Query = {
   __typename?: 'Query';
   getTrip: Array<Trip>;
-  getTripById: Trip;
-};
-
-
-export type QueryGetTripByIdArgs = {
-  tripId: Scalars['String']['input'];
 };
 
 export type Review = {
@@ -75,7 +69,7 @@ export type Trip = {
   arrival_city: Scalars['String']['output'];
   depature_city: Scalars['String']['output'];
   depature_time: Scalars['DateTimeISO']['output'];
-  driver: User;
+  driver?: Maybe<User>;
   id: Scalars['ID']['output'];
   passengers?: Maybe<Array<User>>;
   price: Scalars['Float']['output'];
@@ -109,19 +103,50 @@ export type User = {
   transaction_sent?: Maybe<Array<Transaction>>;
 };
 
-export type GetTripQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type GetTripQuery = { __typename?: 'Query', getTrip: Array<{ __typename?: 'Trip', id: string, depature_time: any, depature_city: string, arrival_city: string, price: number, driver: { __typename?: 'User', id: string, firstname: string, lastname: string } }> };
-
-export type GetTripByIdQueryVariables = Exact<{
-  tripId: Scalars['String']['input'];
+export type CreateTripMutationVariables = Exact<{
+  data: CreateTripInput;
 }>;
 
 
-export type GetTripByIdQuery = { __typename?: 'Query', getTripById: { __typename?: 'Trip', id: string } };
+export type CreateTripMutation = { __typename?: 'Mutation', createTrip: string };
+
+export type GetTripQueryVariables = Exact<{ [key: string]: never; }>;
 
 
+export type GetTripQuery = { __typename?: 'Query', getTrip: Array<{ __typename?: 'Trip', id: string, depature_time: any, depature_city: string, arrival_city: string, price: number, driver?: { __typename?: 'User', id: string, firstname: string, lastname: string } | null, passengers?: Array<{ __typename?: 'User', id: string, firstname: string, lastname: string }> | null }> };
+
+
+export const CreateTripDocument = gql`
+    mutation CreateTrip($data: CreateTripInput!) {
+  createTrip(data: $data)
+}
+    `;
+export type CreateTripMutationFn = Apollo.MutationFunction<CreateTripMutation, CreateTripMutationVariables>;
+
+/**
+ * __useCreateTripMutation__
+ *
+ * To run a mutation, you first call `useCreateTripMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateTripMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createTripMutation, { data, loading, error }] = useCreateTripMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useCreateTripMutation(baseOptions?: Apollo.MutationHookOptions<CreateTripMutation, CreateTripMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateTripMutation, CreateTripMutationVariables>(CreateTripDocument, options);
+      }
+export type CreateTripMutationHookResult = ReturnType<typeof useCreateTripMutation>;
+export type CreateTripMutationResult = Apollo.MutationResult<CreateTripMutation>;
+export type CreateTripMutationOptions = Apollo.BaseMutationOptions<CreateTripMutation, CreateTripMutationVariables>;
 export const GetTripDocument = gql`
     query GetTrip {
   getTrip {
@@ -135,6 +160,11 @@ export const GetTripDocument = gql`
       lastname
     }
     price
+    passengers {
+      id
+      firstname
+      lastname
+    }
   }
 }
     `;
@@ -170,43 +200,3 @@ export type GetTripQueryHookResult = ReturnType<typeof useGetTripQuery>;
 export type GetTripLazyQueryHookResult = ReturnType<typeof useGetTripLazyQuery>;
 export type GetTripSuspenseQueryHookResult = ReturnType<typeof useGetTripSuspenseQuery>;
 export type GetTripQueryResult = Apollo.QueryResult<GetTripQuery, GetTripQueryVariables>;
-export const GetTripByIdDocument = gql`
-    query GetTripById($tripId: String!) {
-  getTripById(tripId: $tripId) {
-    id
-  }
-}
-    `;
-
-/**
- * __useGetTripByIdQuery__
- *
- * To run a query within a React component, call `useGetTripByIdQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetTripByIdQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetTripByIdQuery({
- *   variables: {
- *      tripId: // value for 'tripId'
- *   },
- * });
- */
-export function useGetTripByIdQuery(baseOptions: Apollo.QueryHookOptions<GetTripByIdQuery, GetTripByIdQueryVariables> & ({ variables: GetTripByIdQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<GetTripByIdQuery, GetTripByIdQueryVariables>(GetTripByIdDocument, options);
-      }
-export function useGetTripByIdLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetTripByIdQuery, GetTripByIdQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<GetTripByIdQuery, GetTripByIdQueryVariables>(GetTripByIdDocument, options);
-        }
-export function useGetTripByIdSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetTripByIdQuery, GetTripByIdQueryVariables>) {
-          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
-          return Apollo.useSuspenseQuery<GetTripByIdQuery, GetTripByIdQueryVariables>(GetTripByIdDocument, options);
-        }
-export type GetTripByIdQueryHookResult = ReturnType<typeof useGetTripByIdQuery>;
-export type GetTripByIdLazyQueryHookResult = ReturnType<typeof useGetTripByIdLazyQuery>;
-export type GetTripByIdSuspenseQueryHookResult = ReturnType<typeof useGetTripByIdSuspenseQuery>;
-export type GetTripByIdQueryResult = Apollo.QueryResult<GetTripByIdQuery, GetTripByIdQueryVariables>;

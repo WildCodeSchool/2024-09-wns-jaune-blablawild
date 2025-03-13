@@ -24,7 +24,7 @@ export default function NumberPassengers() {
           <Button
             variant="default"
             size="icon"
-            className="text-6xl text-ring border-none bg-background shadow-none"
+            className="text-6xl text-ring border-none bg-background shadow-none hover:bg-transparent " //recentrer l'icone
             onClick={() =>
               setNumberPassengers((prev: number) => Math.max(0, prev - 1))
             }
@@ -37,7 +37,7 @@ export default function NumberPassengers() {
           <Button
             variant="default"
             size="icon"
-            className="text-6xl text-ring border-none bg-background shadow-none"
+            className="text-6xl text-ring border-none bg-background shadow-none hover:bg-transparent" //recentrer l'icone
             onClick={() => setNumberPassengers((prev: number) => prev + 1)}
           >
             +

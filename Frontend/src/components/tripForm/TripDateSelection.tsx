@@ -1,12 +1,18 @@
 import { Calendar } from "../ui/calendar";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FormControl, FormItem } from "../ui/form";
 import { useFormContext } from "react-hook-form";
 
 export default function TripDateSelection() {
-  const [date, setDate] = useState<Date | undefined>(new Date());
-  const { register } = useFormContext()
-  
+  const { setValue, watch } = useFormContext();
+  const [date, setDate] = useState<Date | undefined>(
+    watch("departureDate") || new Date()
+  );
+
+  useEffect(() => {
+    setValue("departureDate", date)
+  }, [date, setValue])
+
   return (
     <div className="flex flex-col items-center">
       <h1 className="text-secondary text-xl font-semibold">
