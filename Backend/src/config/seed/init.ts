@@ -13,6 +13,7 @@ const seedDatabase = async () => {
 
     try {
         // clear existing data
+        await dataSource.getRepository(Review).delete({})
         await dataSource.getRepository(Transaction).delete({})
         await dataSource.getRepository(Trip).delete({})
         await dataSource.getRepository(User).delete({})
@@ -42,6 +43,7 @@ const seedDatabase = async () => {
             trip.departure_time = faker.date.future();
             trip.driver = users[i % users.length];
             trip.price = Math.floor(Math.random() * 40);
+            trip.capacity = Math.floor(Math.random() * 4);
             trips.push(await dataSource.getRepository(Trip).save(trip))
         }
 
