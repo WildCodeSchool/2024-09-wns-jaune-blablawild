@@ -1,9 +1,8 @@
-import SearchBar from "../components/SearchBar/SearchBar";
-import img from "../assets/home-background.jpg";
-import Header from "@/components/Header";
+import CarrouselTrip from "@/components/CarrouselTrip";
 import { FaqSection } from "@/components/faq-section";
 import { InformationSection } from "@/components/Information-section";
-import CarrouselTrip from "@/components/CarrouselTrip";
+import img from "../assets/home-background.jpg";
+import SearchBar from "../components/SearchBar/SearchBar";
 import HomePageCarte from "@/assets/pictures/home-page-carte.png";
 
 const HomePage = () => {
