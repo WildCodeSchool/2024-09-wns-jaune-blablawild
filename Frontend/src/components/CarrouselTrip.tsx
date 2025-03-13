@@ -34,7 +34,7 @@ export default function CarrouselTrip() {
                 <Card className="w-full relative">
                   <CardContent className="relative flex flex-col md:h-[33rem] h-[25rem] items-center justify-end p-6 gap-8 overflow-hidden rounded-[15px]">
                     <img
-                      src={displayPictureCity(trip.arrival_city)}
+                      src={displayPictureCity()}
                       alt="cities-pictures"
                       className="absolute inset-0 w-full h-full object-cover"
                     />

@@ -12,6 +12,6 @@ const cities = [
   { name: "Toulouse", img: Toulouse },
 ];
 
-export const displayPictureCity = (arrival_city: string) => {
-  return cities.find((city) => arrival_city === city.name)?.img;
+export const displayPictureCity = () => {
+  return cities[Math.floor(Math.random() * cities.length)].img;
 };
