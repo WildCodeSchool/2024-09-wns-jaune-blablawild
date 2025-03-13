@@ -21,7 +21,7 @@ const INFORMATIONS: Information[] = [
 ];
 
 export const InformationSection = () => (
-  <section className="flex flex-col items-center space-y-10 my-25 md:flex-row md:space-y-0 md:space-x-10 md:mx-auto md:w-10/12 md:items-start lg:space-x-16 lg:mt-20 xl:w-9/12">
+  <section className="flex flex-col items-center space-y-10 md:flex-row md:space-y-0 md:space-x-10 md:mx-auto md:w-10/12 md:items-start lg:space-x-16 xl:w-9/12">
     {INFORMATIONS.map((information, index) => (
       <InformationCard
         key={`information-card-${index}`}

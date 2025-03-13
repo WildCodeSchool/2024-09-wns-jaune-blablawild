@@ -17,8 +17,8 @@ export default function CarrouselTrip() {
   if (error) return <p>Error: {error.message}</p>;
 
   return (
-    <section className="flex flex-col items-center w-full gap-15 my-25">
-      <h1 className="text-3xl text-center font-semibold">
+    <section className="flex flex-col items-center w-full gap-15">
+      <h1 className="md:text-3xl text-2xl text-center font-semibold">
         Nos itinéraires les plus populaires
       </h1>
       <Carousel
