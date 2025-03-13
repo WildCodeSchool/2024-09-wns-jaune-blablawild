@@ -4,6 +4,7 @@ import { User } from "../../entities/user";
 import { faker } from "@faker-js/faker/locale/fr";
 import { Trip } from "../../entities/trip";
 import { Transaction } from "../../entities/transaction";
+import { Review } from "../../entities/review";
 
 const seedDatabase = async () => {
     await dataSource.initialize();
@@ -51,7 +52,7 @@ const seedDatabase = async () => {
         for (let i = 0; i < 4; i++) {
             const transaction = new Transaction();
             transaction.status = "VALIDATED"
-            transaction.created_at = new Date()
+            transaction.created_at = faker.date.future();
             transaction.price = Math.floor(Math.random() * 40);
             transaction.method = "credit card";
             transaction.trip = trips[i % trips.length];
@@ -61,6 +62,17 @@ const seedDatabase = async () => {
         }
         console.log("💪 Transactions seeded !")
         
+        const reviews: Review[] = [];
+        for (let i = 0; i < 3; i++) {
+            const review = new Review();
+            review.notation = Math.floor(Math.random() * 5);
+            review.comment = faker.word.words({count: Math.random()*20});
+            review.date = faker.date.past();
+            review.receiver = users[i % users.length];
+            review.sender = users[i % users.length + 1];
+            reviews.push(await dataSource.getRepository(Review).save(review))
+        }
+        console.log("💪 Reviews seeded !")
 
         console.log("🚀 Database seeding complete !")
     } catch (error) {
