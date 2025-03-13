@@ -23,7 +23,7 @@ export class Trip extends BaseEntity {
 
   @Field()
   @Column()
-  depature_city!: string;
+  departure_city!: string;
 
   @Field()
   @Column()
@@ -31,11 +31,15 @@ export class Trip extends BaseEntity {
 
   @Field()
   @Column()
-  depature_time!: Date;
+  departure_time!: Date;
 
   @Field()
   @Column()
   price!: number;
+
+  @Field()
+  @Column()
+  capacity!: number;
 
   @Field(() => TripStatus)
   @Column({ default: TripStatus.OPEN })

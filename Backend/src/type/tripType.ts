@@ -13,17 +13,35 @@ registerEnumType(TripStatus, {
 @InputType()
 export class CreateTripInput {
   @Field()
-  depature_city!: string;
+  departure_city!: string;
 
   @Field()
   arrival_city!: string;
 
   @Field()
-  depature_time!: Date;
+  departure_time!: Date;
 
   @Field()
   price!: number;
 
   @Field({nullable: true}) // remettre a obligatoire quand création user 
   driverId?: string;
+}
+
+@InputType()
+export class FilterTripInput {
+  @Field()
+  arrival!: string
+
+  @Field()
+  departure!: string
+
+  @Field(() => Date)
+  startDate!: Date
+
+  @Field(() => Date)
+  endDate!: Date
+
+  @Field()
+  passengers!: number
 }

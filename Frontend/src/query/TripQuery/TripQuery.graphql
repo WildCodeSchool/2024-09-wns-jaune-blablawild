@@ -1,8 +1,8 @@
-query GetTrip {
-  getTrip {
+query GetTrip($data: FilterTripInput!) {
+  getTrip(data: $data) {
     id
-    depature_time
-    depature_city
+    departure_time
+    departure_city
     arrival_city
     driver {
       id

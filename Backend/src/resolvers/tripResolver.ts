@@ -1,18 +1,39 @@
 import { Arg, Mutation, Query, Resolver } from "type-graphql";
 import { Trip } from "../entities/trip";
-import { CreateTripInput } from "../type/tripType";
+import { CreateTripInput, FilterTripInput } from "../type/tripType";
 import { User } from "../entities/user";
+import { Between, ILike, MoreThanOrEqual } from "typeorm";
+import { getPopular } from "../services/TripServices";
 
 @Resolver(Trip)
 export class TripResolver {
   @Query(() => [Trip])
-  async getTrip() {
+  async getTrip(@Arg("data") data: FilterTripInput) {
     const trip = await Trip.find({
+      where: {
+        departure_city: ILike(data.departure),
+        arrival_city: ILike(data.arrival),
+        departure_time: Between(data.startDate, data.endDate),
+        capacity: MoreThanOrEqual(data.passengers),
+      },
       relations: {
         driver: true,
       },
     });
     return trip;
+  }
+
+  @Query(() => [Trip])
+  async getPopularTrip() {
+    const popular = getPopular();
+    const where = popular.map((p) => {
+      return { 
+        departure_city: p.departure_city, 
+        arrival_city: p.arrival_city,
+      }
+    });
+    const popularTrip = await Trip.find({ where });
+    return popularTrip;
   }
 
   @Mutation(() => String)
