@@ -3,6 +3,7 @@ import { Trip } from "../entities/trip";
 import { CreateTripInput, FilterTripInput } from "../type/tripType";
 import { User } from "../entities/user";
 import { Between, ILike, MoreThanOrEqual } from "typeorm";
+import { getPopular } from "../services/TripServices";
 
 @Resolver(Trip)
 export class TripResolver {
@@ -20,6 +21,19 @@ export class TripResolver {
       },
     });
     return trip;
+  }
+
+  @Query(() => [Trip])
+  async getPopularTrip() {
+    const popular = getPopular();
+    const where = popular.map((p) => {
+      return { 
+        departure_city: p.departure_city, 
+        arrival_city: p.arrival_city,
+      }
+    });
+    const popularTrip = await Trip.find({ where });
+    return popularTrip;
   }
 
   @Mutation(() => String)
