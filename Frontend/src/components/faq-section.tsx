@@ -36,7 +36,7 @@ export function FaqSection() {
   ];
 
   return (
-    <section className="flex flex-col items-center justify-center mb-25">
+    <section className="flex flex-col items-center justify-center mb-25 bg-white pt-10 pb-20">
       <div className="w-full">
         <h1 className="mx-auto my-10 w-full lg:w-3/12 text-accent text-[22px] md:text-[38px] text-center font-semibold">
           Nos Questions fréquentes
