@@ -10,7 +10,7 @@ const HomePage = () => {
       <Header />
       <section className="relative w-full h-[60vh] flex justify-center items-center">
         <div className="z-1 w-[70%] md:w-[80%] md:h-[45px]">
-          <SearchBar />
+          <SearchBar path="/search-result" />
         </div>
         <img
           src={img}

@@ -27,3 +27,21 @@ export class CreateTripInput {
   @Field()
   driverId!: string;
 }
+
+@InputType()
+export class FilterTripInput {
+  @Field()
+  arrival!: string
+
+  @Field()
+  departure!: string
+
+  @Field(() => Date)
+  startDate!: Date
+
+  @Field(() => Date)
+  endDate!: Date
+
+  @Field()
+  passengers!: number
+}

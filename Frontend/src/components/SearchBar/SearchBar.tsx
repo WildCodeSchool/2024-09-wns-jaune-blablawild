@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 import { Separator } from "../ui/separator";
 import { useLocation, useNavigate } from "react-router-dom";
 import PopoverCalendar from "./PopoverCalendar";
-import { format } from "date-fns";
+import { format, formatISO } from "date-fns";
 import { fr } from "date-fns/locale";
 import { capitalizeFirstLetter } from "../../utils";
 import {
@@ -24,7 +24,7 @@ type SearchBarProps = {
 export default function SearchBar({ path }: SearchBarProps) {
   const location = useLocation();
   const navigate = useNavigate();
-  const [countPassenger, setCountPassenger] = useState<number>(0);
+  const [countPassenger, setCountPassenger] = useState<number>(1);
   const [departureCity, setDepartureCity] = useState<string>("");
   const [arrivalCity, setArrivalCity] = useState<string>("");
   const [departureTime, setDepartureTime] = useState<Date | null>(null);
@@ -35,13 +35,13 @@ export default function SearchBar({ path }: SearchBarProps) {
 
   useEffect(() => {
     const params = new URLSearchParams(location.search);
-    setDepartureCity(params.get("departure_city") || "");
-    setArrivalCity(params.get("arrival_city") || "");
-    const departureTimeParam = params.get("departure_time");
+    setDepartureCity(params.get("departure") || "");
+    setArrivalCity(params.get("arrival") || "");
+    const departureTimeParam = params.get("date");
     if (departureTimeParam) {
       setDepartureTime(new Date(departureTimeParam));
     }
-    setCountPassenger(Number(params.get("passenger")) || 0);
+    setCountPassenger(Number(params.get("passengers")) || 1);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -50,11 +50,11 @@ export default function SearchBar({ path }: SearchBarProps) {
     if (departureCity) params.set("departure", departureCity);
     if (arrivalCity) params.set("arrival", arrivalCity);
     if (countPassenger > 0) params.set("passengers", countPassenger.toString());
-    if (departureTime) params.set("date", departureTime.toISOString());
+    if (departureTime) params.set("date", formatISO(departureTime));
     if (path) {
-      navigate(`${path}?${params.toString()}`, { replace: true });
+      navigate(`${path}?${params.toString()}`);
     } else {
-      navigate(`${params.toString()}`, { replace: true });
+      navigate(`${location.pathname}?${params.toString()}`, { replace: true });
     }
   };
 
@@ -67,6 +67,7 @@ export default function SearchBar({ path }: SearchBarProps) {
             type="text"
             placeholder="Départ"
             className="w-full m-0 p-0 shadow-none border-none placeholder:text-foreground focus-visible:ring-0"
+            value={departureCity}
             onChange={(e) => setDepartureCity(e.target.value)}
           />
           <ArrowRightLeft className="hidden md:block size-5" />
@@ -78,11 +79,12 @@ export default function SearchBar({ path }: SearchBarProps) {
             type="text"
             placeholder="Arrivée"
             className="w-full m-0 p-0 shadow-none border-none placeholder:text-foreground focus-visible:ring-0"
+            value={arrivalCity}
             onChange={(e) => setArrivalCity(e.target.value)}
           />
         </div>
         <Separator className="md:hidden" />
-        <div className="hidden md:block md:flex-[0.6]">
+        <div className="hidden md:block md:flex-[0.8]">
           <Popover open={openCalendar} onOpenChange={setOpenCalendar}>
             <PopoverTrigger asChild>
               <div className="w-full flex items-center gap-2 bg-background text-foreground shadow-none cursor-pointer hover:bg-gray-200 md:px-2 md:py-2 px-3 py-4 md:rounded-md">
@@ -140,7 +142,7 @@ export default function SearchBar({ path }: SearchBarProps) {
           </Dialog>
         </div>
         <Separator className="md:hidden" />
-        <div className="hidden md:block md:flex-[0.6]">
+        <div className="hidden md:block md:flex-[0.8]">
           <Popover>
             <PopoverTrigger asChild>
               <div className="w-full flex items-center gap-2 bg-background text-foreground shadow-none cursor-pointer hover:bg-gray-200 md:px-2 md:py-2 px-3 py-4 md:rounded-md">
