@@ -1,0 +1,15 @@
+query GetCheapestTrips($arrivalCity: String) {
+  getCheapestTrips(arrival_city: $arrivalCity) {
+    id
+    arrival_city
+    departure_city
+    price
+    capacity
+    departure_time
+    driver {
+      firstname
+      id
+      image
+    }
+  }
+}
