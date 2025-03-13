@@ -6,6 +6,7 @@ import { getUrlParams } from "@/utils";
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { endOfDay, startOfDay } from "date-fns";
+import { FilterSideBar } from "@/components/FilterSideBar";
 
 export default function SearchTrip() {
   const location = useLocation();
@@ -51,6 +52,7 @@ export default function SearchTrip() {
           </div>
         </div>
       </section>
+      <FilterSideBar/>
       {!loadingTrip ? (
         <section>
           <TripCard trips={allTrip as Trip[]} />
@@ -60,6 +62,7 @@ export default function SearchTrip() {
           <Loader2 className="animate-spin" />
         </section>
       )}
+      
     </section>
   );
 }
