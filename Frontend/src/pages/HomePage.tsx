@@ -4,6 +4,7 @@ import Header from "@/components/Header";
 import { FaqSection } from "@/components/faq-section";
 import { InformationSection } from "@/components/Information-section";
 import CarrouselTrip from "@/components/CarrouselTrip";
+import HomePageCarte from "@/assets/pictures/home-page-carte.png";
 
 const HomePage = () => {
   return (
@@ -20,6 +21,7 @@ const HomePage = () => {
         />
       </section>
       <InformationSection />
+      <img src={HomePageCarte} alt="cartographie" className="md:h-[250px] h-[150px]" />
       <div className="flex items-center justify-center w-full">
         <CarrouselTrip />
       </div>
