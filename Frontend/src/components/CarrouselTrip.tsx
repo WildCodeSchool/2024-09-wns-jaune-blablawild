@@ -9,12 +9,31 @@ import {
 } from "@/components/ui/carousel";
 import { Button } from "@/components/ui/button";
 import { displayPictureCity } from "@/utils/DisplayCityPictures";
+import { useLocation, useNavigate } from "react-router-dom";
+import { formatISO } from "date-fns";
+
+type TripPopular = {
+  id: string;
+  departure_city: string;
+  arrival_city: string;
+  price: number;
+};
 
 export default function CarrouselTrip() {
+  const navigate = useNavigate();
+  const location = useLocation();
   const { loading, error, data } = useGetPopularTripQuery();
 
   if (loading) return <p>Loading ...</p>;
   if (error) return <p>Error: {error.message}</p>;
+
+  const handleClick = (trip: TripPopular) => {
+    const params = new URLSearchParams(location.search);
+    params.set("departure", trip.departure_city);
+    params.set("arrival", trip.arrival_city);
+    params.set("date", formatISO(new Date()));
+    navigate(`/search-result?${params.toString()}`);
+  };
 
   return (
     <section className="flex flex-col items-center w-full gap-15">
@@ -47,7 +66,10 @@ export default function CarrouselTrip() {
                       <p className="md:text-2xl text-2xl  text-white">
                         Dès {trip.price} €
                       </p>
-                      <Button className="bg-accent rounded-full md:px-7 md:py-6 px-5 py-4 text-md text-background cursor-pointer">
+                      <Button
+                        className="bg-accent rounded-full md:px-7 md:py-6 px-5 py-4 text-md text-background cursor-pointer"
+                        onClick={() => handleClick(trip)}
+                      >
                         Réserver
                       </Button>
                     </div>

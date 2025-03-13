@@ -46,13 +46,32 @@ export type MutationCreateTripArgs = {
 
 export type Query = {
   __typename?: 'Query';
+  getCheapestTrips: Array<Trip>;
+  getEarliestTrips: Array<Trip>;
   getPopularTrip: Array<Trip>;
   getTrip: Array<Trip>;
+  getTripsByTime: Array<Trip>;
+};
+
+
+export type QueryGetCheapestTripsArgs = {
+  arrival_city?: InputMaybe<Scalars['String']['input']>;
+};
+
+
+export type QueryGetEarliestTripsArgs = {
+  arrival_city?: InputMaybe<Scalars['String']['input']>;
 };
 
 
 export type QueryGetTripArgs = {
   data: FilterTripInput;
+};
+
+
+export type QueryGetTripsByTimeArgs = {
+  arrival_city?: InputMaybe<Scalars['String']['input']>;
+  time: Scalars['String']['input'];
 };
 
 export type Review = {
@@ -121,7 +140,7 @@ export type User = {
 export type GetPopularTripQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetPopularTripQuery = { __typename?: 'Query', getPopularTrip: Array<{ __typename?: 'Trip', departure_city: string, arrival_city: string, price: number }> };
+export type GetPopularTripQuery = { __typename?: 'Query', getPopularTrip: Array<{ __typename?: 'Trip', id: string, departure_city: string, arrival_city: string, price: number }> };
 
 export type GetTripQueryVariables = Exact<{
   data: FilterTripInput;
@@ -134,6 +153,7 @@ export type GetTripQuery = { __typename?: 'Query', getTrip: Array<{ __typename?:
 export const GetPopularTripDocument = gql`
     query GetPopularTrip {
   getPopularTrip {
+    id
     departure_city
     arrival_city
     price

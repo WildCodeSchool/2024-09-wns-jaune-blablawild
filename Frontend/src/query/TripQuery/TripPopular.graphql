@@ -1,5 +1,6 @@
 query GetPopularTrip {
   getPopularTrip {
+    id
     departure_city
     arrival_city
     price
