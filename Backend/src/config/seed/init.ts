@@ -3,6 +3,7 @@ import { dataSource } from "../db";
 import { User } from "../../entities/user";
 import { faker } from "@faker-js/faker/locale/fr";
 import { Trip } from "../../entities/trip";
+import { Transaction } from "../../entities/transaction";
 
 const seedDatabase = async () => {
     await dataSource.initialize();
@@ -11,6 +12,7 @@ const seedDatabase = async () => {
 
     try {
         // clear existing data
+        await dataSource.getRepository(Transaction).delete({})
         await dataSource.getRepository(Trip).delete({})
         await dataSource.getRepository(User).delete({})
 
@@ -43,6 +45,22 @@ const seedDatabase = async () => {
         }
 
         console.log("💪 Trips seeded !")
+
+        // create transactions
+        const transactions: Transaction[] = [];
+        for (let i = 0; i < 4; i++) {
+            const transaction = new Transaction();
+            transaction.status = "VALIDATED"
+            transaction.created_at = new Date()
+            transaction.price = Math.floor(Math.random() * 40);
+            transaction.method = "credit card";
+            transaction.trip = trips[i % trips.length];
+            transaction.receiver = users[i % users.length];
+            transaction.sender = users[i % users.length + 1];
+            transactions.push(await dataSource.getRepository(Transaction).save(transaction))
+        }
+        console.log("💪 Transactions seeded !")
+        
 
         console.log("🚀 Database seeding complete !")
     } catch (error) {
