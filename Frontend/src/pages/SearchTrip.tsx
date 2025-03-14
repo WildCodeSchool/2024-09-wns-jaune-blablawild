@@ -103,8 +103,8 @@ export default function SearchTrip() {
 
   const displayNoTrips = () => {
     return (
-      <section className="p-10">
-        <p className="md:text-xl ">{`Il n'y a pas encore de trajet disponible de ${data.departure} à ${data.arrival} ce jour là ! `}</p>
+      <section className="p-10 min-h-[500px] flex items-center justify-center">
+        <p className="md:text-xl">{`Il n'y a pas encore de trajet disponible de ${data.departure} à ${data.arrival} ce jour là ! `}</p>
       </section>
     );
   };
@@ -132,7 +132,7 @@ export default function SearchTrip() {
         currentTimeRange={currentTimeRange}
         children={
           !isLoading ? (
-            <section>
+            <section className="min-h-[500px]">
               {tripsToShow.length === 0 ? (
                 displayNoTrips()
               ) : (
@@ -140,7 +140,7 @@ export default function SearchTrip() {
               )}
             </section>
           ) : (
-            <section className="flex justify-center items-center h-64">
+            <section className="flex justify-center items-center min-h-[500px]">
               <Loader2 className="animate-spin w-8 h-8" />
             </section>
           )

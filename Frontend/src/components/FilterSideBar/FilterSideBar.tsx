@@ -20,7 +20,7 @@ export const FilterSideBar = ({
   };
 
   return (     
-    <section className="px-7 py-5 bg-white md:bg-secondary w-full h-full md:p-7 md:block space-y-12">       
+    <section className="px-7 py-5 bg-white md:bg-secondary w-full h-full md:h-screen md:p-7 md:block space-y-12 overflow-auto">       
       <div>         
         <h1 className="md:text-white font-semibold mb-5 md:text-lg">Trier par</h1>         
         <div className="space-y-4">           
