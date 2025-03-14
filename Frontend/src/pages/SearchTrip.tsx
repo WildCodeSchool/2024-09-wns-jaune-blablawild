@@ -13,7 +13,7 @@ import { getUrlParams } from "@/utils";
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { endOfDay, startOfDay } from "date-fns";
-import { FilterSideBarWrapper } from "@/components/FilterSideBarWrapper";
+import { FilterSideBarWrapper } from "@/components/FilterSideBar/FilterSideBarWrapper";
 
 export enum TimeOption {
   BEFORE_6 = "BEFORE_6",
@@ -104,7 +104,7 @@ export default function SearchTrip() {
   const displayNoTrips = () => {
     return (
       <section className="p-10">
-        <p className="text-xl ">{`Il n'y a pas encore de trajet disponible de ${data.departure} à ${data.arrival} ce jour là ! `}</p>
+        <p className="md:text-xl ">{`Il n'y a pas encore de trajet disponible de ${data.departure} à ${data.arrival} ce jour là ! `}</p>
       </section>
     );
   };

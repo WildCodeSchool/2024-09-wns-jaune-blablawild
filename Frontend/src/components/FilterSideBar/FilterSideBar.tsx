@@ -1,5 +1,5 @@
 import { TimeOption } from "@/pages/SearchTrip";
-import { Checkbox } from "./ui/checkbox";
+import { Checkbox } from "../ui/checkbox";
 
 type FilterSideBarProps = {
   onSortChange: (sort: string | null) => void;
@@ -15,7 +15,7 @@ export const FilterSideBar = ({
   currentTimeRange
 }: FilterSideBarProps) => {
   return (
-    <section className="bg-secondary w-full h-full p-7 space-y-12">
+    <section className="px-7 py-5 bg-secondary w-full h-full md:p-7 md:block space-y-12">
       <div>
         <h1 className="text-white font-semibold mb-5 md:text-lg">Trier par</h1>
         <div className="space-y-4">
