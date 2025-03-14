@@ -1,0 +1,16 @@
+query GetTripsByTime($time: String!, $arrivalCity: String, $date: DateTimeISO) {
+  getTripsByTime(time: $time, date: $date, arrival_city: $arrivalCity) {
+    arrival_city
+    capacity
+    departure_city
+    departure_time
+    id
+    price
+    driver {
+      firstname
+      image
+      id
+    }
+    status
+  }
+}

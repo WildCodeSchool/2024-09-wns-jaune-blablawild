@@ -4,9 +4,9 @@ import { Plus } from "lucide-react";
 
 export default function Header() {
   return (
-    <header className="flex justify-between items-center h-[4.5rem]">
+    <header className="flex justify-between items-center h-[3rem] my-1 mr-3">
       <Link to="/">
-        <img src="/logo2.png" alt="logo" className="w-[16rem]" />
+        <img src="/logo2.png" alt="logo" className="w-[10rem]" />
       </Link>
       <div className="flex gap-2">
         <Link to="/tripform">
