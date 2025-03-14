@@ -31,7 +31,7 @@ export const MobileFilterDrawer = ({
             <span>Filtres</span>
           </Button>
         </DrawerTrigger>
-        <DrawerContent className="bg-secondary">
+        <DrawerContent className="bg-white">
           <div className="px-4 pb-4">
             <FilterSideBar
               onSortChange={onSortChange}
@@ -42,7 +42,7 @@ export const MobileFilterDrawer = ({
           </div>
           <DrawerFooter>
             <DrawerClose asChild>
-              <Button variant="outline" className="rounded-full text-secondary mx-6">Fermer</Button>
+              <Button variant="outline" className="rounded-full bg-secondary text-white mx-6">Fermer</Button>
             </DrawerClose>
           </DrawerFooter>
         </DrawerContent>
