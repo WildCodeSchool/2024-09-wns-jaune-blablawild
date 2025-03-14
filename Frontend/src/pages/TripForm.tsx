@@ -92,7 +92,7 @@ export default function TripForm() {
               <Button
                 type="button"
                 onClick={back}
-                className={`w-30 bg-accent rounded-3xl p-5 ${
+                className={`w-30 rounded-3xl p-5 ${
                   isSubmitted ? "hidden" : ""
                 }`}
                 variant="outline"
