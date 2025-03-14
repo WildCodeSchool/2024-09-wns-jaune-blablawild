@@ -25,14 +25,9 @@ export class TripResolver {
 
   @Query(() => [Trip])
   async getPopularTrip() {
-    const popular = getPopular();
-    const where = popular.map((p) => {
-      return { 
-        departure_city: p.departure_city, 
-        arrival_city: p.arrival_city,
-      }
+    const popularTrip = await Trip.find({
+      take: 5,
     });
-    const popularTrip = await Trip.find({ where });
     return popularTrip;
   }
 

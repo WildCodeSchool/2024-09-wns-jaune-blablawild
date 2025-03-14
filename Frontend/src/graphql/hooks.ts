@@ -141,7 +141,7 @@ export type User = {
 export type GetPopularTripQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetPopularTripQuery = { __typename?: 'Query', getPopularTrip: Array<{ __typename?: 'Trip', departure_city: string, arrival_city: string, price: number }> };
+export type GetPopularTripQuery = { __typename?: 'Query', getPopularTrip: Array<{ __typename?: 'Trip', id: string, departure_city: string, arrival_city: string, price: number }> };
 
 export type GetTripQueryVariables = Exact<{
   data: FilterTripInput;
@@ -161,6 +161,7 @@ export type CreateTripMutation = { __typename?: 'Mutation', createTrip: string }
 export const GetPopularTripDocument = gql`
     query GetPopularTrip {
   getPopularTrip {
+    id
     departure_city
     arrival_city
     price

@@ -3,7 +3,7 @@ import { Button } from "../ui/button";
 
 export default function Header() {
   return (
-    <header className="flex justify-between items-center h-[4.5rem] mt-2 mr-2">
+    <header className="flex justify-between items-center h-[4.5rem]">
       <Link to="/">
         <img src="/logo2.png" alt="logo" className="w-[16rem]" />
       </Link>
