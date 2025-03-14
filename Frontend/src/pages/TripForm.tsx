@@ -31,7 +31,7 @@ const formSchema = z.object({
 export default function TripForm() {
   const [createTrip] = useCreateTripMutation();
   const [departureHour, setDepartureHour] = useState(10);
-  const [departureMinutes, setDepartureMinutes] = useState(0);
+  const [departureMinutes, setDepartureMinutes] = useState(20);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const { step, back, next, currentStepIndex, isLastStep } = useMultiStepsForm([
     <Destination />,
