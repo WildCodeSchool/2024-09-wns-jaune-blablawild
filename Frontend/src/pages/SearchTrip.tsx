@@ -50,6 +50,7 @@ export default function SearchTrip() {
   useGetCheapestTripsQuery({
     variables: { 
       arrivalCity: data.arrival,
+      departureCity: data.departure,
       date: utcDate
     },
     skip: currentSort !== "cheapest",
@@ -59,6 +60,7 @@ const { data: earliestTrips, loading: loadingEarliestTrips } =
   useGetEarliestTripsQuery({
     variables: { 
       arrivalCity: data.arrival,
+      departureCity: data.departure,
       date: utcDate
     },
     skip: currentSort !== "earliest",
@@ -69,7 +71,7 @@ const { data: timeRangeTripData, loading: loadingTimeRangeTrip } =
     variables: {
       time: currentTimeRange || "",
       arrivalCity: data.arrival,
-
+      departureCity: data.departure,
       date: utcDate
     },
     skip: currentTimeRange === null,

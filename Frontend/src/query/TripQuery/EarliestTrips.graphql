@@ -1,5 +1,5 @@
-query GetEarliestTrips($date: DateTimeISO, $arrivalCity: String) {
-  getEarliestTrips(date: $date, arrival_city: $arrivalCity) {
+query GetEarliestTrips($date: DateTimeISO!, $arrivalCity: String!, $departureCity: String!) {
+  getEarliestTrips(date: $date, arrival_city: $arrivalCity, departure_city: $departureCity) {
     arrival_city
     capacity
     departure_city

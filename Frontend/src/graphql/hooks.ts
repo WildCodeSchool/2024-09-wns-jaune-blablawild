@@ -56,14 +56,16 @@ export type Query = {
 
 
 export type QueryGetCheapestTripsArgs = {
-  arrival_city?: InputMaybe<Scalars['String']['input']>;
-  date?: InputMaybe<Scalars['DateTimeISO']['input']>;
+  arrival_city: Scalars['String']['input'];
+  date: Scalars['DateTimeISO']['input'];
+  departure_city: Scalars['String']['input'];
 };
 
 
 export type QueryGetEarliestTripsArgs = {
-  arrival_city?: InputMaybe<Scalars['String']['input']>;
-  date?: InputMaybe<Scalars['DateTimeISO']['input']>;
+  arrival_city: Scalars['String']['input'];
+  date: Scalars['DateTimeISO']['input'];
+  departure_city: Scalars['String']['input'];
 };
 
 
@@ -73,8 +75,9 @@ export type QueryGetTripArgs = {
 
 
 export type QueryGetTripsByTimeArgs = {
-  arrival_city?: InputMaybe<Scalars['String']['input']>;
-  date?: InputMaybe<Scalars['DateTimeISO']['input']>;
+  arrival_city: Scalars['String']['input'];
+  date: Scalars['DateTimeISO']['input'];
+  departure_city: Scalars['String']['input'];
   time: Scalars['String']['input'];
 };
 
@@ -149,25 +152,28 @@ export type CreateTripMutationVariables = Exact<{
 export type CreateTripMutation = { __typename?: 'Mutation', createTrip: string };
 
 export type GetCheapestTripsQueryVariables = Exact<{
-  date?: InputMaybe<Scalars['DateTimeISO']['input']>;
-  arrivalCity?: InputMaybe<Scalars['String']['input']>;
+  date: Scalars['DateTimeISO']['input'];
+  arrivalCity: Scalars['String']['input'];
+  departureCity: Scalars['String']['input'];
 }>;
 
 
 export type GetCheapestTripsQuery = { __typename?: 'Query', getCheapestTrips: Array<{ __typename?: 'Trip', arrival_city: string, capacity: number, departure_city: string, departure_time: any, id: string, price: number, status: TripStatus, driver?: { __typename?: 'User', firstname: string, image: string, id: string } | null }> };
 
 export type GetEarliestTripsQueryVariables = Exact<{
-  date?: InputMaybe<Scalars['DateTimeISO']['input']>;
-  arrivalCity?: InputMaybe<Scalars['String']['input']>;
+  date: Scalars['DateTimeISO']['input'];
+  arrivalCity: Scalars['String']['input'];
+  departureCity: Scalars['String']['input'];
 }>;
 
 
 export type GetEarliestTripsQuery = { __typename?: 'Query', getEarliestTrips: Array<{ __typename?: 'Trip', arrival_city: string, capacity: number, departure_city: string, departure_time: any, id: string, price: number, status: TripStatus, driver?: { __typename?: 'User', firstname: string, image: string, id: string } | null }> };
 
 export type GetTripsByTimeQueryVariables = Exact<{
+  date: Scalars['DateTimeISO']['input'];
+  arrivalCity: Scalars['String']['input'];
+  departureCity: Scalars['String']['input'];
   time: Scalars['String']['input'];
-  arrivalCity?: InputMaybe<Scalars['String']['input']>;
-  date?: InputMaybe<Scalars['DateTimeISO']['input']>;
 }>;
 
 
@@ -218,8 +224,12 @@ export type CreateTripMutationHookResult = ReturnType<typeof useCreateTripMutati
 export type CreateTripMutationResult = Apollo.MutationResult<CreateTripMutation>;
 export type CreateTripMutationOptions = Apollo.BaseMutationOptions<CreateTripMutation, CreateTripMutationVariables>;
 export const GetCheapestTripsDocument = gql`
-    query GetCheapestTrips($date: DateTimeISO, $arrivalCity: String) {
-  getCheapestTrips(date: $date, arrival_city: $arrivalCity) {
+    query GetCheapestTrips($date: DateTimeISO!, $arrivalCity: String!, $departureCity: String!) {
+  getCheapestTrips(
+    date: $date
+    arrival_city: $arrivalCity
+    departure_city: $departureCity
+  ) {
     arrival_city
     capacity
     departure_city
@@ -250,10 +260,11 @@ export const GetCheapestTripsDocument = gql`
  *   variables: {
  *      date: // value for 'date'
  *      arrivalCity: // value for 'arrivalCity'
+ *      departureCity: // value for 'departureCity'
  *   },
  * });
  */
-export function useGetCheapestTripsQuery(baseOptions?: Apollo.QueryHookOptions<GetCheapestTripsQuery, GetCheapestTripsQueryVariables>) {
+export function useGetCheapestTripsQuery(baseOptions: Apollo.QueryHookOptions<GetCheapestTripsQuery, GetCheapestTripsQueryVariables> & ({ variables: GetCheapestTripsQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
         const options = {...defaultOptions, ...baseOptions}
         return Apollo.useQuery<GetCheapestTripsQuery, GetCheapestTripsQueryVariables>(GetCheapestTripsDocument, options);
       }
@@ -270,8 +281,12 @@ export type GetCheapestTripsLazyQueryHookResult = ReturnType<typeof useGetCheape
 export type GetCheapestTripsSuspenseQueryHookResult = ReturnType<typeof useGetCheapestTripsSuspenseQuery>;
 export type GetCheapestTripsQueryResult = Apollo.QueryResult<GetCheapestTripsQuery, GetCheapestTripsQueryVariables>;
 export const GetEarliestTripsDocument = gql`
-    query GetEarliestTrips($date: DateTimeISO, $arrivalCity: String) {
-  getEarliestTrips(date: $date, arrival_city: $arrivalCity) {
+    query GetEarliestTrips($date: DateTimeISO!, $arrivalCity: String!, $departureCity: String!) {
+  getEarliestTrips(
+    date: $date
+    arrival_city: $arrivalCity
+    departure_city: $departureCity
+  ) {
     arrival_city
     capacity
     departure_city
@@ -302,10 +317,11 @@ export const GetEarliestTripsDocument = gql`
  *   variables: {
  *      date: // value for 'date'
  *      arrivalCity: // value for 'arrivalCity'
+ *      departureCity: // value for 'departureCity'
  *   },
  * });
  */
-export function useGetEarliestTripsQuery(baseOptions?: Apollo.QueryHookOptions<GetEarliestTripsQuery, GetEarliestTripsQueryVariables>) {
+export function useGetEarliestTripsQuery(baseOptions: Apollo.QueryHookOptions<GetEarliestTripsQuery, GetEarliestTripsQueryVariables> & ({ variables: GetEarliestTripsQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
         const options = {...defaultOptions, ...baseOptions}
         return Apollo.useQuery<GetEarliestTripsQuery, GetEarliestTripsQueryVariables>(GetEarliestTripsDocument, options);
       }
@@ -322,8 +338,13 @@ export type GetEarliestTripsLazyQueryHookResult = ReturnType<typeof useGetEarlie
 export type GetEarliestTripsSuspenseQueryHookResult = ReturnType<typeof useGetEarliestTripsSuspenseQuery>;
 export type GetEarliestTripsQueryResult = Apollo.QueryResult<GetEarliestTripsQuery, GetEarliestTripsQueryVariables>;
 export const GetTripsByTimeDocument = gql`
-    query GetTripsByTime($time: String!, $arrivalCity: String, $date: DateTimeISO) {
-  getTripsByTime(time: $time, date: $date, arrival_city: $arrivalCity) {
+    query GetTripsByTime($date: DateTimeISO!, $arrivalCity: String!, $departureCity: String!, $time: String!) {
+  getTripsByTime(
+    date: $date
+    arrival_city: $arrivalCity
+    departure_city: $departureCity
+    time: $time
+  ) {
     arrival_city
     capacity
     departure_city
@@ -352,9 +373,10 @@ export const GetTripsByTimeDocument = gql`
  * @example
  * const { data, loading, error } = useGetTripsByTimeQuery({
  *   variables: {
- *      time: // value for 'time'
- *      arrivalCity: // value for 'arrivalCity'
  *      date: // value for 'date'
+ *      arrivalCity: // value for 'arrivalCity'
+ *      departureCity: // value for 'departureCity'
+ *      time: // value for 'time'
  *   },
  * });
  */

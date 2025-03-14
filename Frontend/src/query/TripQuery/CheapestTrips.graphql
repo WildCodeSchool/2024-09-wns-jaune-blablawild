@@ -1,5 +1,5 @@
-query GetCheapestTrips($date: DateTimeISO, $arrivalCity: String) {
-  getCheapestTrips(date: $date, arrival_city: $arrivalCity) {
+query GetCheapestTrips($date: DateTimeISO!, $arrivalCity: String!, $departureCity: String!) {
+  getCheapestTrips(date: $date, arrival_city: $arrivalCity, departure_city: $departureCity) {
     arrival_city
     capacity
     departure_city
