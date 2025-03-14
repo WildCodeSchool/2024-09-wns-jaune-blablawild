@@ -3,6 +3,7 @@ import { Button } from "../ui/button";
 import { FormItem } from "../ui/form";
 import { useFormContext } from "react-hook-form";
 import { Input } from "../ui/input";
+import { Minus, Plus } from "lucide-react";
 
 export default function NumberPassengers() {
   const { register, setValue, watch } = useFormContext();
@@ -21,29 +22,19 @@ export default function NumberPassengers() {
       </h1>
       <FormItem>
         <div className="flex items-center gap-10">
-          <Button
-            type="button"
-            variant="default"
-            size="icon"
-            className="text-6xl text-ring border-none bg-background shadow-none hover:bg-transparent " //recentrer l'icone
+          <Minus
+            color="black"
             onClick={() =>
               setNumberPassengers((prev: number) => Math.max(0, prev - 1))
             }
-          >
-            -
-          </Button>
+          />
           <p className="font-bold text-2xl text-foreground m-10">
             {numberPassengers}
           </p>
-          <Button
-            type="button"
-            variant="default"
-            size="icon"
-            className="text-6xl text-ring border-none bg-background shadow-none hover:bg-transparent" //recentrer l'icone
+          <Plus
+            color="black"
             onClick={() => setNumberPassengers((prev: number) => prev + 1)}
-          >
-            +
-          </Button>
+          />
         </div>
         <Input type="hidden" {...register("passengers")} />
       </FormItem>
