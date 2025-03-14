@@ -1,4 +1,4 @@
-import { useGetPopularTripQuery } from "@/graphql/hooks";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import {
   Carousel,
@@ -7,10 +7,10 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
-import { Button } from "@/components/ui/button";
+import { useGetPopularTripQuery } from "@/graphql/hooks";
 import { displayPictureCity } from "@/utils/DisplayCityPictures";
-import { useLocation, useNavigate } from "react-router-dom";
 import { formatISO } from "date-fns";
+import { useLocation, useNavigate } from "react-router-dom";
 
 type TripPopular = {
   id: string;
@@ -37,6 +37,12 @@ export default function CarrouselTrip() {
     navigate(`/search-result?${params.toString()}`);
   };
 
+  const getCarouselItemClass = (totalItems: number) => {
+    if (totalItems === 1) return "basis-full";
+    if (totalItems === 2) return "basis-1/2";
+    return "md:basis-1/2 lg:basis-1/3";
+  };
+
   return (
     <section className="flex flex-col items-center w-full gap-15">
       <h1 className="md:text-3xl text-2xl text-center font-semibold">
@@ -45,12 +51,16 @@ export default function CarrouselTrip() {
       <Carousel
         opts={{
           align: "start",
+          loop: true,
         }}
-        className="max-w-2/3 md:max-w-[90%]"
+        className="max-w-2/3 md:max-w-[90%] w-full"
       >
         <CarouselContent>
           {data?.getPopularTrip.map((trip, index) => (
-            <CarouselItem key={index} className="md:basis-1/2 lg:basis-1/3">
+            <CarouselItem
+              key={trip.id}
+              className={getCarouselItemClass(data.getPopularTrip.length)}
+            >
               <div className="p-1">
                 <Card className="w-full relative">
                   <CardContent className="relative flex flex-col md:h-[33rem] h-[25rem] items-center justify-end p-6 gap-8 overflow-hidden rounded-[15px]">
