@@ -91,7 +91,7 @@ export default function SearchBar({ path }: SearchBarProps) {
           <Input
             type="text"
             placeholder="Arrivée"
-            className="flex-1 md:text-md m-0 p-0 shadow-none border-none placeholder:text-foreground placeholder:opacity-70 focus-visible:ring-0"
+            className="flex-1 md:text-md  text-accent m-0 p-0 shadow-none border-none placeholder:text-foreground placeholder:opacity-70 focus-visible:ring-0"
             value={arrivalCity}
             onChange={(e) => setArrivalCity(e.target.value)}
           />

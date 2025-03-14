@@ -111,7 +111,7 @@ export default function SearchTrip() {
 
   return (
     <section className="h-screen w-screen">
-      <section className="relative w-full h-[40vh] flex justify-center items-center">
+      <section className="relative w-full h-[55vh] flex justify-center items-center">
         <img
           src="/searchTripImg.png"
           alt="Main picture on search trip details"
