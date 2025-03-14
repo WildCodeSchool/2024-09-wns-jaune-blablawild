@@ -24,8 +24,11 @@ export class CreateTripInput {
   @Field()
   price!: number;
 
+  @Field({nullable: true}) // remettre a obligatoire quand création user 
+  driverId?: string;
+
   @Field()
-  driverId!: string;
+  capacity!: number; 
 }
 
 @InputType()

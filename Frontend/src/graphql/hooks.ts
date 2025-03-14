@@ -20,9 +20,10 @@ export type Scalars = {
 
 export type CreateTripInput = {
   arrival_city: Scalars['String']['input'];
+  capacity: Scalars['Float']['input'];
   departure_city: Scalars['String']['input'];
   departure_time: Scalars['DateTimeISO']['input'];
-  driverId: Scalars['String']['input'];
+  driverId?: InputMaybe<Scalars['String']['input']>;
   price: Scalars['Float']['input'];
 };
 
@@ -103,7 +104,7 @@ export type Trip = {
   capacity: Scalars['Float']['output'];
   departure_city: Scalars['String']['output'];
   departure_time: Scalars['DateTimeISO']['output'];
-  driver: User;
+  driver?: Maybe<User>;
   id: Scalars['ID']['output'];
   passengers?: Maybe<Array<User>>;
   price: Scalars['Float']['output'];
@@ -147,7 +148,14 @@ export type GetTripQueryVariables = Exact<{
 }>;
 
 
-export type GetTripQuery = { __typename?: 'Query', getTrip: Array<{ __typename?: 'Trip', id: string, departure_time: any, departure_city: string, arrival_city: string, price: number, driver: { __typename?: 'User', id: string, firstname: string, lastname: string }, passengers?: Array<{ __typename?: 'User', id: string, firstname: string, lastname: string }> | null }> };
+export type GetTripQuery = { __typename?: 'Query', getTrip: Array<{ __typename?: 'Trip', id: string, departure_time: any, departure_city: string, arrival_city: string, price: number, driver?: { __typename?: 'User', id: string, firstname: string, lastname: string } | null, passengers?: Array<{ __typename?: 'User', id: string, firstname: string, lastname: string }> | null }> };
+
+export type CreateTripMutationVariables = Exact<{
+  data: CreateTripInput;
+}>;
+
+
+export type CreateTripMutation = { __typename?: 'Mutation', createTrip: string };
 
 
 export const GetPopularTripDocument = gql`
@@ -246,3 +254,34 @@ export type GetTripQueryHookResult = ReturnType<typeof useGetTripQuery>;
 export type GetTripLazyQueryHookResult = ReturnType<typeof useGetTripLazyQuery>;
 export type GetTripSuspenseQueryHookResult = ReturnType<typeof useGetTripSuspenseQuery>;
 export type GetTripQueryResult = Apollo.QueryResult<GetTripQuery, GetTripQueryVariables>;
+export const CreateTripDocument = gql`
+    mutation CreateTrip($data: CreateTripInput!) {
+  createTrip(data: $data)
+}
+    `;
+export type CreateTripMutationFn = Apollo.MutationFunction<CreateTripMutation, CreateTripMutationVariables>;
+
+/**
+ * __useCreateTripMutation__
+ *
+ * To run a mutation, you first call `useCreateTripMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateTripMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createTripMutation, { data, loading, error }] = useCreateTripMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useCreateTripMutation(baseOptions?: Apollo.MutationHookOptions<CreateTripMutation, CreateTripMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateTripMutation, CreateTripMutationVariables>(CreateTripDocument, options);
+      }
+export type CreateTripMutationHookResult = ReturnType<typeof useCreateTripMutation>;
+export type CreateTripMutationResult = Apollo.MutationResult<CreateTripMutation>;
+export type CreateTripMutationOptions = Apollo.BaseMutationOptions<CreateTripMutation, CreateTripMutationVariables>;
