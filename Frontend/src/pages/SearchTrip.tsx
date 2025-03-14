@@ -43,27 +43,38 @@ export default function SearchTrip() {
     skip: currentSort !== null || currentTimeRange !== null,
   });
 
+  const dateComponents = params.date.split('T')[0];
+  const utcDate = `${dateComponents}T00:00:00Z`;
+
   const { data: cheapestTrips, loading: loadingCheapestTrips } =
-    useGetCheapestTripsQuery({
-      variables: { arrivalCity: data.arrival },
-      skip: currentSort !== "cheapest",
-    });
+  useGetCheapestTripsQuery({
+    variables: { 
+      arrivalCity: data.arrival,
+      date: utcDate
+    },
+    skip: currentSort !== "cheapest",
+  });
 
-  const { data: earliestTrips, loading: loadingEarliestTrips } =
-    useGetEarliestTripsQuery({
-      variables: { arrivalCity: data.arrival },
-      skip: currentSort !== "earliest",
-    });
+const { data: earliestTrips, loading: loadingEarliestTrips } =
+  useGetEarliestTripsQuery({
+    variables: { 
+      arrivalCity: data.arrival,
+      date: utcDate
+    },
+    skip: currentSort !== "earliest",
+  });
 
-  const { data: timeRangeTripData, loading: loadingTimeRangeTrip } =
-    useGetTripsByTimeQuery({
-      variables: {
-        time: currentTimeRange || "",
-        arrivalCity: data.arrival,
-      },
-      skip: currentTimeRange === null,
-    });
+const { data: timeRangeTripData, loading: loadingTimeRangeTrip } =
+  useGetTripsByTimeQuery({
+    variables: {
+      time: currentTimeRange || "",
+      arrivalCity: data.arrival,
 
+      date: utcDate
+    },
+    skip: currentTimeRange === null,
+  });
+  
   let tripsToShow = [];
   let isLoading = false;
 

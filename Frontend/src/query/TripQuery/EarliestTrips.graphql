@@ -1,15 +1,16 @@
-query GetEarliestTrips($arrivalCity: String) {
-  getEarliestTrips(arrival_city: $arrivalCity) {
-    capacity
+query GetEarliestTrips($date: DateTimeISO, $arrivalCity: String) {
+  getEarliestTrips(date: $date, arrival_city: $arrivalCity) {
     arrival_city
+    capacity
     departure_city
     departure_time
     id
     price
     driver {
       firstname
-      id
       image
+      id
     }
+    status
   }
 }

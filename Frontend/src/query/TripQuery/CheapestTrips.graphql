@@ -1,15 +1,16 @@
-query GetCheapestTrips($arrivalCity: String) {
-  getCheapestTrips(arrival_city: $arrivalCity) {
-    id
+query GetCheapestTrips($date: DateTimeISO, $arrivalCity: String) {
+  getCheapestTrips(date: $date, arrival_city: $arrivalCity) {
     arrival_city
-    departure_city
-    price
     capacity
+    departure_city
     departure_time
+    id
+    price
     driver {
       firstname
-      id
       image
+      id
     }
+    status
   }
 }

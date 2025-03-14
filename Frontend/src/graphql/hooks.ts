@@ -57,11 +57,13 @@ export type Query = {
 
 export type QueryGetCheapestTripsArgs = {
   arrival_city?: InputMaybe<Scalars['String']['input']>;
+  date?: InputMaybe<Scalars['DateTimeISO']['input']>;
 };
 
 
 export type QueryGetEarliestTripsArgs = {
   arrival_city?: InputMaybe<Scalars['String']['input']>;
+  date?: InputMaybe<Scalars['DateTimeISO']['input']>;
 };
 
 
@@ -72,6 +74,7 @@ export type QueryGetTripArgs = {
 
 export type QueryGetTripsByTimeArgs = {
   arrival_city?: InputMaybe<Scalars['String']['input']>;
+  date?: InputMaybe<Scalars['DateTimeISO']['input']>;
   time: Scalars['String']['input'];
 };
 
@@ -138,6 +141,38 @@ export type User = {
   transaction_sent?: Maybe<Array<Transaction>>;
 };
 
+export type CreateTripMutationVariables = Exact<{
+  data: CreateTripInput;
+}>;
+
+
+export type CreateTripMutation = { __typename?: 'Mutation', createTrip: string };
+
+export type GetCheapestTripsQueryVariables = Exact<{
+  date?: InputMaybe<Scalars['DateTimeISO']['input']>;
+  arrivalCity?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type GetCheapestTripsQuery = { __typename?: 'Query', getCheapestTrips: Array<{ __typename?: 'Trip', arrival_city: string, capacity: number, departure_city: string, departure_time: any, id: string, price: number, status: TripStatus, driver?: { __typename?: 'User', firstname: string, image: string, id: string } | null }> };
+
+export type GetEarliestTripsQueryVariables = Exact<{
+  date?: InputMaybe<Scalars['DateTimeISO']['input']>;
+  arrivalCity?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type GetEarliestTripsQuery = { __typename?: 'Query', getEarliestTrips: Array<{ __typename?: 'Trip', arrival_city: string, capacity: number, departure_city: string, departure_time: any, id: string, price: number, status: TripStatus, driver?: { __typename?: 'User', firstname: string, image: string, id: string } | null }> };
+
+export type GetTripsByTimeQueryVariables = Exact<{
+  time: Scalars['String']['input'];
+  arrivalCity?: InputMaybe<Scalars['String']['input']>;
+  date?: InputMaybe<Scalars['DateTimeISO']['input']>;
+}>;
+
+
+export type GetTripsByTimeQuery = { __typename?: 'Query', getTripsByTime: Array<{ __typename?: 'Trip', arrival_city: string, capacity: number, departure_city: string, departure_time: any, id: string, price: number, status: TripStatus, driver?: { __typename?: 'User', firstname: string, image: string, id: string } | null }> };
+
 export type GetPopularTripQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -150,36 +185,195 @@ export type GetTripQueryVariables = Exact<{
 
 export type GetTripQuery = { __typename?: 'Query', getTrip: Array<{ __typename?: 'Trip', id: string, departure_time: any, departure_city: string, arrival_city: string, price: number, driver?: { __typename?: 'User', id: string, firstname: string, lastname: string } | null, passengers?: Array<{ __typename?: 'User', id: string, firstname: string, lastname: string }> | null }> };
 
-export type CreateTripMutationVariables = Exact<{
-  data: CreateTripInput;
-}>;
 
+export const CreateTripDocument = gql`
+    mutation CreateTrip($data: CreateTripInput!) {
+  createTrip(data: $data)
+}
+    `;
+export type CreateTripMutationFn = Apollo.MutationFunction<CreateTripMutation, CreateTripMutationVariables>;
 
-export type CreateTripMutation = { __typename?: 'Mutation', createTrip: string };
+/**
+ * __useCreateTripMutation__
+ *
+ * To run a mutation, you first call `useCreateTripMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateTripMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createTripMutation, { data, loading, error }] = useCreateTripMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useCreateTripMutation(baseOptions?: Apollo.MutationHookOptions<CreateTripMutation, CreateTripMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateTripMutation, CreateTripMutationVariables>(CreateTripDocument, options);
+      }
+export type CreateTripMutationHookResult = ReturnType<typeof useCreateTripMutation>;
+export type CreateTripMutationResult = Apollo.MutationResult<CreateTripMutation>;
+export type CreateTripMutationOptions = Apollo.BaseMutationOptions<CreateTripMutation, CreateTripMutationVariables>;
+export const GetCheapestTripsDocument = gql`
+    query GetCheapestTrips($date: DateTimeISO, $arrivalCity: String) {
+  getCheapestTrips(date: $date, arrival_city: $arrivalCity) {
+    arrival_city
+    capacity
+    departure_city
+    departure_time
+    id
+    price
+    driver {
+      firstname
+      image
+      id
+    }
+    status
+  }
+}
+    `;
 
-export type GetCheapestTripsQueryVariables = Exact<{
-  arrivalCity?: InputMaybe<Scalars['String']['input']>;
-}>;
+/**
+ * __useGetCheapestTripsQuery__
+ *
+ * To run a query within a React component, call `useGetCheapestTripsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetCheapestTripsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetCheapestTripsQuery({
+ *   variables: {
+ *      date: // value for 'date'
+ *      arrivalCity: // value for 'arrivalCity'
+ *   },
+ * });
+ */
+export function useGetCheapestTripsQuery(baseOptions?: Apollo.QueryHookOptions<GetCheapestTripsQuery, GetCheapestTripsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetCheapestTripsQuery, GetCheapestTripsQueryVariables>(GetCheapestTripsDocument, options);
+      }
+export function useGetCheapestTripsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetCheapestTripsQuery, GetCheapestTripsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetCheapestTripsQuery, GetCheapestTripsQueryVariables>(GetCheapestTripsDocument, options);
+        }
+export function useGetCheapestTripsSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetCheapestTripsQuery, GetCheapestTripsQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetCheapestTripsQuery, GetCheapestTripsQueryVariables>(GetCheapestTripsDocument, options);
+        }
+export type GetCheapestTripsQueryHookResult = ReturnType<typeof useGetCheapestTripsQuery>;
+export type GetCheapestTripsLazyQueryHookResult = ReturnType<typeof useGetCheapestTripsLazyQuery>;
+export type GetCheapestTripsSuspenseQueryHookResult = ReturnType<typeof useGetCheapestTripsSuspenseQuery>;
+export type GetCheapestTripsQueryResult = Apollo.QueryResult<GetCheapestTripsQuery, GetCheapestTripsQueryVariables>;
+export const GetEarliestTripsDocument = gql`
+    query GetEarliestTrips($date: DateTimeISO, $arrivalCity: String) {
+  getEarliestTrips(date: $date, arrival_city: $arrivalCity) {
+    arrival_city
+    capacity
+    departure_city
+    departure_time
+    id
+    price
+    driver {
+      firstname
+      image
+      id
+    }
+    status
+  }
+}
+    `;
 
+/**
+ * __useGetEarliestTripsQuery__
+ *
+ * To run a query within a React component, call `useGetEarliestTripsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetEarliestTripsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetEarliestTripsQuery({
+ *   variables: {
+ *      date: // value for 'date'
+ *      arrivalCity: // value for 'arrivalCity'
+ *   },
+ * });
+ */
+export function useGetEarliestTripsQuery(baseOptions?: Apollo.QueryHookOptions<GetEarliestTripsQuery, GetEarliestTripsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetEarliestTripsQuery, GetEarliestTripsQueryVariables>(GetEarliestTripsDocument, options);
+      }
+export function useGetEarliestTripsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetEarliestTripsQuery, GetEarliestTripsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetEarliestTripsQuery, GetEarliestTripsQueryVariables>(GetEarliestTripsDocument, options);
+        }
+export function useGetEarliestTripsSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetEarliestTripsQuery, GetEarliestTripsQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetEarliestTripsQuery, GetEarliestTripsQueryVariables>(GetEarliestTripsDocument, options);
+        }
+export type GetEarliestTripsQueryHookResult = ReturnType<typeof useGetEarliestTripsQuery>;
+export type GetEarliestTripsLazyQueryHookResult = ReturnType<typeof useGetEarliestTripsLazyQuery>;
+export type GetEarliestTripsSuspenseQueryHookResult = ReturnType<typeof useGetEarliestTripsSuspenseQuery>;
+export type GetEarliestTripsQueryResult = Apollo.QueryResult<GetEarliestTripsQuery, GetEarliestTripsQueryVariables>;
+export const GetTripsByTimeDocument = gql`
+    query GetTripsByTime($time: String!, $arrivalCity: String, $date: DateTimeISO) {
+  getTripsByTime(time: $time, date: $date, arrival_city: $arrivalCity) {
+    arrival_city
+    capacity
+    departure_city
+    departure_time
+    id
+    price
+    driver {
+      firstname
+      image
+      id
+    }
+    status
+  }
+}
+    `;
 
-export type GetCheapestTripsQuery = { __typename?: 'Query', getCheapestTrips: Array<{ __typename?: 'Trip', id: string, arrival_city: string, departure_city: string, price: number, capacity: number, departure_time: any, driver: { __typename?: 'User', firstname: string, id: string, image: string } }> };
-
-export type GetEarliestTripsQueryVariables = Exact<{
-  arrivalCity?: InputMaybe<Scalars['String']['input']>;
-}>;
-
-
-export type GetEarliestTripsQuery = { __typename?: 'Query', getEarliestTrips: Array<{ __typename?: 'Trip', capacity: number, arrival_city: string, departure_city: string, departure_time: any, id: string, price: number, driver: { __typename?: 'User', firstname: string, id: string, image: string } }> };
-
-export type GetTripsByTimeQueryVariables = Exact<{
-  time: Scalars['String']['input'];
-  arrivalCity?: InputMaybe<Scalars['String']['input']>;
-}>;
-
-
-export type GetTripsByTimeQuery = { __typename?: 'Query', getTripsByTime: Array<{ __typename?: 'Trip', arrival_city: string, capacity: number, departure_city: string, departure_time: any, id: string, price: number, driver: { __typename?: 'User', id: string, image: string, firstname: string } }> };
-
-
+/**
+ * __useGetTripsByTimeQuery__
+ *
+ * To run a query within a React component, call `useGetTripsByTimeQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetTripsByTimeQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetTripsByTimeQuery({
+ *   variables: {
+ *      time: // value for 'time'
+ *      arrivalCity: // value for 'arrivalCity'
+ *      date: // value for 'date'
+ *   },
+ * });
+ */
+export function useGetTripsByTimeQuery(baseOptions: Apollo.QueryHookOptions<GetTripsByTimeQuery, GetTripsByTimeQueryVariables> & ({ variables: GetTripsByTimeQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetTripsByTimeQuery, GetTripsByTimeQueryVariables>(GetTripsByTimeDocument, options);
+      }
+export function useGetTripsByTimeLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetTripsByTimeQuery, GetTripsByTimeQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetTripsByTimeQuery, GetTripsByTimeQueryVariables>(GetTripsByTimeDocument, options);
+        }
+export function useGetTripsByTimeSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetTripsByTimeQuery, GetTripsByTimeQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetTripsByTimeQuery, GetTripsByTimeQueryVariables>(GetTripsByTimeDocument, options);
+        }
+export type GetTripsByTimeQueryHookResult = ReturnType<typeof useGetTripsByTimeQuery>;
+export type GetTripsByTimeLazyQueryHookResult = ReturnType<typeof useGetTripsByTimeLazyQuery>;
+export type GetTripsByTimeSuspenseQueryHookResult = ReturnType<typeof useGetTripsByTimeSuspenseQuery>;
+export type GetTripsByTimeQueryResult = Apollo.QueryResult<GetTripsByTimeQuery, GetTripsByTimeQueryVariables>;
 export const GetPopularTripDocument = gql`
     query GetPopularTrip {
   getPopularTrip {
@@ -276,185 +470,3 @@ export type GetTripQueryHookResult = ReturnType<typeof useGetTripQuery>;
 export type GetTripLazyQueryHookResult = ReturnType<typeof useGetTripLazyQuery>;
 export type GetTripSuspenseQueryHookResult = ReturnType<typeof useGetTripSuspenseQuery>;
 export type GetTripQueryResult = Apollo.QueryResult<GetTripQuery, GetTripQueryVariables>;
-export const GetCheapestTripsDocument = gql`
-    query GetCheapestTrips($arrivalCity: String) {
-  getCheapestTrips(arrival_city: $arrivalCity) {
-    id
-    arrival_city
-    departure_city
-    price
-    capacity
-    departure_time
-    driver {
-      firstname
-      id
-      image
-    }
-  }
-}
-    `;
-
-/**
- * __useGetCheapestTripsQuery__
- *
- * To run a query within a React component, call `useGetCheapestTripsQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetCheapestTripsQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetCheapestTripsQuery({
- *   variables: {
- *      arrivalCity: // value for 'arrivalCity'
- *   },
- * });
- */
-export function useGetCheapestTripsQuery(baseOptions?: Apollo.QueryHookOptions<GetCheapestTripsQuery, GetCheapestTripsQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<GetCheapestTripsQuery, GetCheapestTripsQueryVariables>(GetCheapestTripsDocument, options);
-      }
-export function useGetCheapestTripsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetCheapestTripsQuery, GetCheapestTripsQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<GetCheapestTripsQuery, GetCheapestTripsQueryVariables>(GetCheapestTripsDocument, options);
-        }
-export function useGetCheapestTripsSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetCheapestTripsQuery, GetCheapestTripsQueryVariables>) {
-          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
-          return Apollo.useSuspenseQuery<GetCheapestTripsQuery, GetCheapestTripsQueryVariables>(GetCheapestTripsDocument, options);
-        }
-export type GetCheapestTripsQueryHookResult = ReturnType<typeof useGetCheapestTripsQuery>;
-export type GetCheapestTripsLazyQueryHookResult = ReturnType<typeof useGetCheapestTripsLazyQuery>;
-export type GetCheapestTripsSuspenseQueryHookResult = ReturnType<typeof useGetCheapestTripsSuspenseQuery>;
-export type GetCheapestTripsQueryResult = Apollo.QueryResult<GetCheapestTripsQuery, GetCheapestTripsQueryVariables>;
-export const GetEarliestTripsDocument = gql`
-    query GetEarliestTrips($arrivalCity: String) {
-  getEarliestTrips(arrival_city: $arrivalCity) {
-    capacity
-    arrival_city
-    departure_city
-    departure_time
-    id
-    price
-    driver {
-      firstname
-      id
-      image
-    }
-  }
-}
-    `;
-
-/**
- * __useGetEarliestTripsQuery__
- *
- * To run a query within a React component, call `useGetEarliestTripsQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetEarliestTripsQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetEarliestTripsQuery({
- *   variables: {
- *      arrivalCity: // value for 'arrivalCity'
- *   },
- * });
- */
-export function useGetEarliestTripsQuery(baseOptions?: Apollo.QueryHookOptions<GetEarliestTripsQuery, GetEarliestTripsQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<GetEarliestTripsQuery, GetEarliestTripsQueryVariables>(GetEarliestTripsDocument, options);
-      }
-export function useGetEarliestTripsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetEarliestTripsQuery, GetEarliestTripsQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<GetEarliestTripsQuery, GetEarliestTripsQueryVariables>(GetEarliestTripsDocument, options);
-        }
-export function useGetEarliestTripsSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetEarliestTripsQuery, GetEarliestTripsQueryVariables>) {
-          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
-          return Apollo.useSuspenseQuery<GetEarliestTripsQuery, GetEarliestTripsQueryVariables>(GetEarliestTripsDocument, options);
-        }
-export type GetEarliestTripsQueryHookResult = ReturnType<typeof useGetEarliestTripsQuery>;
-export type GetEarliestTripsLazyQueryHookResult = ReturnType<typeof useGetEarliestTripsLazyQuery>;
-export type GetEarliestTripsSuspenseQueryHookResult = ReturnType<typeof useGetEarliestTripsSuspenseQuery>;
-export type GetEarliestTripsQueryResult = Apollo.QueryResult<GetEarliestTripsQuery, GetEarliestTripsQueryVariables>;
-export const GetTripsByTimeDocument = gql`
-    query GetTripsByTime($time: String!, $arrivalCity: String) {
-  getTripsByTime(time: $time, arrival_city: $arrivalCity) {
-    arrival_city
-    capacity
-    departure_city
-    departure_time
-    id
-    price
-    driver {
-      id
-      image
-      firstname
-    }
-  }
-}
-    `;
-
-/**
- * __useGetTripsByTimeQuery__
- *
- * To run a query within a React component, call `useGetTripsByTimeQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetTripsByTimeQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetTripsByTimeQuery({
- *   variables: {
- *      time: // value for 'time'
- *      arrivalCity: // value for 'arrivalCity'
- *   },
- * });
- */
-export function useGetTripsByTimeQuery(baseOptions: Apollo.QueryHookOptions<GetTripsByTimeQuery, GetTripsByTimeQueryVariables> & ({ variables: GetTripsByTimeQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<GetTripsByTimeQuery, GetTripsByTimeQueryVariables>(GetTripsByTimeDocument, options);
-      }
-export function useGetTripsByTimeLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetTripsByTimeQuery, GetTripsByTimeQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<GetTripsByTimeQuery, GetTripsByTimeQueryVariables>(GetTripsByTimeDocument, options);
-        }
-export function useGetTripsByTimeSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetTripsByTimeQuery, GetTripsByTimeQueryVariables>) {
-          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
-          return Apollo.useSuspenseQuery<GetTripsByTimeQuery, GetTripsByTimeQueryVariables>(GetTripsByTimeDocument, options);
-        }
-export type GetTripsByTimeQueryHookResult = ReturnType<typeof useGetTripsByTimeQuery>;
-export type GetTripsByTimeLazyQueryHookResult = ReturnType<typeof useGetTripsByTimeLazyQuery>;
-export type GetTripsByTimeSuspenseQueryHookResult = ReturnType<typeof useGetTripsByTimeSuspenseQuery>;
-export type GetTripsByTimeQueryResult = Apollo.QueryResult<GetTripsByTimeQuery, GetTripsByTimeQueryVariables>;
-export const CreateTripDocument = gql`
-    mutation CreateTrip($data: CreateTripInput!) {
-  createTrip(data: $data)
-}
-    `;
-export type CreateTripMutationFn = Apollo.MutationFunction<CreateTripMutation, CreateTripMutationVariables>;
-
-/**
- * __useCreateTripMutation__
- *
- * To run a mutation, you first call `useCreateTripMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useCreateTripMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [createTripMutation, { data, loading, error }] = useCreateTripMutation({
- *   variables: {
- *      data: // value for 'data'
- *   },
- * });
- */
-export function useCreateTripMutation(baseOptions?: Apollo.MutationHookOptions<CreateTripMutation, CreateTripMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<CreateTripMutation, CreateTripMutationVariables>(CreateTripDocument, options);
-      }
-export type CreateTripMutationHookResult = ReturnType<typeof useCreateTripMutation>;
-export type CreateTripMutationResult = Apollo.MutationResult<CreateTripMutation>;
-export type CreateTripMutationOptions = Apollo.BaseMutationOptions<CreateTripMutation, CreateTripMutationVariables>;

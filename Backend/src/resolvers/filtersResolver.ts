@@ -13,10 +13,26 @@ enum TimeOption {
 export class FiltersResolver {
   @Query(() => [Trip])
   async getCheapestTrips(
-    @Arg("arrival_city", { nullable: true }) arrival_city?: string
+    @Arg("arrival_city", { nullable: true }) arrival_city?: string,
+    @Arg("date", { nullable: true }) date?: Date
   ) {
-    const where: FindOptionsWhere<Trip> = arrival_city ? { arrival_city } : {};
-
+    const where: FindOptionsWhere<Trip> = {};
+    
+    if (arrival_city) {
+      where.arrival_city = arrival_city;
+    }
+    
+    if (date) {
+      const dateStr = date.toISOString();
+      const [fullDate] = dateStr.split('T');
+      const [year, month, day] = fullDate.split('-').map(Number);
+      
+      const startDate = new Date(year, month - 1, day, 0, 0, 0);
+      const endDate = new Date(year, month - 1, day, 23, 59, 59, 999);
+      
+      where.departure_time = Between(startDate, endDate);
+    }
+    
     const trips = await Trip.find({
       where,
       order: {
@@ -31,10 +47,26 @@ export class FiltersResolver {
 
   @Query(() => [Trip])
   async getEarliestTrips(
-    @Arg("arrival_city", { nullable: true }) arrival_city?: string
+    @Arg("arrival_city", { nullable: true }) arrival_city?: string,
+    @Arg("date", { nullable: true }) date?: Date
   ) {
-    const where: FindOptionsWhere<Trip> = arrival_city ? { arrival_city } : {};
-
+    const where: FindOptionsWhere<Trip> = {};
+    
+    if (arrival_city) {
+      where.arrival_city = arrival_city;
+    }
+    
+    if (date) {
+      const dateStr = date.toISOString();
+      const [fullDate] = dateStr.split('T');
+      const [year, month, day] = fullDate.split('-').map(Number);
+      
+      const startDate = new Date(year, month - 1, day, 0, 0, 0);
+      const endDate = new Date(year, month - 1, day, 23, 59, 59, 999);
+      
+      where.departure_time = Between(startDate, endDate);
+    }
+    
     const trips = await Trip.find({
       where,
       order: {
@@ -50,36 +82,74 @@ export class FiltersResolver {
   @Query(() => [Trip])
   async getTripsByTime(
     @Arg("time", { nullable: false }) time: TimeOption,
-    @Arg("arrival_city", { nullable: true }) arrival_city?: string
+    @Arg("arrival_city", { nullable: true }) arrival_city?: string,
+    @Arg("date", { nullable: true }) date?: Date
   ) {
-    const where: FindOptionsWhere<Trip> = arrival_city ? { arrival_city } : {};
-
+    let where: FindOptionsWhere<Trip> = {};
+    
+    if (arrival_city) {
+      where.arrival_city = arrival_city;
+    }
+    
+    let startOfDay: Date | undefined;
+    let endOfDay: Date | undefined;
+    
+    if (date) {
+      const dateStr = date.toISOString();
+      const [fullDate] = dateStr.split('T');
+      const [year, month, day] = fullDate.split('-').map(Number);
+      
+      startOfDay = new Date(year, month - 1, day, 0, 0, 0);
+      endOfDay = new Date(year, month - 1, day, 23, 59, 59, 999);
+    }
+    
     const getTimeForHour = (hour: number): Date => {
-      const date = new Date();
-      date.setHours(hour, 0, 0, 0);
-      return date;
+      if (!date) {
+        const now = new Date();
+        const year = now.getFullYear();
+        const month = now.getMonth();
+        const day = now.getDate();
+        return new Date(year, month, day, hour, 0, 0);
+      }
+      
+      const dateStr = date.toISOString();
+      const [fullDate] = dateStr.split('T');
+      const [year, month, day] = fullDate.split('-').map(Number);
+      
+      return new Date(year, month - 1, day, hour, 0, 0);
     };
-
+    
+    let finalWhere: FindOptionsWhere<Trip> = { ...where };
+    
     switch (time) {
       case TimeOption.BEFORE_6:
-        where.departure_time = LessThan(getTimeForHour(6));
+        if (date) {
+          finalWhere.departure_time = Between(startOfDay!, getTimeForHour(6));
+        } else {
+          finalWhere.departure_time = LessThan(getTimeForHour(6));
+        }
         break;
       case TimeOption.FROM_6_TO_12:
-        where.departure_time = Between(getTimeForHour(6), getTimeForHour(12));
+        finalWhere.departure_time = Between(getTimeForHour(6), getTimeForHour(12));
         break;
       case TimeOption.FROM_12_TO_18:
-        where.departure_time = Between(getTimeForHour(12), getTimeForHour(18));
+        finalWhere.departure_time = Between(getTimeForHour(12), getTimeForHour(18));
         break;
       case TimeOption.AFTER_18:
-        where.departure_time = MoreThan(getTimeForHour(18));
+        if (date) {
+          finalWhere.departure_time = Between(getTimeForHour(18), endOfDay!);
+        } else {
+          finalWhere.departure_time = MoreThan(getTimeForHour(18));
+        }
         break;
     }
+    
     const trips = await Trip.find({
-      where,
+      where: finalWhere,
       order: { departure_time: "ASC" },
       relations: { driver: true },
     });
-
+    
     return trips;
   }
 }
