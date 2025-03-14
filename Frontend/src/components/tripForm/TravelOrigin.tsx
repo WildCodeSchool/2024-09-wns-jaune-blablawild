@@ -3,11 +3,11 @@ import { Input } from "../ui/input";
 import { FormControl, FormItem } from "../ui/form";
 import { useFormContext } from "react-hook-form";
 export default function TravelOrigin() {
-  const {register} = useFormContext()
+  const { register } = useFormContext();
   return (
     <div className="flex flex-col items-center">
       <h1 className="text-secondary text-xl font-semibold">
-        D'ou partez vous ?
+        D'où partez-vous ?
       </h1>
       <FormItem>
         <FormControl>

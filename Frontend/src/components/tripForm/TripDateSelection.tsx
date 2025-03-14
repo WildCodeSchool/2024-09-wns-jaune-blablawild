@@ -10,13 +10,13 @@ export default function TripDateSelection() {
   );
 
   useEffect(() => {
-    setValue("departureDate", date)
-  }, [date, setValue])
+    setValue("departureDate", date);
+  }, [date, setValue]);
 
   return (
     <div className="flex flex-col items-center">
       <h1 className="text-secondary text-xl font-semibold">
-        Quand partez vous ?
+        Quand partez-vous ?
       </h1>
       <FormItem>
         <FormControl>

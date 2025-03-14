@@ -17,7 +17,7 @@ export default function NumberPassengers() {
   return (
     <section className="flex flex-col items-center">
       <h1 className="text-secondary text-xl font-semibold">
-        Combien de passagers voulez vous transportez ?
+        Combien de passagers voulez-vous transportez ?
       </h1>
       <FormItem>
         <div className="flex items-center gap-10">

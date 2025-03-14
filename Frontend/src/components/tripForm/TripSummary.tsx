@@ -22,7 +22,7 @@ export default function TripSummary() {
         <Card className="bg-background shadow-none border-none">
           <CardHeader className="flex justify-center bg-red">
             <CardTitle className="text-secondary text-xl font-semibold">
-              Votre Trajet
+              Votre trajet
             </CardTitle>
           </CardHeader>
           <CardContent>
