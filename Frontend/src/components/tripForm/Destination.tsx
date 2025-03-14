@@ -12,7 +12,7 @@ export default function Destination() {
       <FormItem>
         <FormControl>
           <Input
-            className={cn("w-md rounded-3xl border-primary border-2 mt-10")}
+            className={cn("rounded-3xl border-primary border-2 mt-10 w-xs")}
             {...register("arrivalCity")}
           />
         </FormControl>
