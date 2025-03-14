@@ -1,5 +1,4 @@
 import TripCard from "@/components/TripCard";
-import img from "../../public/searchTripImg.png";
 import SearchBar from "@/components/SearchBar/SearchBar";
 import { FilterTripInput, Trip, useGetTripQuery } from "@/graphql/hooks";
 import { Loader2 } from "lucide-react";
@@ -41,7 +40,7 @@ export default function SearchTrip() {
     <section className="h-screen w-screen">
       <section className="relative w-full h-[40vh] flex justify-center items-center">
         <img
-          src={img}
+          src="/searchTripImg.png"
           alt="Main picture on search trip details"
           className="absolute object-cover top-0 w-full h-full"
         />
