@@ -1,5 +1,5 @@
-query GetTripsByTime($time: String!, $arrivalCity: String, $date: DateTimeISO) {
-  getTripsByTime(time: $time, date: $date, arrival_city: $arrivalCity) {
+query GetTripsByTime($date: DateTimeISO!, $arrivalCity: String!, $departureCity: String!, $time: String!) {
+  getTripsByTime(date: $date, arrival_city: $arrivalCity, departure_city: $departureCity, time: $time) {
     arrival_city
     capacity
     departure_city
