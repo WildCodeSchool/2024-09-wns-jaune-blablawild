@@ -2,7 +2,7 @@ import { Calendar } from "../ui/calendar";
 import { fr } from "date-fns/locale";
 
 type PopoverCalendarProps = {
-  selected: Date | null;
+  selected: Date;
   setSelected: (value: Date) => void;
   onClose?: () => void;
 };
@@ -15,8 +15,9 @@ export default function PopoverCalendar({
   return (
     <Calendar
       mode="single"
+      disabled={{ before: new Date() }}
       locale={fr}
-      selected={selected || new Date()}
+      selected={selected}
       onSelect={(date) => {
         if (date) {
           setSelected(new Date(date));
