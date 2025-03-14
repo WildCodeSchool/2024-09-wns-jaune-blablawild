@@ -87,12 +87,12 @@ export default function TripForm() {
       <div className="flex-1 flex flex-col justify-center items-center">
         <Form {...form}>
           {isSubmitted ? <Confirmation /> : step}
-          <div className="flex gap-5 m-10 justify-center">
+          <div className="flex gap-7 m-10 justify-center">
             {currentStepIndex !== 0 && (
               <Button
                 type="button"
                 onClick={back}
-                className={`w-30 bg-accent rounded-3xl p-5 ${
+                className={`w-30 text-accent bg-transparent rounded-3xl p-5 ${
                   isSubmitted ? "hidden" : ""
                 }`}
                 variant="outline"
@@ -111,7 +111,7 @@ export default function TripForm() {
                     isSubmitted ? "hidden" : ""
                   }`}
                 >
-                  Valider
+                  Publier
                 </Button>
               </form>
             ) : (

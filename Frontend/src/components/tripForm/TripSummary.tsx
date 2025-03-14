@@ -21,37 +21,40 @@ export default function TripSummary() {
       <FormItem>
         <Card className="bg-background shadow-none border-none">
           <CardHeader className="flex justify-center bg-red">
-            <CardTitle className="text-secondary text-xl font-semibold">
+            <CardTitle className="text-accent text-center text-2xl mb-2 ">
               Votre trajet
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-accent">
+            <p className="text-secondary">
               {departureDate
                 ? format(departureDate, " d MMMM yyyy ", { locale: fr })
                 : "Not set"}
             </p>
-            <div className="flex items-center gap-1 text-foreground">
-              <p>{format(departureDate, " hh : mm ", { locale: fr })}</p>
-              <Circle size={15} />
+            <div className="space-y-3">
+
+            <div className="flex items-center gap-1 text-foreground mb-0">
+              <p className="text-xl mr-1">{format(departureDate, " hh:mm ", { locale: fr })}</p>
+              <Circle size={10} />
               <div className="border-t border-foreground w-50"></div>
-              <Circle size={15} />
+              <Circle size={10} />
             </div>
             <div className="text-foreground flex justify-between">
               <p>{departureCity}</p>
               <p>{arrivalCity}</p>
             </div>
             <div className="flex gap-8">
-              <p className="text-accent">Places disponibles</p>
-              <p className="text-foreground">{passengers}</p>
+              <p className="text-secondary">Places disponibles</p>
+              <p className="text-xl text-foreground">{passengers}</p>
             </div>
             <div className="flex gap-15">
-              <p className="text-accent">Tarif par place</p>
-              <p className="text-foreground">{price} €</p>
+              <p className="text-secondary">Tarif par place</p>
+              <p className="text-xl text-foreground">{price} €</p>
             </div>
             <div className="flex gap-31">
-              <p className="text-accent">Total</p>
-              <p className="text-foreground">{totalPrice} €</p>
+              <p className="text-secondary">Total</p>
+              <p className="text-xl text-foreground">{totalPrice} €</p>
+            </div>
             </div>
           </CardContent>
         </Card>
