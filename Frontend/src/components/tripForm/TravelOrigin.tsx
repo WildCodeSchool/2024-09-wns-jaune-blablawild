@@ -12,7 +12,7 @@ export default function TravelOrigin() {
       <FormItem>
         <FormControl>
           <Input
-            className={cn("w-md rounded-3xl border-primary border-2 mt-10")}
+            className={cn("w-xs rounded-3xl border-primary border-2 mt-10")}
             {...register("departureCity")}
           />
         </FormControl>

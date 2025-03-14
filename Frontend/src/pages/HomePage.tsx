@@ -1,11 +1,13 @@
 import CarrouselTrip from "@/components/CarrouselTrip";
 import { FaqSection } from "@/components/faq-section";
 import { InformationSection } from "@/components/Information-section";
-import img from "../assets/home-background.jpg";
+import { useGetPopularTripQuery } from "@/graphql/hooks";
 import SearchBar from "../components/SearchBar/SearchBar";
-import HomePageCarte from "@/assets/pictures/home-page-carte.png";
 
 const HomePage = () => {
+  const { data } = useGetPopularTripQuery();
+  const hasTrips = data?.getPopularTrip && data.getPopularTrip.length > 0;
+
   return (
     <section className="flex flex-col w-screen md:gap-35 gap-20">
       <section className="relative w-full h-[60vh] flex justify-center items-center">
@@ -13,20 +15,22 @@ const HomePage = () => {
           <SearchBar path="/search-result" />
         </div>
         <img
-          src={img}
-          alt="Main picture on search trip"
+          src="/home-background.jpg"
+          alt=""
           className="absolute object-cover top-0 w-full h-full"
         />
       </section>
       <InformationSection />
       <img
-        src={HomePageCarte}
+        src="/home-page-carte.png"
         alt="cartographie"
         className="md:h-[250px] h-[150px]"
       />
-      <div className="flex items-center justify-center w-full">
-        <CarrouselTrip />
-      </div>
+      {hasTrips && (
+        <div className="flex items-center justify-center w-full">
+          <CarrouselTrip />
+        </div>
+      )}
       <FaqSection />
     </section>
   );

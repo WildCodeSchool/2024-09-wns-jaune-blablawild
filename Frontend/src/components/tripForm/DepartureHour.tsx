@@ -15,7 +15,7 @@ export default function DepartureHour({
 }: departureHourProps) {
   return (
     <section className="flex gap-3 flex-col items-center">
-      <h1 className="text-secondary text-xl font-semibold">
+      <h1 className="text-secondary text-xl font-semibold text-center">
         A quelle heure retrouvez-vous vos passagers ?
       </h1>
       <FormItem>
