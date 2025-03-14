@@ -15,6 +15,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState } from "react";
 import { setHours, setMinutes } from "date-fns";
 import { useCreateTripMutation } from "@/graphql/hooks";
+import Confirmation from "@/components/tripForm/Confirmation";
 
 const formSchema = z.object({
   departureCity: z.string(),
@@ -31,6 +32,7 @@ export default function TripForm() {
   const [createTrip] = useCreateTripMutation();
   const [departureHour, setDepartureHour] = useState(10);
   const [departureMinutes, setDepartureMinutes] = useState(0);
+  const [isSubmitted, setIsSubmitted] = useState(false);
   const { step, back, next, currentStepIndex, isLastStep } = useMultiStepsForm([
     <Destination />,
     <TravelOrigin />,
@@ -66,43 +68,62 @@ export default function TripForm() {
 
   const onSubmit = (data: z.infer<typeof formSchema>) => {
     createTrip({
-        variables: data
-    })
+      variables: {
+        data: {
+          departure_city: data.departureCity,
+          arrival_city: data.arrivalCity,
+          departure_time: data.departureDate,
+          price: data.price,
+          capacity: data.passengers,
+        },
+      },
+    }).then(() => {
+      setIsSubmitted(true);
+    });
   };
 
   return (
     <section className="flex gap-2 justify-center item-center bg-pr h-screen">
       <div className="flex-1 flex flex-col justify-center items-center">
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-            {step}
-            <div className="flex gap-5 m-10 justify-center">
-              {currentStepIndex !== 0 && (
-                <Button
-                  onClick={back}
-                  className="w-30 bg-muted rounded-3xl p-5 text-accent"
-                  variant="outline"
-                >
-                  Précédent
-                </Button>
-              )}
-              {isLastStep ? (
+          {isSubmitted ? <Confirmation /> : step}
+          <div className="flex gap-5 m-10 justify-center">
+            {currentStepIndex !== 0 && (
+              <Button
+                type="button"
+                onClick={back}
+                className={`w-30 bg-accent rounded-3xl p-5 ${
+                  isSubmitted ? "hidden" : ""
+                }`}
+                variant="outline"
+              >
+                Précédent
+              </Button>
+            )}
+            {isLastStep ? (
+              <form
+                onSubmit={form.handleSubmit(onSubmit)}
+                className="space-y-6"
+              >
                 <Button
                   type="submit"
-                  className="w-30 bg-accent rounded-3xl p-5"
+                  className={`w-30 bg-accent rounded-3xl p-5 ${
+                    isSubmitted ? "hidden" : ""
+                  }`}
                 >
                   Valider
                 </Button>
-              ) : (
-                <Button
-                  onClick={next}
-                  className="w-30 bg-accent rounded-3xl p-5"
-                >
-                  Continuer
-                </Button>
-              )}
-            </div>
-          </form>
+              </form>
+            ) : (
+              <Button
+                type="button"
+                onClick={next}
+                className="w-30 bg-accent rounded-3xl p-5"
+              >
+                Continuer
+              </Button>
+            )}
+          </div>
         </Form>
       </div>
       <div className="flex-1 md:block hidden">

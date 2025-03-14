@@ -22,6 +22,7 @@ export default function NumberPassengers() {
       <FormItem>
         <div className="flex items-center gap-10">
           <Button
+            type="button"
             variant="default"
             size="icon"
             className="text-6xl text-ring border-none bg-background shadow-none hover:bg-transparent " //recentrer l'icone
@@ -35,6 +36,7 @@ export default function NumberPassengers() {
             {numberPassengers}
           </p>
           <Button
+            type="button"
             variant="default"
             size="icon"
             className="text-6xl text-ring border-none bg-background shadow-none hover:bg-transparent" //recentrer l'icone
