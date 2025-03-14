@@ -7,9 +7,16 @@ export default function Header() {
       <Link to="/">
         <img src="/logo2.png" alt="logo" className="w-[10rem]" />
       </Link>
-      <Button size="lg" className="rounded-3xl mx-4" variant="outline">
-        Se connecter
-      </Button>
+      <div>
+        <Button size="lg" className="rounded-3xl mx-4" variant="outline">
+          Se connecter
+        </Button>
+        <Link to="/tripform">
+          <Button size="lg" className="rounded-3xl mx-4" variant="outline">
+            Ajouter un trajet
+          </Button>
+        </Link>
+      </div>
     </header>
   );
 }
