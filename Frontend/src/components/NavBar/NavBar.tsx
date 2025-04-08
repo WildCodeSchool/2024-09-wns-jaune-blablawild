@@ -1,0 +1,34 @@
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Separator } from "@/components/ui/separator"
+import { CircleUserRound } from "lucide-react";
+import { CarTaxiFront } from 'lucide-react';
+import { UserRound } from 'lucide-react';
+import { MessageSquareText } from 'lucide-react';
+import { LogOut } from 'lucide-react';
+import { ChevronRight } from 'lucide-react';
+
+
+export default function NavBar() {
+  return (
+    <Popover>
+      <PopoverTrigger asChild>
+        <CircleUserRound className="cursor-pointer"/>
+      </PopoverTrigger>
+      <PopoverContent className="w-screen h-screen md:w-[25vw] md:h-auto p-10 bg-background rounded-none mt-2">
+        <ul className="flex flex-col space-y-6 text-md ">
+          <li className="flex justify-between"><div className="flex justify-center gap-2 cursor-pointer"><CarTaxiFront /> Mes Trajets</div><ChevronRight /></li>
+          <Separator />
+          <li className="flex justify-between"><div className="flex justify-center gap-2 cursor-pointer"><UserRound /> Profile</div><ChevronRight /></li>
+          <Separator />
+          <li className="flex justify-between"><div className="flex justify-center gap-2 cursor-pointer"><MessageSquareText /> Messages</div><ChevronRight /></li>
+          <Separator />
+          <li className="flex gap-2 cursor-pointer"><LogOut /> Déconnexion</li>
+        </ul>
+      </PopoverContent>
+    </Popover>
+  );
+}
