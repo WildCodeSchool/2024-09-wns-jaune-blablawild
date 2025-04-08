@@ -6,7 +6,7 @@ import {
 } from "react-router-dom";
 import Layout from "./Layout";
 import HomePage from "./pages/HomePage";
-import Page404 from "./pages/Other/404";
+import Page404 from "./pages/Other/Page404";
 import SearchTrip from "./pages/SearchTrip";
 import SignInPage from "./pages/SignInPage";
 import SignUpPage from "./pages/SignUpPage";
