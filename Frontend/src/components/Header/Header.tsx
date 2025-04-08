@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { Button } from "../ui/button";
 import { Plus } from "lucide-react";
+import NavBar from "../NavBar/NavBar";
 
 export default function Header() {
   return (
@@ -8,7 +9,7 @@ export default function Header() {
       <Link to="/">
         <img src="/logo2.png" alt="logo" className="w-[10rem]" />
       </Link>
-      <div className="flex gap-2">
+      <div className="flex gap-2 items-center">
         <Link to="/tripform">
           <Button size="lg" className="rounded-3xl" variant="outline">
             <Plus />
@@ -18,6 +19,7 @@ export default function Header() {
         <Button size="lg" className="rounded-3xl" variant="outline">
           Se connecter
         </Button>
+        <NavBar />
       </div>
     </header>
   );
