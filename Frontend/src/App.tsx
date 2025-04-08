@@ -4,6 +4,7 @@ import HomePage from "./pages/HomePage";
 import SignInPage from "./pages/SignInPage";
 import SearchTrip from "./pages/SearchTrip";
 import SignUpPage from "./pages/SignUpPage";
+import UserProfilePage from "./pages/UserProfile/UserProfilePage";
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
           <Route path="signup" element={<SignUpPage />} />
           <Route path="signin" element={<SignInPage />} />
           <Route path="search-result" element={<SearchTrip />} />
+          <Route path="/user/:id" element={<UserProfilePage />}/>
         </Routes>
       </Layout>
     </Router>

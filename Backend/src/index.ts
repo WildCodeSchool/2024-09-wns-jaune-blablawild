@@ -1,6 +1,6 @@
 import "reflect-metadata";
 import { ApolloServer } from "@apollo/server";
-import { startStandaloneServer } from "@apollo/server/standalone";
+import { startStandaloneServer } from "@apollo/server/dist/esm/standalone";
 import { buildSchema } from "type-graphql";
 import { dataSource } from "./config/db";
 import { TripResolver } from "./resolvers/tripResolver";
