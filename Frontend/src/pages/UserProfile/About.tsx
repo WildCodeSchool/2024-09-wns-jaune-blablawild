@@ -12,14 +12,14 @@ export default function About({user}: Props) {
             <h1>Mon profil</h1>
             <div className="flex flex-col w-full items-center md:flex-row-reverse md:justify-between">
                 <img 
-                    src={user.image} alt={`${user.firstname} ${user.lastname}`}
+                    src={user.image || "/placeholder-portrait.png"} alt={`${user.firstname} ${user.lastname}`}
                     className="w-1/3 self-center rounded-full border-chart-3 border-6"/>
                 
                 <div className="flex flex-col items-center my-4 gap-4 md:items-start">
                     <p data-testid="user-fullname" className="font-semibold text-chart-3">{`${user.firstname} ${user.lastname}`}</p>
                     <p>Pas de téléphone</p>
                     <p data-testid="user-email">{user.email}</p>
-                    <p>Profil vérifié</p>
+                    <p>Profil verifié</p>
                 </div>
             </div>
             <Separator className="bg-chart-3"/>

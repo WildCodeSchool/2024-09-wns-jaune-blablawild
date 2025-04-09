@@ -25,8 +25,8 @@ export default function PopoverPassenger({
         />
         <p className="text-foreground text-xl font-semibold">{count}</p>
         <CirclePlus
-          className="text-secondary cursor-pointer"
-          onClick={() => setCount(count + 1)}
+  className="text-secondary cursor-pointer" 
+  onClick={() => setCount(count + 1)}
         />
       </div>
     </section>

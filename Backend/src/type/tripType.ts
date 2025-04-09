@@ -3,12 +3,35 @@ import { Field, InputType, registerEnumType } from "type-graphql";
 export enum TripStatus {
   OPEN = "OPEN",
   CLOSE = "CLOSE",
-  FULL = "FULL",
+  FULL= "FULL",
 }
+
+export enum TimeOption {
+  Before_6 = "Before_6",     
+  From_6To_12 = "From_6To_12", 
+  From_12To_18 = "From_12To_18", 
+  After_18 = "After_18",  
+}
+
+export enum SortOption {
+  PRICE = "PRICE",
+  TIME = "TIME",
+}
+
 registerEnumType(TripStatus, {
-    name: "TripStatus",
-    description: "Le statut d'un trajet (ouvert, fermé, complet)",
-  });
+  name: "TripStatus",
+  description: "Le statut d'un trajet (ouvert, fermé, complet)",
+});
+
+registerEnumType(TimeOption, {
+  name: "TimeOption",
+  description: "Options for filtering by time of day",
+});
+
+registerEnumType(SortOption, {
+  name: "SortOption",
+  description: "Options for sorting trips",
+});
 
 @InputType()
 export class CreateTripInput {
@@ -24,24 +47,33 @@ export class CreateTripInput {
   @Field()
   price!: number;
 
+  @Field({ nullable: true }) // remettre a obligatoire quand création user
+  driverId?: string;
+
   @Field()
-  driverId!: string;
+  capacity!: number;
 }
 
 @InputType()
 export class FilterTripInput {
   @Field()
-  arrival!: string
+  arrival!: string;
 
   @Field()
-  departure!: string
+  departure!: string;
 
   @Field(() => Date)
-  startDate!: Date
+  startDate!: Date;
 
   @Field(() => Date)
-  endDate!: Date
+  endDate!: Date;
 
   @Field()
-  passengers!: number
+  passengers!: number;
+
+  @Field(() => TimeOption, { nullable: true })
+  timeOption?: TimeOption;
+
+  @Field(() => SortOption, { nullable: true })
+  sortBy?: SortOption;
 }

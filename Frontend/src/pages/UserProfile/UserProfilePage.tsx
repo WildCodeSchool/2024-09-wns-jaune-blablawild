@@ -1,5 +1,5 @@
 import { useGetUserByIdQuery } from "@/graphql/hooks";
-import img from "../../assets/home-background.jpg";
+import img from "/home-background.jpg";
 import About from "./About";
 import { useParams } from "react-router-dom";
 import { useState } from "react";

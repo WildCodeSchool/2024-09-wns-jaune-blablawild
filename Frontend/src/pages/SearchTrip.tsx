@@ -1,66 +1,171 @@
 import TripCard from "@/components/TripCard";
-import img from "../../public/searchTripImg.png";
 import SearchBar from "@/components/SearchBar/SearchBar";
-import { FilterTripInput, Trip, useGetTripQuery } from "@/graphql/hooks";
+import {
+  FilterTripInput,
+  SortOption,
+  TimeOption,
+  Trip,
+  useGetTripQuery,
+} from "@/graphql/hooks";
 import { Loader2 } from "lucide-react";
 import { getUrlParams } from "@/utils";
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { endOfDay, startOfDay } from "date-fns";
+import { FilterSideBarWrapper } from "@/components/FilterSideBar/FilterSideBarWrapper";
 
 export default function SearchTrip() {
   const location = useLocation();
   const params = getUrlParams();
-  const startDate = startOfDay(new Date(params.date));
-  const endDate = endOfDay(new Date(params.date));
-  const [data, setData] = useState<FilterTripInput>({
-    arrival: params.arrival.trim(),
-    departure: params.departure.trim(),
-    passengers: Number(params.passengers),
+  
+  const [searchParams, setSearchParams] = useState(params);
+  
+  const startDate = startOfDay(new Date(searchParams.date));
+  const endDate = endOfDay(new Date(searchParams.date));
+  const [currentSort, setCurrentSort] = useState<string | null>("earliest");
+  const [currentTimeRange, setCurrentTimeRange] = useState<TimeOption | null>(
+    null
+  );
+  const [filterData, setFilterData] = useState<FilterTripInput>({
+    arrival: searchParams.arrival.trim(),
+    departure: searchParams.departure.trim(),
+    passengers: Number(searchParams.passengers),
     startDate,
     endDate,
+    sortBy: SortOption.Time,
   });
-  const { data: dataTrip, loading: loadingTrip } = useGetTripQuery({
-    variables: { data },
+
+  const { data: dataTrip, loading: loadingTrip, refetch } = useGetTripQuery({
+    variables: { data: filterData },
   });
-  const allTrip = dataTrip?.getTrip ?? [];
+
+ 
+  
+  const handleSortChange = (sort: string | null): void => {
+    setCurrentSort(sort);
+    
+    const newData = {
+      ...filterData
+    };
+    
+    if (sort === "cheapest") {
+      newData.sortBy = SortOption.Price;
+    } else if (sort === "earliest") {
+      newData.sortBy = SortOption.Time;
+    } else {
+      newData.sortBy = undefined;
+    }
+    
+    setFilterData(newData);
+    
+  };
+  
+  const handleTimeRangeChange = (timeRange: TimeOption | null): void => {
+    setCurrentTimeRange(timeRange);
+    
+    const newData = {
+      ...filterData
+    };
+    
+    if (timeRange === null) {
+      newData.timeOption = undefined;
+    } else {
+      newData.timeOption = timeRange;
+    }
+    
+    setFilterData(newData);
+    
+    
+  };
+  
+  const handleReinstateFilter = () => {
+    setCurrentSort(null);
+    setCurrentTimeRange(null);
+    const newData = {
+      ...filterData,
+      sortBy: undefined,
+      timeOption: undefined
+    };
+    
+    setFilterData(newData);
+    
+    refetch({
+      data: newData
+    });
+  }
+
 
   useEffect(() => {
+    const newParams = getUrlParams();
+    setSearchParams(newParams);
+    
+    const newStartDate = startOfDay(new Date(newParams.date));
+    const newEndDate = endOfDay(new Date(newParams.date));
+    
     const newData = {
-      arrival: params.arrival.trim(),
-      departure: params.departure.trim(),
-      passengers: Number(params.passengers),
-      startDate,
-      endDate,
+      ...filterData,
+      arrival: newParams.arrival.trim(),
+      departure: newParams.departure.trim(),
+      passengers: Number(newParams.passengers),
+      startDate: newStartDate,
+      endDate: newEndDate,
     };
-    setData(newData);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [location]);
+    
+    setFilterData(newData);
+  }, [location.search]);
+
+  const allTrips = dataTrip?.getTrip || [];
+  
+  const displayNoTrips = () => {
+      
+    return (
+      <section className="p-10 min-h-[500px] flex items-center justify-center">
+        <div className="text-center">
+          <p className="md:text-xl">{`Aucun trajet trouvé de ${filterData.departure} à ${filterData.arrival} pour cette période.`}</p>
+          
+        </div>
+      </section>
+    );
+  };
 
   return (
     <section className="h-screen w-screen">
-      <section className="relative w-full h-[60vh] flex justify-center items-center">
+      <section className="relative w-full h-[55vh] flex justify-center items-center">
         <img
-          src={img}
+          src="/searchTripImg.png"
           alt="Main picture on search trip details"
           className="absolute object-cover top-0 w-full h-full"
         />
-        <div className="flex flex-col justify-center items-center gap-5 z-1 w-[70%] md:w-[80%]">
+        <div className="flex flex-col justify-center items-center gap-7 z-1 w-[70%] md:w-[80%]">
           <p className="text-white text-2xl">Où souhaitez-vous aller ?</p>
-          <div className="w-full md:h-[45px]">
+          <div className="w-full">
             <SearchBar />
           </div>
         </div>
       </section>
-      {!loadingTrip ? (
-        <section>
-          <TripCard trips={allTrip as Trip[]} />
-        </section>
-      ) : (
-        <section>
-          <Loader2 className="animate-spin" />
-        </section>
-      )}
+
+      <FilterSideBarWrapper
+        onReinstateChange={handleReinstateFilter}
+        onSortChange={handleSortChange}
+        onTimeRangeChange={handleTimeRangeChange}
+        currentSort={currentSort}
+        currentTimeRange={currentTimeRange}
+        children={
+          !loadingTrip ? (
+            <section className="min-h-[500px]">
+              {allTrips.length === 0 ? (
+                displayNoTrips()
+              ) : (
+                <TripCard trips={allTrips as Trip[]} />
+              )}
+            </section>
+          ) : (
+            <section className="flex justify-center items-center min-h-[500px]">
+              <Loader2 className="animate-spin w-8 h-8" />
+            </section>
+          )
+        }
+      />
     </section>
   );
 }
