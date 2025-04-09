@@ -1,6 +1,5 @@
 import { FilterSideBarWrapper } from "@/components/FilterSideBar/FilterSideBarWrapper";
 import SearchBar from "@/components/SearchBar/SearchBar";
-import { mockTrips } from "@/components/TripCard/_utils/utils";
 import TripCard from "@/components/TripCard/TripCard";
 import {
   FilterTripInput,
@@ -112,14 +111,6 @@ export default function SearchTrip() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location]);
 
-  const displayNoTrips = () => {
-    return (
-      <section className="p-10 min-h-[500px] flex items-center justify-center">
-        <p className="md:text-xl">{`Il n'y a pas encore de trajet disponible de ${data.departure} à ${data.arrival} ce jour là ! `}</p>
-      </section>
-    );
-  };
-
   return (
     <section className="h-screen w-screen">
       <section className="relative w-full h-[55vh] flex justify-center items-center">
@@ -145,14 +136,7 @@ export default function SearchTrip() {
       >
         {!isLoading ? (
           <section className="min-h-[500px]">
-            {tripsToShow.length === 0 ? (
-              displayNoTrips()
-            ) : (
-              <>
-                <TripCard trips={mockTrips as Trip[]} mode="published" />
-                <TripCard trips={mockTrips as Trip[]} mode="search" />
-              </>
-            )}
+            <TripCard trips={tripsToShow as Trip[]} mode="search" />
           </section>
         ) : (
           <section className="flex justify-center items-center min-h-[500px]">
