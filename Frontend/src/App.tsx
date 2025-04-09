@@ -10,6 +10,7 @@ import SearchTrip from "./pages/SearchTrip";
 import SignInPage from "./pages/SignInPage";
 import SignUpPage from "./pages/SignUpPage";
 import TripForm from "./pages/TripForm";
+import UserJourneys from "./pages/UserJourneys";
 
 const AppRoutes = () => {
   const location = useLocation();
@@ -25,6 +26,7 @@ const AppRoutes = () => {
         <Route path="signin" element={<SignInPage />} />
         <Route path="search-result" element={<SearchTrip />} />
         <Route path="tripform" element={<TripForm />} />
+        <Route path="userjourneys" element={<UserJourneys />} />
       </Routes>
     </Layout>
   );
