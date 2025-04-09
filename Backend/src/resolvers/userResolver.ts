@@ -23,10 +23,14 @@ export class UserResolver {
       return users;
     }
 
-    @Mutation(() => User)
+    @Mutation(() => String)
     async signup(
         @Arg("data") userData: NewUserInput,
     ) {
+        // const existingUser = await User.findOne({ where: { email: userData.email } });
+        // if (existingUser) {
+        //     throw new Error("L'utilisateur existe deja");
+        // }
        const hashedPassword = await argon.hash(userData.password)
        const user = await User.save({
            firstname: userData.firstname,
@@ -35,7 +39,7 @@ export class UserResolver {
            password: hashedPassword
        })
 
-     return user
+     return JSON.stringify("Utilisateur créé avec success") 
     }
 
 }

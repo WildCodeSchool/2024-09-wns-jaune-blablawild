@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { Button } from "../ui/button";
 import { Plus } from "lucide-react";
-
+import ModalUserCreationForm  from "../UserCreationForm/ModalUserCreationForm";
 export default function Header() {
   return (
     <header className="flex justify-between items-center h-[3rem] mt-1 mr-3 border-b border-solid">
@@ -15,9 +15,7 @@ export default function Header() {
             <p className="md:block hidden">Ajouter un trajet</p>
           </Button>
         </Link>
-        <Button size="lg" className="rounded-3xl" variant="outline">
-          Se connecter
-        </Button>
+        <ModalUserCreationForm />
       </div>
     </header>
   );
