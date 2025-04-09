@@ -4,11 +4,11 @@ import { startStandaloneServer } from "@apollo/server/standalone";
 import { buildSchema } from "type-graphql";
 import { dataSource } from "./config/db";
 import { TripResolver } from "./resolvers/tripResolver";
-import { FiltersResolver } from "./resolvers/filtersResolver";
+
 async function StartGraphQLServer() {
   await dataSource.initialize();
   const schema = await buildSchema({
-    resolvers: [TripResolver, FiltersResolver],
+    resolvers: [TripResolver],
   });
 
   const server = new ApolloServer({ schema });

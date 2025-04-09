@@ -1,4 +1,3 @@
-import { TimeOption } from "@/pages/SearchTrip";
 import { Menu } from "lucide-react";
 import { FilterSideBar } from "./FilterSideBar";
 import {
@@ -9,16 +8,19 @@ import {
   DrawerFooter,
 } from "../ui/drawer";
 import { Button } from "../ui/button";
+import { TimeOption } from "@/graphql/hooks";
 type MobileFilterDrawerProps = {
   onSortChange: (sort: string | null) => void;
   onTimeRangeChange: (timeRange: TimeOption | null) => void;
   currentSort: string | null;
   currentTimeRange: TimeOption | null;
+  onReinstateChange: () => void;
 };
 
 export const MobileFilterDrawer = ({
   onSortChange,
   onTimeRangeChange,
+  onReinstateChange,
   currentSort,
   currentTimeRange,
 }: MobileFilterDrawerProps) => {
@@ -34,6 +36,7 @@ export const MobileFilterDrawer = ({
         <DrawerContent className="bg-white">
           <div className="px-4 pb-4">
             <FilterSideBar
+              onReinstateChange={onReinstateChange}
               onSortChange={onSortChange}
               onTimeRangeChange={onTimeRangeChange}
               currentSort={currentSort}
