@@ -1,27 +1,32 @@
-import TripCard from "@/components/TripCard";
+import { FilterSideBarWrapper } from "@/components/FilterSideBar/FilterSideBarWrapper";
 import SearchBar from "@/components/SearchBar/SearchBar";
+import { mockTrips } from "@/components/TripCard/_utils/utils";
+import TripCard from "@/components/TripCard/TripCard";
 import {
   FilterTripInput,
-  SortOption,
-  TimeOption,
   Trip,
-  useGetTripQuery,
+  useGetCheapestTripsQuery,
+  useGetEarliestTripsQuery,
+  useGetTripsByTimeQuery,
 } from "@/graphql/hooks";
-import { Loader2 } from "lucide-react";
 import { getUrlParams } from "@/utils";
+import { endOfDay, startOfDay } from "date-fns";
+import { Loader2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
-import { endOfDay, startOfDay } from "date-fns";
-import { FilterSideBarWrapper } from "@/components/FilterSideBar/FilterSideBarWrapper";
+
+export enum TimeOption {
+  BEFORE_6 = "BEFORE_6",
+  FROM_6_TO_12 = "FROM_6_TO_12",
+  FROM_12_TO_18 = "FROM_12_TO_18",
+  AFTER_18 = "AFTER_18",
+}
 
 export default function SearchTrip() {
   const location = useLocation();
   const params = getUrlParams();
-  
-  const [searchParams, setSearchParams] = useState(params);
-  
-  const startDate = startOfDay(new Date(searchParams.date));
-  const endDate = endOfDay(new Date(searchParams.date));
+  const startDate = startOfDay(new Date(params.date));
+  const endDate = endOfDay(new Date(params.date));
   const [currentSort, setCurrentSort] = useState<string | null>("earliest");
   const [currentTimeRange, setCurrentTimeRange] = useState<TimeOption | null>(
     null
@@ -35,73 +40,66 @@ export default function SearchTrip() {
     sortBy: SortOption.Time,
   });
 
-  const { data: dataTrip, loading: loadingTrip, refetch } = useGetTripQuery({
-    variables: { data: filterData },
-  });
+  const dateComponents = params.date.split("T")[0];
+  const utcDate = `${dateComponents}T00:00:00Z`;
 
- 
-  
-  const handleSortChange = (sort: string | null): void => {
-    setCurrentSort(sort);
-    
-    const newData = {
-      ...filterData
-    };
-    
-    if (sort === "cheapest") {
-      newData.sortBy = SortOption.Price;
-    } else if (sort === "earliest") {
-      newData.sortBy = SortOption.Time;
-    } else {
-      newData.sortBy = undefined;
-    }
-    
-    setFilterData(newData);
-    
-  };
-  
-  const handleTimeRangeChange = (timeRange: TimeOption | null): void => {
-    setCurrentTimeRange(timeRange);
-    
-    const newData = {
-      ...filterData
-    };
-    
-    if (timeRange === null) {
-      newData.timeOption = undefined;
-    } else {
-      newData.timeOption = timeRange;
-    }
-    
-    setFilterData(newData);
-    
-    
-  };
-  
-  const handleReinstateFilter = () => {
-    setCurrentSort(null);
-    setCurrentTimeRange(null);
-    const newData = {
-      ...filterData,
-      sortBy: undefined,
-      timeOption: undefined
-    };
-    
-    setFilterData(newData);
-    
-    refetch({
-      data: newData
+  const { data: cheapestTrips, loading: loadingCheapestTrips } =
+    useGetCheapestTripsQuery({
+      variables: {
+        arrivalCity: data.arrival,
+        departureCity: data.departure,
+        date: utcDate,
+      },
+      skip: currentSort !== "cheapest",
     });
+
+  const { data: earliestTrips, loading: loadingEarliestTrips } =
+    useGetEarliestTripsQuery({
+      variables: {
+        arrivalCity: data.arrival,
+        departureCity: data.departure,
+        date: utcDate,
+      },
+      skip: currentSort !== "earliest",
+    });
+
+  const { data: timeRangeTripData, loading: loadingTimeRangeTrip } =
+    useGetTripsByTimeQuery({
+      variables: {
+        time: currentTimeRange || "",
+        arrivalCity: data.arrival,
+        departureCity: data.departure,
+        date: utcDate,
+      },
+      skip: currentTimeRange === null,
+    });
+
+  let tripsToShow = [];
+  let isLoading = false;
+
+  if (currentSort === "cheapest") {
+    tripsToShow = cheapestTrips?.getCheapestTrips || [];
+    isLoading = loadingCheapestTrips;
+  } else if (currentSort === "earliest") {
+    tripsToShow = earliestTrips?.getEarliestTrips || [];
+    isLoading = loadingEarliestTrips;
+  } else if (currentTimeRange) {
+    tripsToShow = timeRangeTripData?.getTripsByTime || [];
+    isLoading = loadingTimeRangeTrip;
+  } else {
+    tripsToShow = dataTrip?.getTrip || [];
+    isLoading = loadingTrip;
   }
 
+  const handleSortChange = (sort: string | null): void => {
+    setCurrentSort(sort);
+  };
+
+  const handleTimeRangeChange = (timeRange: TimeOption | null): void => {
+    setCurrentTimeRange(timeRange);
+  };
 
   useEffect(() => {
-    const newParams = getUrlParams();
-    setSearchParams(newParams);
-    
-    const newStartDate = startOfDay(new Date(newParams.date));
-    const newEndDate = endOfDay(new Date(newParams.date));
-    
     const newData = {
       ...filterData,
       arrival: newParams.arrival.trim(),
@@ -110,20 +108,14 @@ export default function SearchTrip() {
       startDate: newStartDate,
       endDate: newEndDate,
     };
-    
-    setFilterData(newData);
-  }, [location.search]);
+    setData(newData);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location]);
 
-  const allTrips = dataTrip?.getTrip || [];
-  
   const displayNoTrips = () => {
-      
     return (
       <section className="p-10 min-h-[500px] flex items-center justify-center">
-        <div className="text-center">
-          <p className="md:text-xl">{`Aucun trajet trouvé de ${filterData.departure} à ${filterData.arrival} pour cette période.`}</p>
-          
-        </div>
+        <p className="md:text-xl">{`Il n'y a pas encore de trajet disponible de ${data.departure} à ${data.arrival} ce jour là ! `}</p>
       </section>
     );
   };
@@ -133,7 +125,7 @@ export default function SearchTrip() {
       <section className="relative w-full h-[55vh] flex justify-center items-center">
         <img
           src="/searchTripImg.png"
-          alt="Main picture on search trip details"
+          alt=""
           className="absolute object-cover top-0 w-full h-full"
         />
         <div className="flex flex-col justify-center items-center gap-7 z-1 w-[70%] md:w-[80%]">
@@ -150,22 +142,24 @@ export default function SearchTrip() {
         onTimeRangeChange={handleTimeRangeChange}
         currentSort={currentSort}
         currentTimeRange={currentTimeRange}
-        children={
-          !loadingTrip ? (
-            <section className="min-h-[500px]">
-              {allTrips.length === 0 ? (
-                displayNoTrips()
-              ) : (
-                <TripCard trips={allTrips as Trip[]} />
-              )}
-            </section>
-          ) : (
-            <section className="flex justify-center items-center min-h-[500px]">
-              <Loader2 className="animate-spin w-8 h-8" />
-            </section>
-          )
-        }
-      />
+      >
+        {!isLoading ? (
+          <section className="min-h-[500px]">
+            {tripsToShow.length === 0 ? (
+              displayNoTrips()
+            ) : (
+              <>
+                <TripCard trips={mockTrips as Trip[]} mode="published" />
+                <TripCard trips={mockTrips as Trip[]} mode="search" />
+              </>
+            )}
+          </section>
+        ) : (
+          <section className="flex justify-center items-center min-h-[500px]">
+            <Loader2 className="animate-spin w-8 h-8" />
+          </section>
+        )}
+      </FilterSideBarWrapper>
     </section>
   );
 }
