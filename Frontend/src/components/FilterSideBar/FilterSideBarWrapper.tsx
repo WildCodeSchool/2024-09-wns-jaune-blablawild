@@ -1,7 +1,7 @@
 import { ReactElement } from "react";
 import { FilterSideBar } from "./FilterSideBar";
-import { TimeOption } from "@/pages/SearchTrip";
 import { MobileFilterDrawer } from "./FilterSideBarDrawer";
+import { TimeOption } from "@/graphql/hooks";
 
 type FilterSideBarWrapperProps = {
   children: ReactElement;
@@ -9,12 +9,14 @@ type FilterSideBarWrapperProps = {
   onTimeRangeChange: (timeRange: TimeOption | null) => void;
   currentSort: string | null;
   currentTimeRange: TimeOption | null;
+  onReinstateChange: () => void;
 };
 
 export const FilterSideBarWrapper = ({
   children,
   onSortChange,
   onTimeRangeChange,
+  onReinstateChange,
   currentSort,
   currentTimeRange,
 }: FilterSideBarWrapperProps) => {
@@ -22,6 +24,7 @@ export const FilterSideBarWrapper = ({
     <div className="w-full">
       <div className="container relative">
         <MobileFilterDrawer
+          onReinstateChange={onReinstateChange}
           onSortChange={onSortChange}
           onTimeRangeChange={onTimeRangeChange}
           currentSort={currentSort}
@@ -32,6 +35,7 @@ export const FilterSideBarWrapper = ({
           <aside className="hidden md:block shrink-0 md:w-[220px] lg:w-[318px] md:sticky md:top-0 md:self-start md:h-auto">
             <div className="h-full">
               <FilterSideBar
+                onReinstateChange={onReinstateChange}
                 onSortChange={onSortChange}
                 onTimeRangeChange={onTimeRangeChange}
                 currentSort={currentSort}
