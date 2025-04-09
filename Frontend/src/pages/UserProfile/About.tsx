@@ -10,7 +10,7 @@ export default function About({user}: Props) {
     return (
         <section className="flex flex-col justify-center items-center w-4/5 gap-4">
             <h1>Mon profil</h1>
-            <div className="flex flex-col items-center md:flex-row-reverse md:justify-between">
+            <div className="flex flex-col w-full items-center md:flex-row-reverse md:justify-between">
                 <img 
                     src={user.image} alt={`${user.firstname} ${user.lastname}`}
                     className="w-1/3 self-center rounded-full border-chart-3 border-6"/>
