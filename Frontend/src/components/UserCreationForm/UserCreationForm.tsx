@@ -11,6 +11,7 @@ import {
   FormMessage,
 } from "../ui/form";
 import { useSignupMutation } from "@/graphql/hooks";
+import { useToast } from "@/contexts/ToasterContext";
 
 const formSchema = z.object({
   name: z.string().min(1, "Name is required"),
@@ -19,8 +20,14 @@ const formSchema = z.object({
   password: z.string().min(6, "Password must be at least 6 characters"),
 });
 
-export default function UserCreationForm() {
+type userModalSuccessType = {
+  onSuccess?: () => void;
+};
+
+export default function UserCreationForm({ onSuccess }: userModalSuccessType) {
   const [signup] = useSignupMutation();
+  const { success } = useToast();
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -43,6 +50,10 @@ export default function UserCreationForm() {
           },
         },
       });
+      success("Utilisateur créer");
+      if (onSuccess) {
+        onSuccess();
+      }
     } catch (error) {
       console.error("Error submitting form:", error);
     }
@@ -127,7 +138,9 @@ export default function UserCreationForm() {
         </div>
 
         <div className="flex justify-center">
-          <Button type="submit" className="w-40 bg-accent rounded-3xl p-5">Valider</Button>
+          <Button type="submit" className="w-40 bg-accent rounded-3xl p-5">
+            Valider
+          </Button>
         </div>
       </form>
     </Form>
