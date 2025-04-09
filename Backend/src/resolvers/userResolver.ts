@@ -3,7 +3,7 @@ import { User } from "../entities/user";
 import * as argon from "argon2";
 
 @InputType()
-class NewUserInput {
+ export class NewUserInput {
   @Field()
   firstname!: string;
   @Field()
@@ -42,7 +42,7 @@ export class UserResolver {
       return JSON.stringify("Utilisateur créé avec success");
     } catch (error) {
       console.error("Error creating user:", error);
-      throw new Error();
+      throw error;
     }
   }
 }
