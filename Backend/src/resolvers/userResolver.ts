@@ -1,9 +1,9 @@
-import { Arg, Field, InputType, Mutation, Query, Resolver } from "type-graphql";
+import { Arg, Field, InputType, Mutation, Resolver, Query } from "type-graphql";
 import { User } from "../entities/user";
 import * as argon from "argon2";
 
 @InputType()
-class NewUserInput {
+ export class NewUserInput {
   @Field()
   firstname!: string;
   @Field()
@@ -49,7 +49,7 @@ export class UserResolver {
       return JSON.stringify("Utilisateur créé avec success");
     } catch (error) {
       console.error("Error creating user:", error);
-      throw new Error();
+      throw error;
     }
   }
 }
