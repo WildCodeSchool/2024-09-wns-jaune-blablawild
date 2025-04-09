@@ -34,7 +34,7 @@ export type FilterTripInput = {
   passengers: Scalars['Float']['input'];
   sortBy?: InputMaybe<SortOption>;
   startDate: Scalars['DateTimeISO']['input'];
-  timeOption?: InputMaybe<TimeOption>;
+  timeOptions?: InputMaybe<Array<TimeOption>>;
 };
 
 export type Mutation = {
@@ -67,20 +67,6 @@ export type Query = {
   getTripByUser: Array<Trip>;
   getTripsByTime: Array<Trip>;
   getUsers: Array<User>;
-};
-
-
-export type QueryGetCheapestTripsArgs = {
-  arrival_city: Scalars['String']['input'];
-  date: Scalars['DateTimeISO']['input'];
-  departure_city: Scalars['String']['input'];
-};
-
-
-export type QueryGetEarliestTripsArgs = {
-  arrival_city: Scalars['String']['input'];
-  date: Scalars['DateTimeISO']['input'];
-  departure_city: Scalars['String']['input'];
 };
 
 
@@ -184,33 +170,12 @@ export type CreateTripMutationVariables = Exact<{
 
 export type CreateTripMutation = { __typename?: 'Mutation', createTrip: string };
 
-export type GetCheapestTripsQueryVariables = Exact<{
-  date: Scalars['DateTimeISO']['input'];
-  arrivalCity: Scalars['String']['input'];
-  departureCity: Scalars['String']['input'];
+export type SignupMutationVariables = Exact<{
+  data: NewUserInput;
 }>;
 
 
-export type GetCheapestTripsQuery = { __typename?: 'Query', getCheapestTrips: Array<{ __typename?: 'Trip', arrival_city: string, capacity: number, departure_city: string, departure_time: any, id: string, price: number, status: TripStatus, driver?: { __typename?: 'User', firstname: string, image?: string | null, id: string } | null }> };
-
-export type GetEarliestTripsQueryVariables = Exact<{
-  date: Scalars['DateTimeISO']['input'];
-  arrivalCity: Scalars['String']['input'];
-  departureCity: Scalars['String']['input'];
-}>;
-
-
-export type GetEarliestTripsQuery = { __typename?: 'Query', getEarliestTrips: Array<{ __typename?: 'Trip', arrival_city: string, capacity: number, departure_city: string, departure_time: any, id: string, price: number, status: TripStatus, driver?: { __typename?: 'User', firstname: string, image?: string | null, id: string } | null }> };
-
-export type GetTripsByTimeQueryVariables = Exact<{
-  date: Scalars['DateTimeISO']['input'];
-  arrivalCity: Scalars['String']['input'];
-  departureCity: Scalars['String']['input'];
-  time: Scalars['String']['input'];
-}>;
-
-
-export type GetTripsByTimeQuery = { __typename?: 'Query', getTripsByTime: Array<{ __typename?: 'Trip', arrival_city: string, capacity: number, departure_city: string, departure_time: any, id: string, price: number, status: TripStatus, driver?: { __typename?: 'User', firstname: string, image?: string | null, id: string } | null }> };
+export type SignupMutation = { __typename?: 'Mutation', signup: string };
 
 export type GetPopularTripQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -231,14 +196,6 @@ export type GetTripByUserQueryVariables = Exact<{
 
 
 export type GetTripByUserQuery = { __typename?: 'Query', getTripByUser: Array<{ __typename?: 'Trip', id: string, departure_time: any, departure_city: string, arrival_city: string, price: number, passengers?: Array<{ __typename?: 'User', id: string, firstname: string }> | null }> };
-
-export type SignupMutationVariables = Exact<{
-  data: NewUserInput;
-}>;
-
-
-export type SignupMutation = { __typename?: 'Mutation', signup: string };
-
 
 
 export const CreateTripDocument = gql`
@@ -272,6 +229,39 @@ export function useCreateTripMutation(baseOptions?: Apollo.MutationHookOptions<C
 export type CreateTripMutationHookResult = ReturnType<typeof useCreateTripMutation>;
 export type CreateTripMutationResult = Apollo.MutationResult<CreateTripMutation>;
 export type CreateTripMutationOptions = Apollo.BaseMutationOptions<CreateTripMutation, CreateTripMutationVariables>;
+
+export const SignupDocument = gql`
+    mutation Signup($data: NewUserInput!) {
+  signup(data: $data)
+}
+    `;
+export type SignupMutationFn = Apollo.MutationFunction<SignupMutation, SignupMutationVariables>;
+
+/**
+ * __useSignupMutation__
+ *
+ * To run a mutation, you first call `useSignupMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSignupMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [signupMutation, { data, loading, error }] = useSignupMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useSignupMutation(baseOptions?: Apollo.MutationHookOptions<SignupMutation, SignupMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<SignupMutation, SignupMutationVariables>(SignupDocument, options);
+      }
+export type SignupMutationHookResult = ReturnType<typeof useSignupMutation>;
+export type SignupMutationResult = Apollo.MutationResult<SignupMutation>;
+export type SignupMutationOptions = Apollo.BaseMutationOptions<SignupMutation, SignupMutationVariables>;
+
 export const GetPopularTripDocument = gql`
     query GetPopularTrip {
   getPopularTrip {
@@ -314,6 +304,7 @@ export type GetPopularTripQueryHookResult = ReturnType<typeof useGetPopularTripQ
 export type GetPopularTripLazyQueryHookResult = ReturnType<typeof useGetPopularTripLazyQuery>;
 export type GetPopularTripSuspenseQueryHookResult = ReturnType<typeof useGetPopularTripSuspenseQuery>;
 export type GetPopularTripQueryResult = Apollo.QueryResult<GetPopularTripQuery, GetPopularTripQueryVariables>;
+
 export const GetTripDocument = gql`
     query GetTrip($data: FilterTripInput!) {
   getTrip(data: $data) {
@@ -418,36 +409,3 @@ export type GetTripByUserQueryHookResult = ReturnType<typeof useGetTripByUserQue
 export type GetTripByUserLazyQueryHookResult = ReturnType<typeof useGetTripByUserLazyQuery>;
 export type GetTripByUserSuspenseQueryHookResult = ReturnType<typeof useGetTripByUserSuspenseQuery>;
 export type GetTripByUserQueryResult = Apollo.QueryResult<GetTripByUserQuery, GetTripByUserQueryVariables>;
-
-export const SignupDocument = gql`
-    mutation Signup($data: NewUserInput!) {
-  signup(data: $data)
-}
-    `;
-export type SignupMutationFn = Apollo.MutationFunction<SignupMutation, SignupMutationVariables>;
-
-/**
- * __useSignupMutation__
- *
- * To run a mutation, you first call `useSignupMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useSignupMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [signupMutation, { data, loading, error }] = useSignupMutation({
- *   variables: {
- *      data: // value for 'data'
- *   },
- * });
- */
-export function useSignupMutation(baseOptions?: Apollo.MutationHookOptions<SignupMutation, SignupMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<SignupMutation, SignupMutationVariables>(SignupDocument, options);
-      }
-export type SignupMutationHookResult = ReturnType<typeof useSignupMutation>;
-export type SignupMutationResult = Apollo.MutationResult<SignupMutation>;
-export type SignupMutationOptions = Apollo.BaseMutationOptions<SignupMutation, SignupMutationVariables>;
-

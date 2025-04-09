@@ -23,9 +23,7 @@ export default function SearchTrip() {
   const startDate = startOfDay(new Date(searchParams.date));
   const endDate = endOfDay(new Date(searchParams.date));
   const [currentSort, setCurrentSort] = useState<string | null>("earliest");
-  const [currentTimeRange, setCurrentTimeRange] = useState<TimeOption | null>(
-    null
-  );
+  const [currentTimeRange, setCurrentTimeRange] = useState<TimeOption[]>([]);
   const [filterData, setFilterData] = useState<FilterTripInput>({
     arrival: searchParams.arrival.trim(),
     departure: searchParams.departure.trim(),
@@ -60,7 +58,7 @@ export default function SearchTrip() {
     
   };
   
-  const handleTimeRangeChange = (timeRange: TimeOption | null): void => {
+  const handleTimeRangeChange = (timeRange: TimeOption[]): void => {
     setCurrentTimeRange(timeRange);
     
     const newData = {
@@ -68,9 +66,9 @@ export default function SearchTrip() {
     };
     
     if (timeRange === null) {
-      newData.timeOption = undefined;
+      newData.timeOptions = undefined;
     } else {
-      newData.timeOption = timeRange;
+      newData.timeOptions = timeRange;
     }
     
     setFilterData(newData);
@@ -80,7 +78,7 @@ export default function SearchTrip() {
   
   const handleReinstateFilter = () => {
     setCurrentSort(null);
-    setCurrentTimeRange(null);
+    setCurrentTimeRange([]);
     const newData = {
       ...filterData,
       sortBy: undefined,
