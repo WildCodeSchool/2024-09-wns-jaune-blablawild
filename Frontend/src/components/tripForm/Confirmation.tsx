@@ -1,4 +1,4 @@
-import { Check, CircleCheck } from "lucide-react";
+import { Check } from "lucide-react";
 import { Button } from "../ui/button";
 import { Link } from "react-router-dom";
 export default function Confirmation() {

@@ -6,6 +6,7 @@ import {
 } from "react-router-dom";
 import Layout from "./Layout";
 import HomePage from "./pages/HomePage";
+import Page404 from "./pages/Other/Page404";
 import SearchTrip from "./pages/SearchTrip";
 import SignInPage from "./pages/SignInPage";
 import SignUpPage from "./pages/SignUpPage";
@@ -27,6 +28,7 @@ const AppRoutes = () => {
         <Route path="search-result" element={<SearchTrip />} />
         <Route path="tripform" element={<TripForm />} />
         <Route path="userjourneys" element={<UserJourneys />} />
+        <Route path="404" element={<Page404 />} />
       </Routes>
     </Layout>
   );

@@ -34,13 +34,14 @@ export class User extends BaseEntity {
   @Column()
   password!: string;
 
-  @Field()
-  @Column()
-  image!: string;
+  @Field({nullable: true})
+  @Column({nullable: true})
+  image?: string;
 
-  @Field()
-  @Column()
-  role!: string;
+  // Role for user to define later if needed
+  // @Field()
+  // @Column()
+  // role!: string;
 
   @Field()
   @Column({ default: 0 })
