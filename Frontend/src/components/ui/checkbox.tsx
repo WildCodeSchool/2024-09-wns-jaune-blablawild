@@ -16,7 +16,7 @@ function Checkbox({
   labelClassName,
   id,
   checkboxColor = "bg-primary",
-  indicatorColor = "bg-secondary",
+  indicatorColor = "bg-secondary md:bg-white",
   borderColor = "border-input",
   ...props
 }: CheckboxProps) {
