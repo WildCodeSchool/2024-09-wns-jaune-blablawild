@@ -2,7 +2,7 @@ import { Arg, Mutation, Query, Resolver } from "type-graphql";
 import { Trip } from "../entities/trip";
 import { CreateTripInput, FilterTripInput } from "../type/tripType";
 import { User } from "../entities/user";
-import { Between, ILike, MoreThanOrEqual } from "typeorm";
+import { Between, ILike, MoreThan, LessThan, MoreThanOrEqual } from "typeorm";
 import { getPopular } from "../services/TripServices";
 
 @Resolver(Trip)
@@ -29,6 +29,36 @@ export class TripResolver {
       take: 5,
     });
     return popularTrip;
+  }
+
+  @Query(() => [Trip])
+  async getTripByUser(
+    @Arg("userId") userId: string,
+    @Arg("filter", { nullable: true }) filter: "upcoming" | "past" | "published"
+  ) {
+    const today = new Date();
+
+    let whereClause: any = { driver: { id: userId } };
+
+    if (filter === "upcoming") {
+      whereClause.departure_time = MoreThan(today);
+    } else if (filter === "past") {
+      whereClause.departure_time = LessThan(today);
+    } else if (filter === "published") {
+    }
+
+    const trips = await Trip.find({
+      where: whereClause,
+      relations: { passengers: true, driver: true },
+    });
+
+    if (!trips) {
+      throw new Error("No trips found for this user");
+    }
+
+    console.log("trip", trips);
+
+    return trips;
   }
 
   @Mutation(() => String)

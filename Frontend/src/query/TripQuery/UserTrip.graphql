@@ -1,0 +1,13 @@
+query GetTripByUser($userId: String!, $filter: String) {
+  getTripByUser(userId: $userId, filter: $filter) {
+    id
+    departure_time
+    departure_city
+    arrival_city
+    price
+    passengers {
+      id
+      firstname
+    }
+  }
+}
