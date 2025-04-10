@@ -7,7 +7,7 @@ export const calculateArrivalTime = (departureTime: string | Date): string => {
 };
 
 export const formatHourFromTime = (time: string | Date): string => {
-  return new Date(time).getHours() + "h";
+  return new Date(time).getUTCHours() + "h";
 };
 
 export const formatDuration = (
