@@ -22,7 +22,10 @@ export function PassengersList({ passengers }: Readonly<PassengersListProps>) {
         {passengers.map((passenger) => (
           <div key={passenger.id} className="flex items-center gap-2">
             <Avatar className="w-6 h-6">
-              <AvatarImage src={passenger.image} alt={passenger.firstname} />
+              <AvatarImage
+                src={passenger.image || undefined}
+                alt={passenger.firstname}
+              />
               <AvatarFallback>{passenger.firstname.charAt(0)}</AvatarFallback>
             </Avatar>
             <span className="text-sm text-gray-600">
