@@ -1,11 +1,12 @@
 import { Trip } from "@/graphql/hooks";
+import { formatUTCTime } from "@/utils/FormatUTC";
 
 type TripCardProps = {
   trips: Trip[];
 };
 
 export default function TripCard({ trips }: TripCardProps) {
-  
+
   return (
     <section>
       <div>
@@ -15,7 +16,7 @@ export default function TripCard({ trips }: TripCardProps) {
               key={trip.id}
               className="p-5 my-8 mx-6 md:mx-12 bg-gray-200 rounded-[10px]"
             >
-              <p>{new Date(trip.departure_time).toLocaleString("fr-FR")}</p>
+              <p>{formatUTCTime(new Date(trip.departure_time))}</p>
               <h1 className="text-2xl mb-4">
                 {trip.departure_city} + {trip.arrival_city}
               </h1>

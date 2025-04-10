@@ -129,7 +129,7 @@ export default function SearchTrip() {
 
     if (sortParam) {
       newData.sortBy =
-        sortParam === "cheapest" ? SortOption.Price : SortOption.Time;
+      sortParam === "cheapest" ? SortOption.Price : SortOption.Time;
       setCurrentSort(sortParam);
     }
 

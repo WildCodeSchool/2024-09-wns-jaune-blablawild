@@ -14,7 +14,6 @@ export default function TripSummary() {
   const passengers = watch("passengers");
 
   const totalPrice = passengers * price;
-  console.log(departureDate);
 
   return (
     <section>
