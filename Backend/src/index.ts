@@ -5,7 +5,6 @@ import { buildSchema } from "type-graphql";
 import { dataSource } from "./config/db";
 import { TripResolver } from "./resolvers/tripResolver";
 import { UserResolver } from "./resolvers/userResolver";
-
 async function StartGraphQLServer() {
   await dataSource.initialize();
   const schema = await buildSchema({
