@@ -7,7 +7,7 @@ import {
 import Layout from "./Layout";
 import HomePage from "./pages/HomePage";
 import Page404 from "./pages/Other/Page404";
-import SearchTrip from "./pages/SearchTrip";
+import SearchTrip from "./pages/SearchTrip/SearchTrip";
 import SignInPage from "./pages/SignInPage";
 import SignUpPage from "./pages/SignUpPage";
 import TripForm from "./pages/TripForm";
