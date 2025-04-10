@@ -1,8 +1,7 @@
-import { useGetTripByUserQuery } from "@/graphql/hooks";
-import van_image from "../assets/van-image-trip-form.png";
+import TripCard from "@/components/TripCard/TripCard";
+import { Trip, useGetTripByUserQuery } from "@/graphql/hooks";
 import { useState } from "react";
-import TripCard from "@/components/TripCard";
-import { Trip } from "@/graphql/hooks";
+import van_image from "../assets/van-image-trip-form.png";
 
 export default function UserJourneys() {
   const [activeTab, setActiveTab] = useState("À VENIR");
