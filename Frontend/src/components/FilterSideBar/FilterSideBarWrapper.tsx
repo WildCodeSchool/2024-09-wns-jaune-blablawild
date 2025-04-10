@@ -2,7 +2,6 @@ import { TimeOption } from "@/pages/SearchTrip";
 import { ReactElement } from "react";
 import { FilterSideBar } from "./FilterSideBar";
 import { MobileFilterDrawer } from "./FilterSideBarDrawer";
-import { TimeOption } from "@/graphql/hooks";
 
 type FilterSideBarWrapperProps = {
   children: ReactElement;

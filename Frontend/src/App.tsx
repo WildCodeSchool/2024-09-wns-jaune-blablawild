@@ -11,8 +11,8 @@ import SearchTrip from "./pages/SearchTrip";
 import SignInPage from "./pages/SignInPage";
 import SignUpPage from "./pages/SignUpPage";
 import TripForm from "./pages/TripForm";
-import UserProfilePage from "./pages/UserProfile/UserProfilePage";
 import UserJourneys from "./pages/UserJourneys";
+import UserProfilePage from "./pages/UserProfile/UserProfilePage";
 
 const AppRoutes = () => {
   const location = useLocation();
