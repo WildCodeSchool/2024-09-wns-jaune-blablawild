@@ -1,7 +1,7 @@
+import { TimeOption } from "@/pages/SearchTrip";
 import { ReactElement } from "react";
 import { FilterSideBar } from "./FilterSideBar";
 import { MobileFilterDrawer } from "./FilterSideBarDrawer";
-import { TimeOption } from "@/graphql/hooks";
 
 type FilterSideBarWrapperProps = {
   children: ReactElement;
@@ -22,7 +22,7 @@ export const FilterSideBarWrapper = ({
 }: FilterSideBarWrapperProps) => {
   return (
     <div className="w-full">
-      <div className="container relative">
+      <div className="relative">
         <MobileFilterDrawer
           onReinstateChange={onReinstateChange}
           onSortChange={onSortChange}
@@ -30,7 +30,7 @@ export const FilterSideBarWrapper = ({
           currentSort={currentSort}
           currentTimeRange={currentTimeRange}
         />
-        
+
         <div className="flex flex-row min-h-screen">
           <aside className="hidden md:block shrink-0 md:w-[220px] lg:w-[318px] md:sticky md:top-0 md:self-start md:h-auto">
             <div className="h-full">
@@ -43,7 +43,7 @@ export const FilterSideBarWrapper = ({
               />
             </div>
           </aside>
-          
+
           <main className="flex-grow w-full">{children}</main>
         </div>
       </div>
