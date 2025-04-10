@@ -65,7 +65,6 @@ export type Query = {
   getPopularTrip: Array<Trip>;
   getTrip: Array<Trip>;
   getTripByUser: Array<Trip>;
-  getTripsByTime: Array<Trip>;
   getUsers: Array<User>;
 };
 
@@ -74,17 +73,10 @@ export type QueryGetTripArgs = {
   data: FilterTripInput;
 };
 
+
 export type QueryGetTripByUserArgs = {
   filter?: InputMaybe<Scalars['String']['input']>;
   userId: Scalars['String']['input'];
-};
-
-
-export type QueryGetTripsByTimeArgs = {
-  arrival_city: Scalars['String']['input'];
-  date: Scalars['DateTimeISO']['input'];
-  departure_city: Scalars['String']['input'];
-  time: Scalars['String']['input'];
 };
 
 export type Review = {
@@ -229,7 +221,6 @@ export function useCreateTripMutation(baseOptions?: Apollo.MutationHookOptions<C
 export type CreateTripMutationHookResult = ReturnType<typeof useCreateTripMutation>;
 export type CreateTripMutationResult = Apollo.MutationResult<CreateTripMutation>;
 export type CreateTripMutationOptions = Apollo.BaseMutationOptions<CreateTripMutation, CreateTripMutationVariables>;
-
 export const SignupDocument = gql`
     mutation Signup($data: NewUserInput!) {
   signup(data: $data)
@@ -261,7 +252,6 @@ export function useSignupMutation(baseOptions?: Apollo.MutationHookOptions<Signu
 export type SignupMutationHookResult = ReturnType<typeof useSignupMutation>;
 export type SignupMutationResult = Apollo.MutationResult<SignupMutation>;
 export type SignupMutationOptions = Apollo.BaseMutationOptions<SignupMutation, SignupMutationVariables>;
-
 export const GetPopularTripDocument = gql`
     query GetPopularTrip {
   getPopularTrip {
@@ -304,7 +294,6 @@ export type GetPopularTripQueryHookResult = ReturnType<typeof useGetPopularTripQ
 export type GetPopularTripLazyQueryHookResult = ReturnType<typeof useGetPopularTripLazyQuery>;
 export type GetPopularTripSuspenseQueryHookResult = ReturnType<typeof useGetPopularTripSuspenseQuery>;
 export type GetPopularTripQueryResult = Apollo.QueryResult<GetPopularTripQuery, GetPopularTripQueryVariables>;
-
 export const GetTripDocument = gql`
     query GetTrip($data: FilterTripInput!) {
   getTrip(data: $data) {
@@ -359,7 +348,6 @@ export type GetTripQueryHookResult = ReturnType<typeof useGetTripQuery>;
 export type GetTripLazyQueryHookResult = ReturnType<typeof useGetTripLazyQuery>;
 export type GetTripSuspenseQueryHookResult = ReturnType<typeof useGetTripSuspenseQuery>;
 export type GetTripQueryResult = Apollo.QueryResult<GetTripQuery, GetTripQueryVariables>;
-
 export const GetTripByUserDocument = gql`
     query GetTripByUser($userId: String!, $filter: String) {
   getTripByUser(userId: $userId, filter: $filter) {
