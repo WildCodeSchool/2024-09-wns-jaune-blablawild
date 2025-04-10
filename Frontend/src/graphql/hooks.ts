@@ -65,6 +65,7 @@ export type Query = {
   getPopularTrip: Array<Trip>;
   getTrip: Array<Trip>;
   getTripByUser: Array<Trip>;
+  getUserById: User;
   getUsers: Array<User>;
 };
 
@@ -77,6 +78,11 @@ export type QueryGetTripArgs = {
 export type QueryGetTripByUserArgs = {
   filter?: InputMaybe<Scalars['String']['input']>;
   userId: Scalars['String']['input'];
+};
+
+
+export type QueryGetUserByIdArgs = {
+  id: Scalars['String']['input'];
 };
 
 export type Review = {
@@ -188,6 +194,13 @@ export type GetTripByUserQueryVariables = Exact<{
 
 
 export type GetTripByUserQuery = { __typename?: 'Query', getTripByUser: Array<{ __typename?: 'Trip', id: string, departure_time: any, departure_city: string, arrival_city: string, price: number, passengers?: Array<{ __typename?: 'User', id: string, firstname: string }> | null }> };
+
+export type GetUserByIdQueryVariables = Exact<{
+  id: Scalars['String']['input'];
+}>;
+
+
+export type GetUserByIdQuery = { __typename?: 'Query', getUserById: { __typename?: 'User', email: string, firstname: string, id: string, image?: string | null, lastname: string } };
 
 
 export const CreateTripDocument = gql`
@@ -397,3 +410,47 @@ export type GetTripByUserQueryHookResult = ReturnType<typeof useGetTripByUserQue
 export type GetTripByUserLazyQueryHookResult = ReturnType<typeof useGetTripByUserLazyQuery>;
 export type GetTripByUserSuspenseQueryHookResult = ReturnType<typeof useGetTripByUserSuspenseQuery>;
 export type GetTripByUserQueryResult = Apollo.QueryResult<GetTripByUserQuery, GetTripByUserQueryVariables>;
+export const GetUserByIdDocument = gql`
+    query GetUserById($id: String!) {
+  getUserById(id: $id) {
+    email
+    firstname
+    id
+    image
+    lastname
+  }
+}
+    `;
+
+/**
+ * __useGetUserByIdQuery__
+ *
+ * To run a query within a React component, call `useGetUserByIdQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetUserByIdQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetUserByIdQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useGetUserByIdQuery(baseOptions: Apollo.QueryHookOptions<GetUserByIdQuery, GetUserByIdQueryVariables> & ({ variables: GetUserByIdQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetUserByIdQuery, GetUserByIdQueryVariables>(GetUserByIdDocument, options);
+      }
+export function useGetUserByIdLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetUserByIdQuery, GetUserByIdQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetUserByIdQuery, GetUserByIdQueryVariables>(GetUserByIdDocument, options);
+        }
+export function useGetUserByIdSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetUserByIdQuery, GetUserByIdQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetUserByIdQuery, GetUserByIdQueryVariables>(GetUserByIdDocument, options);
+        }
+export type GetUserByIdQueryHookResult = ReturnType<typeof useGetUserByIdQuery>;
+export type GetUserByIdLazyQueryHookResult = ReturnType<typeof useGetUserByIdLazyQuery>;
+export type GetUserByIdSuspenseQueryHookResult = ReturnType<typeof useGetUserByIdSuspenseQuery>;
+export type GetUserByIdQueryResult = Apollo.QueryResult<GetUserByIdQuery, GetUserByIdQueryVariables>;

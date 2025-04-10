@@ -1,4 +1,3 @@
-import TripCard from "@/components/TripCard";
 import SearchBar from "@/components/SearchBar/SearchBar";
 import {
   FilterTripInput,
@@ -13,6 +12,7 @@ import { useEffect, useState } from "react";
 import { useLocation, useSearchParams } from "react-router-dom";
 import { endOfDay, startOfDay } from "date-fns";
 import { FilterSideBarWrapper } from "@/components/FilterSideBar/FilterSideBarWrapper";
+import TripCard from "@/components/TripCard/TripCard";
 
 export default function SearchTrip() {
   const location = useLocation();

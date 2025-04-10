@@ -75,3 +75,27 @@ describe("User resolver tests", () => {
     expect(User.save).not.toHaveBeenCalled();
   });
 });
+
+describe("User queries tests", () => {
+  let userResolver: UserResolver;
+  it('should return the correct User given a valid id', async () => {
+
+    userResolver = new UserResolver()
+
+    const id = faker.string.uuid()
+    const user = {
+      id: id,
+      firstname: faker.person.firstName(),
+      lastname: faker.person.lastName(),
+      email: faker.internet.email(),
+      password: faker.internet.password(),
+    }
+    
+    User.findOneBy = jest.fn().mockResolvedValue(user)
+
+    const result = await userResolver.getUserById(id)
+
+    expect(User.findOneBy).toHaveBeenCalledWith({id: id});
+    expect(result).toEqual(user);
+  })
+});
