@@ -27,7 +27,7 @@ export default function UserProfilePage() {
         >
             <section className="h-screen w-full self-center flex flex-col items-center bg-white/80 md:w-2/3 md:bg-white md:px-24">
                 <div className="w-full mt-14">
-                    <h1 className="text-[#595959] text-[36px] text-left">Mon profil</h1>
+                    <h1 className="text-[#595959] text-[36px] text-left px-6 md:px-0">Mon profil</h1>
                 </div>
                 
                 <menu className="flex w-full justify-between my-4 mt-6">
