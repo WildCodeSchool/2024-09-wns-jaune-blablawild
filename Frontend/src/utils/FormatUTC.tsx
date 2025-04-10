@@ -2,5 +2,5 @@ export function formatUTCTime(date: Date) {
     const hours = date.getUTCHours().toString().padStart(2, '0');
     const minutes = date.getUTCMinutes().toString().padStart(2, '0');
     
-    return `${hours}:${minutes}`;
+    return `${hours}h${minutes}`;
   }
