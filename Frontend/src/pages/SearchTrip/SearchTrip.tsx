@@ -144,6 +144,9 @@ export default function SearchTrip() {
 
   const allTrips = dataTrip?.getTrip || [];
 
+  console.log("Alltrip", allTrips);
+  
+
   const displayNoTrips = () => {
     return (
       <section className="p-10 min-h-[500px] flex items-center justify-center">
