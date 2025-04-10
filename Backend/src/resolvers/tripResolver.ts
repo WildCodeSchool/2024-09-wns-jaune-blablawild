@@ -36,22 +36,24 @@ export class TripResolver {
 
       let filteredTrips = trips;
       
-      if (data.timeOption) {
+      if (data.timeOptions && data.timeOptions.length > 0) {
         filteredTrips = trips.filter(trip => {
           const departureHour = new Date(trip.departure_time).getUTCHours();
           
-          switch (data.timeOption) {
-            case TimeOption.Before_6:
-              return departureHour < 6;
-            case TimeOption.From_6To_12:
-              return departureHour >= 6 && departureHour < 12;
-            case TimeOption.From_12To_18:
-              return departureHour >= 12 && departureHour < 18;
-            case TimeOption.After_18:
-              return departureHour >= 18;
-            default:
-              return true;
-          }
+          return data.timeOptions?.some(option => {
+            switch (option) {
+              case TimeOption.Before_6:
+                return departureHour < 6;
+              case TimeOption.From_6To_12:
+                return departureHour >= 6 && departureHour < 12;
+              case TimeOption.From_12To_18:
+                return departureHour >= 12 && departureHour < 18;
+              case TimeOption.After_18:
+                return departureHour >= 18;
+              default:
+                return true;
+            }
+          });
         });
       }
       
