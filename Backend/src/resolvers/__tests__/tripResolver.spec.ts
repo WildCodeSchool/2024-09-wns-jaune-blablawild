@@ -8,7 +8,6 @@ jest.mock('../../entities/trip')
 jest.mock('../../entities/user')
 
 describe('Trip Resolver', () => {
-    // it should create a trip
     let tripResolver: TripResolver
     let newTrip: CreateTripInput
 
