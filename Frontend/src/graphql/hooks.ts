@@ -179,13 +179,19 @@ export type CreateTripMutationVariables = Exact<{
 
 export type CreateTripMutation = { __typename?: 'Mutation', createTrip: string };
 
-
 export type SignupMutationVariables = Exact<{
   data: NewUserInput;
 }>;
 
 
 export type SignupMutation = { __typename?: 'Mutation', signup: string };
+
+export type LoginMutationVariables = Exact<{
+  data: LoginInput;
+}>;
+
+
+export type LoginMutation = { __typename?: 'Mutation', login: string };
 
 export type GetPopularTripQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -212,18 +218,7 @@ export type GetUserByIdQueryVariables = Exact<{
 }>;
 
 
-
-export type SignupMutation = { __typename?: 'Mutation', signup: string };
-
-export type LoginMutationVariables = Exact<{
-  data: LoginInput;
-}>;
-
-
-export type LoginMutation = { __typename?: 'Mutation', login: string };
-
 export type GetUserByIdQuery = { __typename?: 'Query', getUserById: { __typename?: 'User', email: string, firstname: string, id: string, image?: string | null, lastname: string } };
-
 
 
 export const CreateTripDocument = gql`
@@ -288,6 +283,37 @@ export function useSignupMutation(baseOptions?: Apollo.MutationHookOptions<Signu
 export type SignupMutationHookResult = ReturnType<typeof useSignupMutation>;
 export type SignupMutationResult = Apollo.MutationResult<SignupMutation>;
 export type SignupMutationOptions = Apollo.BaseMutationOptions<SignupMutation, SignupMutationVariables>;
+export const LoginDocument = gql`
+    mutation Login($data: LoginInput!) {
+  login(data: $data)
+}
+    `;
+export type LoginMutationFn = Apollo.MutationFunction<LoginMutation, LoginMutationVariables>;
+
+/**
+ * __useLoginMutation__
+ *
+ * To run a mutation, you first call `useLoginMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useLoginMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [loginMutation, { data, loading, error }] = useLoginMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useLoginMutation(baseOptions?: Apollo.MutationHookOptions<LoginMutation, LoginMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<LoginMutation, LoginMutationVariables>(LoginDocument, options);
+      }
+export type LoginMutationHookResult = ReturnType<typeof useLoginMutation>;
+export type LoginMutationResult = Apollo.MutationResult<LoginMutation>;
+export type LoginMutationOptions = Apollo.BaseMutationOptions<LoginMutation, LoginMutationVariables>;
 export const GetPopularTripDocument = gql`
     query GetPopularTrip {
   getPopularTrip {
@@ -433,11 +459,6 @@ export type GetTripByUserQueryHookResult = ReturnType<typeof useGetTripByUserQue
 export type GetTripByUserLazyQueryHookResult = ReturnType<typeof useGetTripByUserLazyQuery>;
 export type GetTripByUserSuspenseQueryHookResult = ReturnType<typeof useGetTripByUserSuspenseQuery>;
 export type GetTripByUserQueryResult = Apollo.QueryResult<GetTripByUserQuery, GetTripByUserQueryVariables>;
-
-export const SignupDocument = gql`
-    mutation Signup($data: NewUserInput!) {
-  signup(data: $data)
-
 export const GetUserByIdDocument = gql`
     query GetUserById($id: String!) {
   getUserById(id: $id) {
@@ -447,7 +468,6 @@ export const GetUserByIdDocument = gql`
     image
     lastname
   }
-
 }
     `;
 
@@ -471,42 +491,6 @@ export function useGetUserByIdQuery(baseOptions: Apollo.QueryHookOptions<GetUser
         const options = {...defaultOptions, ...baseOptions}
         return Apollo.useQuery<GetUserByIdQuery, GetUserByIdQueryVariables>(GetUserByIdDocument, options);
       }
-
-export type SignupMutationHookResult = ReturnType<typeof useSignupMutation>;
-export type SignupMutationResult = Apollo.MutationResult<SignupMutation>;
-export type SignupMutationOptions = Apollo.BaseMutationOptions<SignupMutation, SignupMutationVariables>;
-export const LoginDocument = gql`
-    mutation Login($data: LoginInput!) {
-  login(data: $data)
-}
-    `;
-export type LoginMutationFn = Apollo.MutationFunction<LoginMutation, LoginMutationVariables>;
-
-/**
- * __useLoginMutation__
- *
- * To run a mutation, you first call `useLoginMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useLoginMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [loginMutation, { data, loading, error }] = useLoginMutation({
- *   variables: {
- *      data: // value for 'data'
- *   },
- * });
- */
-export function useLoginMutation(baseOptions?: Apollo.MutationHookOptions<LoginMutation, LoginMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<LoginMutation, LoginMutationVariables>(LoginDocument, options);
-      }
-export type LoginMutationHookResult = ReturnType<typeof useLoginMutation>;
-export type LoginMutationResult = Apollo.MutationResult<LoginMutation>;
-export type LoginMutationOptions = Apollo.BaseMutationOptions<LoginMutation, LoginMutationVariables>;
-
 export function useGetUserByIdLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetUserByIdQuery, GetUserByIdQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
           return Apollo.useLazyQuery<GetUserByIdQuery, GetUserByIdQueryVariables>(GetUserByIdDocument, options);
@@ -519,4 +503,3 @@ export type GetUserByIdQueryHookResult = ReturnType<typeof useGetUserByIdQuery>;
 export type GetUserByIdLazyQueryHookResult = ReturnType<typeof useGetUserByIdLazyQuery>;
 export type GetUserByIdSuspenseQueryHookResult = ReturnType<typeof useGetUserByIdSuspenseQuery>;
 export type GetUserByIdQueryResult = Apollo.QueryResult<GetUserByIdQuery, GetUserByIdQueryVariables>;
-
