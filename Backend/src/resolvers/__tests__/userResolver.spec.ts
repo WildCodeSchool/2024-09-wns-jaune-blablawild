@@ -28,7 +28,7 @@ describe("User resolver tests", () => {
     (User.save as jest.Mock).mockResolvedValueOnce({
       id: faker.string.uuid(),
       ...newUser,
-      password: "hash_passaword",
+      password: "hash_password",
     });
 
     const result = await userResolver.signup(newUser);

@@ -96,8 +96,6 @@ export class TripResolver {
       throw new Error("No trips found for this user");
     }
 
-    console.log("trip", trips);
-
     return trips;
   }
 
