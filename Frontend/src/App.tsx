@@ -12,6 +12,7 @@ import SignInPage from "./pages/SignInPage";
 import SignUpPage from "./pages/SignUpPage";
 import TripForm from "./pages/TripForm";
 import UserProfilePage from "./pages/UserProfile/UserProfilePage";
+import UserJourneys from "./pages/UserJourneys";
 
 const AppRoutes = () => {
   const location = useLocation();
@@ -28,6 +29,7 @@ const AppRoutes = () => {
         <Route path="search-result" element={<SearchTrip />} />
         <Route path="user/:id" element={<UserProfilePage />} />
         <Route path="tripform" element={<TripForm />} />
+        <Route path="userjourneys" element={<UserJourneys />} />
         <Route path="404" element={<Page404 />} />
       </Routes>
     </Layout>

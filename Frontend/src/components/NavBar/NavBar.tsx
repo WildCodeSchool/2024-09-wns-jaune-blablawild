@@ -10,9 +10,11 @@ import { UserRound } from 'lucide-react';
 import { MessageSquareText } from 'lucide-react';
 import { LogOut } from 'lucide-react';
 import { ChevronRight } from 'lucide-react';
+import { useNavigate } from "react-router-dom";
 
 
 export default function NavBar() {
+  const navigate = useNavigate(); 
   return (
     <Popover>
       <PopoverTrigger asChild>
@@ -20,7 +22,7 @@ export default function NavBar() {
       </PopoverTrigger>
       <PopoverContent className="w-screen h-screen md:w-[25vw] md:h-auto p-10 bg-background rounded-none mt-2">
         <ul className="flex flex-col space-y-6 text-md ">
-          <li className="flex justify-between"><div className="flex justify-center gap-2 cursor-pointer"><CarTaxiFront /> Mes Trajets</div><ChevronRight /></li>
+          <li className="flex justify-between" onClick={() => navigate("userjourneys")}><div className="flex justify-center gap-2 cursor-pointer"><CarTaxiFront /> Mes Trajets</div><ChevronRight /></li>
           <Separator />
           <li className="flex justify-between"><div className="flex justify-center gap-2 cursor-pointer"><UserRound /> Profile</div><ChevronRight /></li>
           <Separator />
