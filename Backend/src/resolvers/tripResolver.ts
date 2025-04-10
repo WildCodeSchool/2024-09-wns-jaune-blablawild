@@ -105,6 +105,6 @@ export class TripResolver {
     const trip = new Trip();
     Object.assign(trip, data);
     await trip.save();
-    return JSON.stringify("Le trajet a bien été créé");
+    return "Le trajet a bien été créé";
   }
 }
