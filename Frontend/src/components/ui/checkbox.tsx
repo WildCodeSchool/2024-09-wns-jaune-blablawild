@@ -32,7 +32,7 @@ function Checkbox({
         id={checkboxId}
         data-slot="checkbox"
         className={cn(
-          "peer dark:bg-input/30 focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive size-4 shrink-0 rounded-full border shadow-xs outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50 relative",
+          "peer dark:bg-input/30 focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive size-4 shrink-0 rounded-xs border shadow-xs outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50 relative",
           borderClass, 
           `data-[state=checked]:${checkboxBgClass}`, 
           "data-[state=checked]:text-primary-foreground",
@@ -45,7 +45,7 @@ function Checkbox({
           className="flex items-center justify-center text-current absolute inset-0"
         >
           <div className={cn(
-            "size-2 rounded-full mx-auto my-auto",
+            "size-2 rounded-xs mx-auto my-auto",
             indicatorBgClass
           )} />
         </CheckboxPrimitive.Indicator>
