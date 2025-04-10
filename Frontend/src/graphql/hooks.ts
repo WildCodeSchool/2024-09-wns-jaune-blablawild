@@ -37,15 +37,26 @@ export type FilterTripInput = {
   timeOption?: InputMaybe<TimeOption>;
 };
 
+export type LoginInput = {
+  email: Scalars['String']['input'];
+  password: Scalars['String']['input'];
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
   createTrip: Scalars['String']['output'];
+  login: Scalars['String']['output'];
   signup: Scalars['String']['output'];
 };
 
 
 export type MutationCreateTripArgs = {
   data: CreateTripInput;
+};
+
+
+export type MutationLoginArgs = {
+  data: LoginInput;
 };
 
 
@@ -65,22 +76,7 @@ export type Query = {
   getPopularTrip: Array<Trip>;
   getTrip: Array<Trip>;
   getTripByUser: Array<Trip>;
-  getTripsByTime: Array<Trip>;
   getUsers: Array<User>;
-};
-
-
-export type QueryGetCheapestTripsArgs = {
-  arrival_city: Scalars['String']['input'];
-  date: Scalars['DateTimeISO']['input'];
-  departure_city: Scalars['String']['input'];
-};
-
-
-export type QueryGetEarliestTripsArgs = {
-  arrival_city: Scalars['String']['input'];
-  date: Scalars['DateTimeISO']['input'];
-  departure_city: Scalars['String']['input'];
 };
 
 
@@ -88,17 +84,10 @@ export type QueryGetTripArgs = {
   data: FilterTripInput;
 };
 
+
 export type QueryGetTripByUserArgs = {
   filter?: InputMaybe<Scalars['String']['input']>;
   userId: Scalars['String']['input'];
-};
-
-
-export type QueryGetTripsByTimeArgs = {
-  arrival_city: Scalars['String']['input'];
-  date: Scalars['DateTimeISO']['input'];
-  departure_city: Scalars['String']['input'];
-  time: Scalars['String']['input'];
 };
 
 export type Review = {
@@ -184,34 +173,6 @@ export type CreateTripMutationVariables = Exact<{
 
 export type CreateTripMutation = { __typename?: 'Mutation', createTrip: string };
 
-export type GetCheapestTripsQueryVariables = Exact<{
-  date: Scalars['DateTimeISO']['input'];
-  arrivalCity: Scalars['String']['input'];
-  departureCity: Scalars['String']['input'];
-}>;
-
-
-export type GetCheapestTripsQuery = { __typename?: 'Query', getCheapestTrips: Array<{ __typename?: 'Trip', arrival_city: string, capacity: number, departure_city: string, departure_time: any, id: string, price: number, status: TripStatus, driver?: { __typename?: 'User', firstname: string, image?: string | null, id: string } | null }> };
-
-export type GetEarliestTripsQueryVariables = Exact<{
-  date: Scalars['DateTimeISO']['input'];
-  arrivalCity: Scalars['String']['input'];
-  departureCity: Scalars['String']['input'];
-}>;
-
-
-export type GetEarliestTripsQuery = { __typename?: 'Query', getEarliestTrips: Array<{ __typename?: 'Trip', arrival_city: string, capacity: number, departure_city: string, departure_time: any, id: string, price: number, status: TripStatus, driver?: { __typename?: 'User', firstname: string, image?: string | null, id: string } | null }> };
-
-export type GetTripsByTimeQueryVariables = Exact<{
-  date: Scalars['DateTimeISO']['input'];
-  arrivalCity: Scalars['String']['input'];
-  departureCity: Scalars['String']['input'];
-  time: Scalars['String']['input'];
-}>;
-
-
-export type GetTripsByTimeQuery = { __typename?: 'Query', getTripsByTime: Array<{ __typename?: 'Trip', arrival_city: string, capacity: number, departure_city: string, departure_time: any, id: string, price: number, status: TripStatus, driver?: { __typename?: 'User', firstname: string, image?: string | null, id: string } | null }> };
-
 export type GetPopularTripQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -239,6 +200,12 @@ export type SignupMutationVariables = Exact<{
 
 export type SignupMutation = { __typename?: 'Mutation', signup: string };
 
+export type LoginMutationVariables = Exact<{
+  data: LoginInput;
+}>;
+
+
+export type LoginMutation = { __typename?: 'Mutation', login: string };
 
 
 export const CreateTripDocument = gql`
@@ -368,7 +335,6 @@ export type GetTripQueryHookResult = ReturnType<typeof useGetTripQuery>;
 export type GetTripLazyQueryHookResult = ReturnType<typeof useGetTripLazyQuery>;
 export type GetTripSuspenseQueryHookResult = ReturnType<typeof useGetTripSuspenseQuery>;
 export type GetTripQueryResult = Apollo.QueryResult<GetTripQuery, GetTripQueryVariables>;
-
 export const GetTripByUserDocument = gql`
     query GetTripByUser($userId: String!, $filter: String) {
   getTripByUser(userId: $userId, filter: $filter) {
@@ -418,7 +384,6 @@ export type GetTripByUserQueryHookResult = ReturnType<typeof useGetTripByUserQue
 export type GetTripByUserLazyQueryHookResult = ReturnType<typeof useGetTripByUserLazyQuery>;
 export type GetTripByUserSuspenseQueryHookResult = ReturnType<typeof useGetTripByUserSuspenseQuery>;
 export type GetTripByUserQueryResult = Apollo.QueryResult<GetTripByUserQuery, GetTripByUserQueryVariables>;
-
 export const SignupDocument = gql`
     mutation Signup($data: NewUserInput!) {
   signup(data: $data)
@@ -450,4 +415,34 @@ export function useSignupMutation(baseOptions?: Apollo.MutationHookOptions<Signu
 export type SignupMutationHookResult = ReturnType<typeof useSignupMutation>;
 export type SignupMutationResult = Apollo.MutationResult<SignupMutation>;
 export type SignupMutationOptions = Apollo.BaseMutationOptions<SignupMutation, SignupMutationVariables>;
+export const LoginDocument = gql`
+    mutation Login($data: LoginInput!) {
+  login(data: $data)
+}
+    `;
+export type LoginMutationFn = Apollo.MutationFunction<LoginMutation, LoginMutationVariables>;
 
+/**
+ * __useLoginMutation__
+ *
+ * To run a mutation, you first call `useLoginMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useLoginMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [loginMutation, { data, loading, error }] = useLoginMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useLoginMutation(baseOptions?: Apollo.MutationHookOptions<LoginMutation, LoginMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<LoginMutation, LoginMutationVariables>(LoginDocument, options);
+      }
+export type LoginMutationHookResult = ReturnType<typeof useLoginMutation>;
+export type LoginMutationResult = Apollo.MutationResult<LoginMutation>;
+export type LoginMutationOptions = Apollo.BaseMutationOptions<LoginMutation, LoginMutationVariables>;
