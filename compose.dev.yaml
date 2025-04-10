@@ -10,6 +10,7 @@ services:
       DB_USER: ${DB_USER}
       DB_HOST: ${DB_HOST}
       APP_SECRET: ${APP_SECRET}
+      JWT_SECRET: ${JWT_SECRET}
 
   frontend:
     container_name: frontend
