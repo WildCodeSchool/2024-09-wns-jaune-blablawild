@@ -52,12 +52,12 @@ export class UserResolver {
       generateToken(user.id, res)
 
       return JSON.stringify({ 
-        firstname: user.firstname, 
         id: user.id, 
+        firstname: user.firstname, 
         lastname: user.lastname, 
         email: user.email 
       });
-      
+
     } catch (error) {
       console.error("Error creating user:", error);
       throw error;
