@@ -1,10 +1,22 @@
 import { Arg, Mutation, Query, Resolver } from "type-graphql";
 import { Trip } from "../entities/trip";
-import { CreateTripInput, FilterTripInput, SortOption, TimeOption } from "../type/tripType";
+import {
+  CreateTripInput,
+  FilterTripInput,
+  SortOption,
+  TimeOption,
+  TripStatusFilter,
+} from "../type/tripType";
 import { User } from "../entities/user";
-import { Between, FindOptionsWhere, ILike, MoreThanOrEqual, MoreThan, LessThan } from "typeorm";
+import {
+  Between,
+  FindOptionsWhere,
+  ILike,
+  MoreThanOrEqual,
+  MoreThan,
+  LessThan,
+} from "typeorm";
 import { getPopular } from "../services/TripServices";
-
 
 @Resolver(Trip)
 export class TripResolver {
@@ -13,7 +25,8 @@ export class TripResolver {
     const where: FindOptionsWhere<Trip> = {
       departure_city: ILike(`%${data.departure}%`),
       arrival_city: ILike(`%${data.arrival}%`),
-      departure_time: Between(data.startDate, data.endDate)
+      capacity: MoreThanOrEqual(data.passengers),
+      departure_time: Between(data.startDate, data.endDate),
     };
 
     let orderBy = {};
@@ -29,7 +42,7 @@ export class TripResolver {
         order: orderBy,
         relations: {
           driver: true,
-          passengers: true
+          passengers: true,
         },
       });
 
@@ -57,13 +70,13 @@ export class TripResolver {
           });
         });
       }
-      
+
       return filteredTrips;
     } catch (error) {
       throw error;
     }
   }
-  
+
   @Query(() => [Trip])
   async getPopularTrip() {
     const popularTrip = await Trip.find({
@@ -75,17 +88,17 @@ export class TripResolver {
   @Query(() => [Trip])
   async getTripByUser(
     @Arg("userId") userId: string,
-    @Arg("filter", { nullable: true }) filter: "upcoming" | "past" | "published"
+    @Arg("filter", { nullable: true }) filter: TripStatusFilter
   ) {
     const today = new Date();
 
     let whereClause: any = { driver: { id: userId } };
 
-    if (filter === "upcoming") {
+    if (filter === TripStatusFilter.UPCOMING) {
       whereClause.departure_time = MoreThan(today);
-    } else if (filter === "past") {
+    } else if (filter === TripStatusFilter.PAST) {
       whereClause.departure_time = LessThan(today);
-    } else if (filter === "published") {
+    } else if (filter === TripStatusFilter.PUBLISHED) {
     }
 
     const trips = await Trip.find({
