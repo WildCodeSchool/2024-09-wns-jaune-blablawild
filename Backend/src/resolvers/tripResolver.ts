@@ -1,10 +1,22 @@
 import { Arg, Mutation, Query, Resolver } from "type-graphql";
 import { Trip } from "../entities/trip";
-import { CreateTripInput, FilterTripInput, SortOption, TimeOption } from "../type/tripType";
+import {
+  CreateTripInput,
+  FilterTripInput,
+  SortOption,
+  TimeOption,
+  TripStatusFilter,
+} from "../type/tripType";
 import { User } from "../entities/user";
-import { Between, FindOptionsWhere, ILike, MoreThanOrEqual, MoreThan, LessThan } from "typeorm";
+import {
+  Between,
+  FindOptionsWhere,
+  ILike,
+  MoreThanOrEqual,
+  MoreThan,
+  LessThan,
+} from "typeorm";
 import { getPopular } from "../services/TripServices";
-
 
 @Resolver(Trip)
 export class TripResolver {
@@ -14,7 +26,7 @@ export class TripResolver {
       departure_city: ILike(`%${data.departure}%`),
       arrival_city: ILike(`%${data.arrival}%`),
       capacity: MoreThanOrEqual(data.passengers),
-      departure_time: Between(data.startDate, data.endDate)
+      departure_time: Between(data.startDate, data.endDate),
     };
 
     let orderBy = {};
@@ -30,16 +42,16 @@ export class TripResolver {
         order: orderBy,
         relations: {
           driver: true,
-          passengers: true
+          passengers: true,
         },
       });
 
       let filteredTrips = trips;
-      
+
       if (data.timeOption) {
-        filteredTrips = trips.filter(trip => {
+        filteredTrips = trips.filter((trip) => {
           const departureHour = new Date(trip.departure_time).getUTCHours();
-          
+
           switch (data.timeOption) {
             case TimeOption.Before_6:
               return departureHour < 6;
@@ -54,13 +66,13 @@ export class TripResolver {
           }
         });
       }
-      
+
       return filteredTrips;
     } catch (error) {
       throw error;
     }
   }
-  
+
   @Query(() => [Trip])
   async getPopularTrip() {
     const popularTrip = await Trip.find({
@@ -72,29 +84,23 @@ export class TripResolver {
   @Query(() => [Trip])
   async getTripByUser(
     @Arg("userId") userId: string,
-    @Arg("filter", { nullable: true }) filter: "upcoming" | "past" | "published"
+    @Arg("filter", { nullable: true }) filter: TripStatusFilter
   ) {
     const today = new Date();
 
     let whereClause: any = { driver: { id: userId } };
 
-    if (filter === "upcoming") {
+    if (filter === TripStatusFilter.UPCOMING) {
       whereClause.departure_time = MoreThan(today);
-    } else if (filter === "past") {
+    } else if (filter === TripStatusFilter.PAST) {
       whereClause.departure_time = LessThan(today);
-    } else if (filter === "published") {
+    } else if (filter === TripStatusFilter.PUBLISHED) {
     }
 
     const trips = await Trip.find({
       where: whereClause,
       relations: { passengers: true, driver: true },
     });
-
-    if (!trips) {
-      throw new Error("No trips found for this user");
-    }
-
-    console.log("trip", trips);
 
     return trips;
   }

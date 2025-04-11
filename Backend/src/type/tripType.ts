@@ -3,19 +3,25 @@ import { Field, InputType, registerEnumType } from "type-graphql";
 export enum TripStatus {
   OPEN = "OPEN",
   CLOSE = "CLOSE",
-  FULL= "FULL",
+  FULL = "FULL",
 }
 
 export enum TimeOption {
-  Before_6 = "Before_6",     
-  From_6To_12 = "From_6To_12", 
-  From_12To_18 = "From_12To_18", 
-  After_18 = "After_18",  
+  Before_6 = "Before_6",
+  From_6To_12 = "From_6To_12",
+  From_12To_18 = "From_12To_18",
+  After_18 = "After_18",
 }
 
 export enum SortOption {
   PRICE = "PRICE",
   TIME = "TIME",
+}
+
+export enum TripStatusFilter {
+  UPCOMING = "upcoming",
+  PAST = "past",
+  PUBLISHED = "published",
 }
 
 registerEnumType(TripStatus, {
@@ -31,6 +37,11 @@ registerEnumType(TimeOption, {
 registerEnumType(SortOption, {
   name: "SortOption",
   description: "Options for sorting trips",
+});
+
+registerEnumType(TripStatusFilter, {
+  name: "TripStatusFilter",
+  description: "Status for a trip",
 });
 
 @InputType()
