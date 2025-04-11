@@ -7,7 +7,15 @@ export const calculateArrivalTime = (departureTime: string | Date): string => {
 };
 
 export const formatHourFromTime = (time: string | Date): string => {
-  return new Date(time).getUTCHours() + "h";
+
+  const date = new Date(time);
+  const hours = date.getUTCHours();
+  const minutes = date.getUTCMinutes();
+  const formattedHour = hours === 0 ? `0${hours}` : hours;
+  const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes;
+  
+  return `${formattedHour}h${formattedMinutes}`;
+
 };
 
 export const formatDuration = (

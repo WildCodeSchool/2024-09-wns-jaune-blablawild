@@ -74,10 +74,16 @@ export type NewUserInput = {
 export type Query = {
   __typename?: 'Query';
   getPopularTrip: Array<Trip>;
+  getReviewsByUser: Array<Review>;
   getTrip: Array<Trip>;
   getTripByUser: Array<Trip>;
   getUserById: User;
   getUsers: Array<User>;
+};
+
+
+export type QueryGetReviewsByUserArgs = {
+  userId: Scalars['String']['input'];
 };
 
 
@@ -212,6 +218,13 @@ export type GetTripByUserQueryVariables = Exact<{
 
 
 export type GetTripByUserQuery = { __typename?: 'Query', getTripByUser: Array<{ __typename?: 'Trip', id: string, departure_time: any, departure_city: string, arrival_city: string, price: number, passengers?: Array<{ __typename?: 'User', id: string, firstname: string }> | null }> };
+
+export type GetReviewsByUserQueryVariables = Exact<{
+  userId: Scalars['String']['input'];
+}>;
+
+
+export type GetReviewsByUserQuery = { __typename?: 'Query', getReviewsByUser: Array<{ __typename?: 'Review', comment: string, date: any, notation: number, id: string, sender: { __typename?: 'User', firstname: string, image?: string | null }, receiver: { __typename?: 'User', firstname: string } }> };
 
 export type GetUserByIdQueryVariables = Exact<{
   id: Scalars['String']['input'];
@@ -459,6 +472,56 @@ export type GetTripByUserQueryHookResult = ReturnType<typeof useGetTripByUserQue
 export type GetTripByUserLazyQueryHookResult = ReturnType<typeof useGetTripByUserLazyQuery>;
 export type GetTripByUserSuspenseQueryHookResult = ReturnType<typeof useGetTripByUserSuspenseQuery>;
 export type GetTripByUserQueryResult = Apollo.QueryResult<GetTripByUserQuery, GetTripByUserQueryVariables>;
+export const GetReviewsByUserDocument = gql`
+    query GetReviewsByUser($userId: String!) {
+  getReviewsByUser(userId: $userId) {
+    comment
+    date
+    notation
+    id
+    sender {
+      firstname
+      image
+    }
+    receiver {
+      firstname
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetReviewsByUserQuery__
+ *
+ * To run a query within a React component, call `useGetReviewsByUserQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetReviewsByUserQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetReviewsByUserQuery({
+ *   variables: {
+ *      userId: // value for 'userId'
+ *   },
+ * });
+ */
+export function useGetReviewsByUserQuery(baseOptions: Apollo.QueryHookOptions<GetReviewsByUserQuery, GetReviewsByUserQueryVariables> & ({ variables: GetReviewsByUserQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetReviewsByUserQuery, GetReviewsByUserQueryVariables>(GetReviewsByUserDocument, options);
+      }
+export function useGetReviewsByUserLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetReviewsByUserQuery, GetReviewsByUserQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetReviewsByUserQuery, GetReviewsByUserQueryVariables>(GetReviewsByUserDocument, options);
+        }
+export function useGetReviewsByUserSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetReviewsByUserQuery, GetReviewsByUserQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetReviewsByUserQuery, GetReviewsByUserQueryVariables>(GetReviewsByUserDocument, options);
+        }
+export type GetReviewsByUserQueryHookResult = ReturnType<typeof useGetReviewsByUserQuery>;
+export type GetReviewsByUserLazyQueryHookResult = ReturnType<typeof useGetReviewsByUserLazyQuery>;
+export type GetReviewsByUserSuspenseQueryHookResult = ReturnType<typeof useGetReviewsByUserSuspenseQuery>;
+export type GetReviewsByUserQueryResult = Apollo.QueryResult<GetReviewsByUserQuery, GetReviewsByUserQueryVariables>;
 export const GetUserByIdDocument = gql`
     query GetUserById($id: String!) {
   getUserById(id: $id) {
