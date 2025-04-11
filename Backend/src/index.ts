@@ -5,10 +5,11 @@ import { buildSchema } from "type-graphql";
 import { dataSource } from "./config/db";
 import { TripResolver } from "./resolvers/tripResolver";
 import { UserResolver } from "./resolvers/userResolver";
+import { ReviewResolver } from "./resolvers/reviewsResolver";
 async function StartGraphQLServer() {
   await dataSource.initialize();
   const schema = await buildSchema({
-    resolvers: [TripResolver, UserResolver],
+    resolvers: [TripResolver, UserResolver, ReviewResolver],
   });
 
   const server = new ApolloServer({ schema });
