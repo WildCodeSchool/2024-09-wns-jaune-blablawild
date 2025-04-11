@@ -1,9 +1,12 @@
 import { faker } from "@faker-js/faker/locale/fr";
-import { CreateTripInput, TripStatus, TripStatusFilter } from "../../type/tripType";
 import { TripResolver } from "../tripResolver";
 import { Trip } from "../../entities/trip";
 import { User } from "../../entities/user";
-import { LessThan, MoreThan } from "typeorm";
+import {
+  CreateTripInput,
+  TripStatus,
+  TripStatusFilter,
+} from "../../type/tripType";
 
 jest.mock("../../entities/trip");
 jest.mock("../../entities/user");
@@ -16,16 +19,16 @@ const generateTrip = () => {
     price: faker.number.int(),
     capacity: faker.number.int({ min: 1, max: 10 }),
     driverId: faker.string.uuid(),
-    status: TripStatus.OPEN
+    status: TripStatus.OPEN,
   };
 };
 
 describe("Trip Resolver", () => {
   let tripResolver: TripResolver;
   let newTrip: CreateTripInput;
-  const today = new Date()
-  const upcomingDate = today.setDate(today.getDate() + 3)
-  const pastDate = today.setDate(today.getDate() - 3)
+  const today = new Date();
+  const upcomingDate = today.setDate(today.getDate() + 3);
+  const pastDate = today.setDate(today.getDate() - 3);
 
   beforeEach(() => {
     tripResolver = new TripResolver();
@@ -58,79 +61,91 @@ describe("Trip Resolver", () => {
       trips: [
         {
           ...generateTrip(),
-          driverId: 3,
+          driver: { id: "3" },
         },
         {
           ...generateTrip(),
-          driverId: 3,
+          driver: { id: "3" },
         },
         {
           ...generateTrip(),
-          driverId: 1,
+          driver: { id: "1" },
         },
       ],
       expectedLength: 2,
-      driverId: 3,
-      filter: TripStatusFilter.PUBLISHED
+      driverId: "3",
+      filter: TripStatusFilter.PUBLISHED,
     },
     {
       name: "Get trips for given filter",
       trips: [
         {
           ...generateTrip(),
-          driverId: 3,
-          departure_time: upcomingDate
+          driver: { id: "3" },
+          departure_time: upcomingDate,
         },
         {
           ...generateTrip(),
-          driverId: 3,
-          departure_time: pastDate
+          driver: { id: "3" },
+          departure_time: pastDate,
         },
         {
           ...generateTrip(),
-          driverId: 1,
-          departure_time: pastDate
+          driver: { id: "1" },
+          departure_time: pastDate,
         },
       ],
       expectedLength: 2,
-      driverId: 3,
-      filter: TripStatusFilter.UPCOMING
+      driverId: "3",
+      filter: TripStatusFilter.UPCOMING,
     },
     {
       name: "Get no trip when no driverId",
       trips: [
         {
           ...generateTrip(),
-          driverId: 3,
+          driver: { id: "3" },
         },
         {
           ...generateTrip(),
-          driverId: 3,
+          driver: { id: "3" },
         },
         {
           ...generateTrip(),
-          driverId: 1,
+          driver: { id: "1" },
         },
       ],
       expectedLength: 0,
       driverId: null,
-      filter: TripStatusFilter.PUBLISHED
+      filter: TripStatusFilter.PUBLISHED,
     },
   ])("$name", async ({ name, trips, expectedLength, driverId, filter }) => {
-    (Trip.find as jest.Mock).mockResolvedValueOnce(null);
+    const filteredTrips = trips.filter((trip) => trip.driver?.id === driverId);
+    (Trip.find as jest.Mock).mockResolvedValueOnce(filteredTrips);
 
-    const result = await tripResolver.getTripByUser(
-      newTrip.driverId as string,
-      filter
-    );
+    const result = await tripResolver.getTripByUser(driverId as string, filter);
+
+    interface WhereClause {
+      driver: { id: string | null };
+      departure_time?: any;
+    }
+
+    const expectedWhere: WhereClause = {
+      driver: { id: driverId },
+    };
+
+    if (filter === TripStatusFilter.UPCOMING) {
+      expectedWhere.departure_time = expect.objectContaining({
+        _type: "moreThan",
+      });
+    } else if (filter === TripStatusFilter.PAST) {
+      expectedWhere.departure_time = expect.objectContaining({
+        _type: "lessThan",
+      });
+    }
 
     expect(Trip.find).toHaveBeenCalledWith({
-      where: {
-        driver: { id: newTrip.driverId },
-        departure_time: expect.objectContaining({
-          _type: "moreThan",
-        }),
-      },
+      where: expectedWhere,
       relations: {
         passengers: true,
         driver: true,
