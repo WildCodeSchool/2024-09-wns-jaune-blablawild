@@ -24,15 +24,15 @@ export default function TripCard({
           return (
             <article
               key={trip.id}
-              className="relative flex md:h-48 bg-white rounded-xl overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-150 hover:cursor-pointer hover:ring-2 hover:ring-primary"
+              className="relative flex md:h-[232px] bg-white rounded-xl border-solid border-[#E5E5E5] border-1 overflow-hidden hover:shadow-lg transition-shadow duration-150 hover:cursor-pointer hover:ring-2 hover:ring-primary xl:max-w-[1000px]"
             >
-              <div className="flex-1 p-4 flex flex-col justify-between">
+              <div className="flex-1 p-4 flex flex-col justify-between ">
                 {mode === "published" && (
                   <span className="text-lg text-primary">
                     {formatDate(trip.departure_time, "fr")}
                   </span>
                 )}
-                <div className="flex gap-2 items-center mb-4">
+                <div className="flex gap-2 items-center mb-4 lg:max-w-[500px]">
                   <div className="flex-1">
                     <div className="text-lg font-medium text-gray-900">
                       {formatHourFromTime(trip.departure_time)}
@@ -59,7 +59,7 @@ export default function TripCard({
                   </div>
                 </div>
                 {mode === "search" ? (
-                  <div className="flex justify-between gap-4 mt-auto">
+                  <div className="flex justify-between gap-4 mt-auto lg:max-w-[500px]">
                     <DriverInfo driver={trip.driver} />
 
                     <div className="mt-3 flex items-center gap-2">

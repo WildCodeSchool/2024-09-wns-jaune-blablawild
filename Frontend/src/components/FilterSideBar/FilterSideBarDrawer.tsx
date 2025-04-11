@@ -11,9 +11,9 @@ import { Button } from "../ui/button";
 import { TimeOption } from "@/graphql/hooks";
 type MobileFilterDrawerProps = {
   onSortChange: (sort: string | null) => void;
-  onTimeRangeChange: (timeRange: TimeOption | null) => void;
+  onTimeRangeChange: (timeRanges: TimeOption[]) => void;
   currentSort: string | null;
-  currentTimeRange: TimeOption | null;
+  currentTimeRange: TimeOption[];
   onReinstateChange: () => void;
 };
 

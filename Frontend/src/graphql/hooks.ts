@@ -34,7 +34,7 @@ export type FilterTripInput = {
   passengers: Scalars['Float']['input'];
   sortBy?: InputMaybe<SortOption>;
   startDate: Scalars['DateTimeISO']['input'];
-  timeOption?: InputMaybe<TimeOption>;
+  timeOptions?: InputMaybe<Array<TimeOption>>;
 };
 
 export type LoginInput = {
