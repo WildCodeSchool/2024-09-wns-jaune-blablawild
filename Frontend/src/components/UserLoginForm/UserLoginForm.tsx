@@ -10,25 +10,19 @@ import {
   FormItem,
   FormMessage,
 } from "../ui/form";
-import { useSignupMutation } from "@/graphql/hooks";
-import { useToast } from "@/contexts/ToasterContext";
+import { useLoginMutation } from "@/graphql/hooks";
 
 const formSchema = z.object({
-  name: z.string().min(1, "Name is required"),
-  lastname: z.string().min(1, "Lastname is required"),
   email: z.string().email("Invalid email address"),
   password: z.string().min(6, "Password must be at least 6 characters"),
 });
 
-export default function UserCreationForm() {
-  const [signup] = useSignupMutation();
-  const { success } = useToast();
+export default function UserLoginForm() {
+  const [login] = useLoginMutation();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: "",
-      lastname: "",
       email: "",
       password: "",
     },
@@ -36,17 +30,14 @@ export default function UserCreationForm() {
 
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     try {
-      await signup({
+      await login({
         variables: {
           data: {
-            firstname: data.name,
-            lastname: data.lastname,
             email: data.email,
             password: data.password,
           },
         },
       });
-      success("Utilisateur créer");
     } catch (error) {
       console.error("Error submitting form:", error);
     }
@@ -56,42 +47,6 @@ export default function UserCreationForm() {
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
         <div className="grid gap-4 py-4">
-          <FormField
-            control={form.control}
-            name="name"
-            render={({ field }) => (
-              <FormItem className="grid grid-cols-4 items-center gap-4">
-                <FormControl>
-                  <Input
-                    variant="underline"
-                    placeholder="*Nom"
-                    className="col-span-5"
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage className="col-span-4 col-start-2 text-primary" />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="lastname"
-            render={({ field }) => (
-              <FormItem className="grid grid-cols-4 items-center gap-4">
-                <FormControl>
-                  <Input
-                    variant="underline"
-                    placeholder="*Prénom"
-                    className="col-span-5"
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage className="col-span-4 col-start-2 text-primary" />
-              </FormItem>
-            )}
-          />
-
           <FormField
             control={form.control}
             name="email"
@@ -129,10 +84,15 @@ export default function UserCreationForm() {
             )}
           />
         </div>
-
-        <div className="flex justify-center">
+        <div className="flex justify-end text-foreground mb-5">
+          <p>Mot de passe oublié ?</p>
+        </div>
+        <div className="flex flex-col justify-center items-center gap-4">
           <Button type="submit" className="w-40 bg-accent rounded-3xl p-5">
-            Valider
+            Se connecter
+          </Button>
+          <Button variant="outline" className="w-40 rounded-3xl p-5">
+            S'inscrire
           </Button>
         </div>
       </form>
