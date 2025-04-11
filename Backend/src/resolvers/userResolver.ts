@@ -73,7 +73,7 @@ export class UserResolver {
   }
 
   @Mutation(() => String)
-  async login(@Arg("data") loginData: LoginInput) {
+  async login(@Arg("data") loginData: LoginInput, @Ctx() { res }: { res: Response }) {
     try {
       const user = await User.findOne({
         where: { email: loginData.email },
@@ -87,6 +87,8 @@ export class UserResolver {
       );
 
       if (!isPasswordValid) throw new Error("Mot de passe incorrect");
+
+      generateToken(user.id, res)
 
       const userData = {
         id: user.id,
