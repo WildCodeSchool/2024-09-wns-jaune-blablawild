@@ -24,7 +24,7 @@ const Footer = () => {
   return (
     <footer className="flex flex-col md:flex-row md:flex-wrap justify-between gap-8 bg-secondary text-white p-12">
       <section className="flex flex-col gap-4 md:w-[45%]">
-        <h2 className="text-xl font-semibold flex flex-col">
+        <h2 className="text-xl font-semibold flex flex-col text-white">
           <span>Besoin d'aide ?</span>
           <span>Notre équipe est là pour vous !</span>
         </h2>
@@ -40,7 +40,7 @@ const Footer = () => {
       <section className="flex flex-col gap-4 md:w-1/2">
         <div className="flex flex-col md:flex-row md:justify-between gap-8">
           <div className="md:w-1/2">
-            <h2 className="text-xl font-semibold">Nos itinéraires</h2>
+            <h2 className="text-xl font-semibold text-white">Nos itinéraires</h2>
             <nav aria-label="Itinéraires populaires" className="mt-4">
               <ul className="flex flex-col gap-4 text-sm">
                 {routes.map((route) => (
@@ -60,7 +60,7 @@ const Footer = () => {
           </div>
 
           <div className="md:w-1/2">
-            <h2 className="text-xl font-semibold">En savoir plus</h2>
+            <h2 className="text-xl font-semibold text-white">En savoir plus</h2>
             <nav
               aria-label="Liens d'information"
               className="flex flex-col gap-4 mt-4"
@@ -76,7 +76,7 @@ const Footer = () => {
       </section>
 
       <section className="flex flex-col gap-4 md:w-1/2">
-        <h2 className="font-semibold text-xl">Suivez-nous</h2>
+        <h2 className="font-semibold text-xl text-white">Suivez-nous</h2>
         <SocialIcons size={36} />
       </section>
 
