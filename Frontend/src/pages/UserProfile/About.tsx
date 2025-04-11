@@ -11,8 +11,8 @@ export default function About({user}: Props) {
         <section className="flex flex-col justify-center items-center gap-4">
             <div className="flex flex-col mt-6 w-full items-center md:flex-row-reverse md:justify-between md:mt-0">
                 <img 
-                    src={user.image || "/placeholder-portrait.png"} alt={`${user.firstname} ${user.lastname}`}
-                    className="w-[134px] self-center rounded-full border-chart-3 border-6"/>
+                    src={user.image || '/placeholder-portrait.png'} alt={`${user.firstname} ${user.lastname}`}
+                    className="w-1/3 self-center rounded-full border-chart-3 border-6"/>
                 
                 <div className="flex flex-col items-center my-4 gap-4 md:items-start">
                     <p data-testid="user-fullname" className="font-semibold text-chart-3">{`${user.firstname} ${user.lastname}`}</p>

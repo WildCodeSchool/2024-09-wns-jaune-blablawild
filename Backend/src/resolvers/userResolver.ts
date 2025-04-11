@@ -1,6 +1,8 @@
-import { Arg, Field, InputType, Mutation, Resolver, Query } from "type-graphql";
+import { Arg, Field, InputType, Mutation, Resolver, Query, Ctx } from "type-graphql";
 import { User } from "../entities/user";
 import * as argon from "argon2";
+import { generateToken } from "../services/UserServices";
+import { Response } from "express";
 
 @InputType()
 export class NewUserInput {
@@ -38,7 +40,7 @@ export class UserResolver {
   }
 
   @Mutation(() => String)
-  async signup(@Arg("data") userData: NewUserInput) {
+  async signup(@Arg("data") userData: NewUserInput, @Ctx() { res }: { res: Response }) {
     try {
       const existingUser = await User.findOne({
         where: { email: userData.email },
@@ -46,15 +48,24 @@ export class UserResolver {
       if (existingUser) {
         throw new Error("L'utilisateur existe deja");
       }
+
+      const user = new User()
+      Object.assign(user, userData)
+
       const hashedPassword = await argon.hash(userData.password);
-      await User.save({
-        firstname: userData.firstname,
-        lastname: userData.lastname,
-        email: userData.email,
-        password: hashedPassword,
+      user.password = hashedPassword
+
+      await user.save()
+
+      generateToken(user.id, res)
+
+      return JSON.stringify({ 
+        id: user.id, 
+        firstname: user.firstname, 
+        lastname: user.lastname, 
+        email: user.email 
       });
 
-      return JSON.stringify("Utilisateur créé avec success");
     } catch (error) {
       console.error("Error creating user:", error);
       throw error;
@@ -62,7 +73,7 @@ export class UserResolver {
   }
 
   @Mutation(() => String)
-  async login(@Arg("data") loginData: LoginInput) {
+  async login(@Arg("data") loginData: LoginInput, @Ctx() { res }: { res: Response }) {
     try {
       const user = await User.findOne({
         where: { email: loginData.email },
@@ -76,6 +87,8 @@ export class UserResolver {
       );
 
       if (!isPasswordValid) throw new Error("Mot de passe incorrect");
+
+      generateToken(user.id, res)
 
       const userData = {
         id: user.id,
