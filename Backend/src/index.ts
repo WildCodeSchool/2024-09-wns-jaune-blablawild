@@ -6,6 +6,7 @@ import { dataSource } from "./config/db";
 import * as jwt from "jsonwebtoken";
 import { TripResolver } from "./resolvers/tripResolver";
 import { UserResolver } from "./resolvers/userResolver";
+<<<<<<< HEAD
 
 
 
@@ -18,6 +19,13 @@ async function StartGraphQLServer() {
       if (context.user) return true;
       return false
     }
+=======
+import { ReviewResolver } from "./resolvers/reviewsResolver";
+async function StartGraphQLServer() {
+  await dataSource.initialize();
+  const schema = await buildSchema({
+    resolvers: [TripResolver, UserResolver, ReviewResolver],
+>>>>>>> bd4ec1edeb419c18ae966218aea1903348c3c5a0
   });
 
   const server = new ApolloServer({ schema });

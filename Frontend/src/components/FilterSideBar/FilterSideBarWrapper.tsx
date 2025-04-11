@@ -1,14 +1,14 @@
-import { TimeOption } from "@/pages/SearchTrip";
 import { ReactElement } from "react";
 import { FilterSideBar } from "./FilterSideBar";
 import { MobileFilterDrawer } from "./FilterSideBarDrawer";
+import { TimeOption } from "@/graphql/hooks";
 
 type FilterSideBarWrapperProps = {
   children: ReactElement;
   onSortChange: (sort: string | null) => void;
-  onTimeRangeChange: (timeRange: TimeOption | null) => void;
+  onTimeRangeChange: (timeRanges: TimeOption[]) => void;
   currentSort: string | null;
-  currentTimeRange: TimeOption | null;
+  currentTimeRange: TimeOption[];
   onReinstateChange: () => void;
 };
 

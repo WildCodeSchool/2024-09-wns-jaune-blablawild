@@ -3,6 +3,8 @@
 
 :root {
   --background: #f3f3f3;
+  --light-background: #c52626bd;
+  --border-grey: #595959;
   --foreground: #4e598c;
   --card: hsl(0 0% 100%);
   --card-foreground: hsl(0 0% 3.9%);
