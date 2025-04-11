@@ -46,24 +46,28 @@ export class TripResolver {
         },
       });
 
-      let filteredTrips = trips;
-
-      if (data.timeOption) {
-        filteredTrips = trips.filter((trip) => {
+      let filteredTrips = trips.filter(trip => 
+        trip.capacity >= data.passengers || trip.capacity === 0
+      );
+      
+      if (data.timeOptions && data.timeOptions.length > 0) {
+        filteredTrips = trips.filter(trip => {
           const departureHour = new Date(trip.departure_time).getUTCHours();
-
-          switch (data.timeOption) {
-            case TimeOption.Before_6:
-              return departureHour < 6;
-            case TimeOption.From_6To_12:
-              return departureHour >= 6 && departureHour < 12;
-            case TimeOption.From_12To_18:
-              return departureHour >= 12 && departureHour < 18;
-            case TimeOption.After_18:
-              return departureHour >= 18;
-            default:
-              return true;
-          }
+          
+          return data.timeOptions?.some(option => {
+            switch (option) {
+              case TimeOption.Before_6:
+                return departureHour < 6;
+              case TimeOption.From_6To_12:
+                return departureHour >= 6 && departureHour < 12;
+              case TimeOption.From_12To_18:
+                return departureHour >= 12 && departureHour < 18;
+              case TimeOption.After_18:
+                return departureHour >= 18;
+              default:
+                return true;
+            }
+          });
         });
       }
 
@@ -101,6 +105,10 @@ export class TripResolver {
       where: whereClause,
       relations: { passengers: true, driver: true },
     });
+
+    if (!trips) {
+      throw new Error("No trips found for this user");
+    }
 
     return trips;
   }

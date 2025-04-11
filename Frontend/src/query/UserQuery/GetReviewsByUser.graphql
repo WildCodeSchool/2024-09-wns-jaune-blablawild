@@ -1,0 +1,15 @@
+query GetReviewsByUser($userId: String!) {
+  getReviewsByUser(userId: $userId) {
+    comment
+    date
+    notation
+    id
+    sender {
+      firstname
+      image
+    }
+    receiver {
+      firstname
+    }
+  }
+}

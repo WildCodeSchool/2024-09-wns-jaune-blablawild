@@ -82,8 +82,8 @@ export class FilterTripInput {
   @Field()
   passengers!: number;
 
-  @Field(() => TimeOption, { nullable: true })
-  timeOption?: TimeOption;
+  @Field(() => [TimeOption], { nullable: true })
+  timeOptions?: TimeOption[];
 
   @Field(() => SortOption, { nullable: true })
   sortBy?: SortOption;

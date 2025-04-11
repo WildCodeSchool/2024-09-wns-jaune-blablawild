@@ -6,10 +6,12 @@ import * as argon from "argon2";
 
 jest.mock("argon2");
 jest.mock("../../entities/user");
+jest.mock("../../services/UserServices")
 
 describe("User resolver tests", () => {
   let userResolver: UserResolver;
   let newUser: NewUserInput;
+  const mockResponse = { cookie: jest.fn() } as any;
 
   beforeEach(() => {
     userResolver = new UserResolver();
@@ -23,12 +25,17 @@ describe("User resolver tests", () => {
   });
 
   it("should create a new user", async () => {
+<<<<<<< HEAD
+    const id = faker.string.uuid();
+    const expectedUser = {
+      id: id,
+=======
     (User.findOne as jest.Mock).mockResolvedValueOnce(null);
     (argon.hash as jest.Mock).mockResolvedValueOnce("hashed_password");
     (User.save as jest.Mock).mockResolvedValueOnce({
       id: faker.string.uuid(),
       ...newUser,
-      password: "hash_passaword",
+      password: "hash_password",
     });
 
     const result = await userResolver.signup(newUser);
@@ -36,11 +43,31 @@ describe("User resolver tests", () => {
 
     expect(argon.hash).toHaveBeenCalledWith(newUser.password);
     expect(User.save).toHaveBeenCalledWith({
+>>>>>>> bd4ec1edeb419c18ae966218aea1903348c3c5a0
       firstname: newUser.firstname,
       lastname: newUser.lastname,
-      email: newUser.email,
+      email: newUser.email
+    };
+    
+
+    (User.findOne as jest.Mock).mockResolvedValueOnce(null);
+    (argon.hash as jest.Mock).mockResolvedValueOnce("hashed_password");
+
+    const userInstance = {
+      id,
+      ...newUser,
       password: "hashed_password",
-    });
+      save: jest.fn().mockResolvedValueOnce(undefined)
+    };
+
+    (User as unknown as jest.Mock).mockImplementationOnce(() => userInstance);
+
+    const result = await userResolver.signup(newUser, {res: mockResponse});
+
+    expect(result).toBe(JSON.stringify(expectedUser));
+
+    expect(argon.hash).toHaveBeenCalledWith(newUser.password);
+    expect(userInstance.save).toHaveBeenCalled();
   });
 
   it("should not create user if email already exists", async () => {
@@ -63,7 +90,7 @@ describe("User resolver tests", () => {
       email: existingEmail,
     };
 
-    await expect(userResolver.signup(newUserWithExistingEmail)).rejects.toThrow(
+    await expect(userResolver.signup(newUserWithExistingEmail, {res: mockResponse})).rejects.toThrow(
       "L'utilisateur existe deja"
     );
 
