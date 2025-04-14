@@ -3,7 +3,6 @@ import { FaqSection } from "@/components/faq-section";
 import { InformationSection } from "@/components/Information-section";
 import { useGetPopularTripQuery } from "@/graphql/hooks";
 import SearchBar from "../components/SearchBar/SearchBar";
-import UserProfilePage from "./UserProfile/UserProfilePage";
 
 const HomePage = () => {
   const { data } = useGetPopularTripQuery();
