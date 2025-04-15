@@ -1,6 +1,6 @@
 services:
   backend:
-    container_name: driveup-dev-backend
+    container_name: driveup-prod-backend
     build: ./backend
     volumes:
       - ./backend/src:/app/src
@@ -15,7 +15,7 @@ services:
       - database
 
   frontend:
-    container_name: driveup-dev-frontend
+    container_name: driveup-prod-frontend
     build: ./frontend
     volumes:
       - ./frontend/src/:/app/src/
@@ -25,7 +25,7 @@ services:
       - backend
 
   database:
-    container_name: driveup-dev-database
+    container_name: driveup-prod-database
     image: postgres
     volumes:
       - ./persist/data/:/var/lib/postgresql/data
@@ -35,12 +35,8 @@ services:
       POSTGRES_USER: ${DB_USER}
       POSTGRES_HOST: ${DB_HOST}
 
-  visualizer:
-    container_name: driveup-dev-visualizer
-    image: adminer
-
   gateway: 
-    container_name: driveup-dev-gateway
+    container_name: driveup-prod-gateway
     image: nginx
     restart: always
     ports: 
