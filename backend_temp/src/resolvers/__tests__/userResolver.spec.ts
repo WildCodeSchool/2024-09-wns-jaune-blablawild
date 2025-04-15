@@ -25,25 +25,9 @@ describe("User resolver tests", () => {
   });
 
   it("should create a new user", async () => {
-<<<<<<< HEAD
     const id = faker.string.uuid();
     const expectedUser = {
       id: id,
-=======
-    (User.findOne as jest.Mock).mockResolvedValueOnce(null);
-    (argon.hash as jest.Mock).mockResolvedValueOnce("hashed_password");
-    (User.save as jest.Mock).mockResolvedValueOnce({
-      id: faker.string.uuid(),
-      ...newUser,
-      password: "hash_password",
-    });
-
-    const result = await userResolver.signup(newUser);
-    expect(result).toBe(JSON.stringify("Utilisateur créé avec success"));
-
-    expect(argon.hash).toHaveBeenCalledWith(newUser.password);
-    expect(User.save).toHaveBeenCalledWith({
->>>>>>> bd4ec1edeb419c18ae966218aea1903348c3c5a0
       firstname: newUser.firstname,
       lastname: newUser.lastname,
       email: newUser.email

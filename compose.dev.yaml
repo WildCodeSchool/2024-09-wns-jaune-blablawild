@@ -1,9 +1,9 @@
 services:
   backend:
     container_name: backend
-    build: ./backend
+    build: ./backend_temp
     volumes:
-      - ./backend/src:/app/src
+      - ./backend_temp/src:/app/src
     environment:
       DB_PASSWORD: ${DB_PASSWORD}
       DB_SCHEMA: ${DB_SCHEMA}
@@ -14,9 +14,9 @@ services:
 
   frontend:
     container_name: frontend
-    build: ./frontend
+    build: ./frontend_temp
     volumes:
-      - ./frontend/src/:/app/src/
+      - ./frontend_temp/src/:/app/src/
     environment:
       VITE_GATEWAY_PORT: ${GATEWAY_PORT}
 

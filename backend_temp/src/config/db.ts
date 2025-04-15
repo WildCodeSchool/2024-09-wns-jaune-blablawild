@@ -7,11 +7,11 @@ import { Transaction } from "../entities/transaction";
 
 config();
 
-const { DB_PASSWORD, DB_SCHEMA, DB_USER } = process.env;
+const { DB_PASSWORD, DB_SCHEMA, DB_USER, DB_HOST } = process.env;
 
 export const dataSource = new DataSource({
   type: "postgres",
-  host: "database",
+  host: DB_HOST,
   username: DB_USER,
   password: DB_PASSWORD,
   database: DB_SCHEMA,
