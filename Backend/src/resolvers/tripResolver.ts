@@ -25,7 +25,6 @@ export class TripResolver {
     const where: FindOptionsWhere<Trip> = {
       departure_city: ILike(`%${data.departure}%`),
       arrival_city: ILike(`%${data.arrival}%`),
-      capacity: MoreThanOrEqual(data.passengers),
       departure_time: Between(data.startDate, data.endDate),
     };
 
