@@ -6,7 +6,7 @@ import * as argon from "argon2";
 
 jest.mock("argon2");
 jest.mock("../../entities/user");
-jest.mock("../../services/UserServices")
+jest.mock("../../services/UserServices");
 
 describe("User resolver tests", () => {
   let userResolver: UserResolver;
@@ -30,9 +30,8 @@ describe("User resolver tests", () => {
       id: id,
       firstname: newUser.firstname,
       lastname: newUser.lastname,
-      email: newUser.email
+      email: newUser.email,
     };
-    
 
     (User.findOne as jest.Mock).mockResolvedValueOnce(null);
     (argon.hash as jest.Mock).mockResolvedValueOnce("hashed_password");
@@ -41,12 +40,12 @@ describe("User resolver tests", () => {
       id,
       ...newUser,
       password: "hashed_password",
-      save: jest.fn().mockResolvedValueOnce(undefined)
+      save: jest.fn().mockResolvedValueOnce(undefined),
     };
 
     (User as unknown as jest.Mock).mockImplementationOnce(() => userInstance);
 
-    const result = await userResolver.signup(newUser, {res: mockResponse});
+    const result = await userResolver.signup(newUser, { res: mockResponse });
 
     expect(result).toBe(JSON.stringify(expectedUser));
 
@@ -74,9 +73,9 @@ describe("User resolver tests", () => {
       email: existingEmail,
     };
 
-    await expect(userResolver.signup(newUserWithExistingEmail, {res: mockResponse})).rejects.toThrow(
-      "L'utilisateur existe deja"
-    );
+    await expect(
+      userResolver.signup(newUserWithExistingEmail, { res: mockResponse })
+    ).rejects.toThrow("L'utilisateur existe deja");
 
     expect(User.findOne).toHaveBeenCalledWith({
       where: { email: existingEmail },
@@ -85,28 +84,34 @@ describe("User resolver tests", () => {
     expect(argon.hash).not.toHaveBeenCalled();
     expect(User.save).not.toHaveBeenCalled();
   });
+
+  it("should successfully login a user", async () => {
+    const existingUser = {
+      ...newUser,
+      password: "hashed_password",
+    };
+  });
 });
 
 describe("User queries tests", () => {
   let userResolver: UserResolver;
-  it('should return the correct User given a valid id', async () => {
+  it("should return the correct User given a valid id", async () => {
+    userResolver = new UserResolver();
 
-    userResolver = new UserResolver()
-
-    const id = faker.string.uuid()
+    const id = faker.string.uuid();
     const user = {
       id: id,
       firstname: faker.person.firstName(),
       lastname: faker.person.lastName(),
       email: faker.internet.email(),
       password: faker.internet.password(),
-    }
-    
-    User.findOneBy = jest.fn().mockResolvedValue(user)
+    };
 
-    const result = await userResolver.getUserById(id)
+    User.findOneBy = jest.fn().mockResolvedValue(user);
 
-    expect(User.findOneBy).toHaveBeenCalledWith({id: id});
+    const result = await userResolver.getUserById(id);
+
+    expect(User.findOneBy).toHaveBeenCalledWith({ id: id });
     expect(result).toEqual(user);
-  })
+  });
 });
