@@ -1,0 +1,20 @@
+query GetTrip($data: FilterTripInput!) {
+  getTrip(data: $data) {
+    id
+    departure_time
+    departure_city
+    capacity
+    arrival_city
+    driver {
+      id
+      firstname
+      lastname
+    }
+    price
+    passengers {
+      id
+      firstname
+      lastname
+    }
+  }
+}
