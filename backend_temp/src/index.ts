@@ -15,28 +15,28 @@ async function StartGraphQLServer() {
   await dataSource.initialize();
   const schema = await buildSchema({
     resolvers: [TripResolver, UserResolver, ReviewResolver],
-    // authChecker: ({context}) => {
-    //   if (context.user) return true;
-    //   return false
-    // }
+    authChecker: ({context}) => {
+      if (context.user) return true;
+      return false
+    }
   });
 
   const server = new ApolloServer({ schema });
   const { url } = await startStandaloneServer(server, {
     listen: { port: 4100 },
-    // context: async ({req, res}) => {
-    //   if (!process.env.JWT_SECRET) return { res };
-    //   const token = req.headers.cookie?.split("token=")[1];
+    context: async ({req, res}) => {
+      if (!process.env.JWT_SECRET) return { res };
+      const token = req.headers.cookie?.split("token=")[1];
 
-    //   if (!token) return {res};
+      if (!token) return {res};
 
-    //   const tokenContent = jwt.verify(token, process.env.JWT_SECRET);
+      const tokenContent = jwt.verify(token, process.env.JWT_SECRET);
 
-    //   return {
-    //     res, 
-    //     user: tokenContent,
-    //   }
-    // }
+      return {
+        res, 
+        user: tokenContent,
+      }
+    }
   });
 
   console.log(`🚀  Server ready at: ${url}`);

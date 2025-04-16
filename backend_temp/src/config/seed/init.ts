@@ -27,7 +27,7 @@ const seedDatabase = async () => {
             user.email = faker.internet.email();
             user.password = faker.internet.password();
             user.image = faker.image.avatar();
-            user.role = "driver";
+            // user.role = "driver"; add later when role defined
             user.pot = 0
             users.push(await dataSource.getRepository(User).save(user))
         }
