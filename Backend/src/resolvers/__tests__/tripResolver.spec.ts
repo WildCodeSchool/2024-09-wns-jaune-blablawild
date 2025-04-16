@@ -70,15 +70,21 @@ describe("Filters trip tests", () => {
 
   //it should sort trips by cheapest price
   it("should filter trips by cheapest price", async () => {
-    const sortedTrips = [...mockTrips].sort(
-      (a, b) => (a.price as number) - (b.price as number)
-    );
-    (Trip.find as jest.Mock).mockResolvedValue(sortedTrips);
-
+    const orderedTrips = [
+      { ...createMockTrip(2, 30), price: 30, capacity: 5 },  
+      { ...createMockTrip(4, 32), price: 32, capacity: 5 },
+      { ...createMockTrip(15, 45), price: 45, capacity: 5 },
+      { ...createMockTrip(20, 50), price: 50, capacity: 5 }  
+    ];
+    
+    (Trip.find as jest.Mock).mockResolvedValue(orderedTrips);
+  
+    filterInput.passengers = 3; 
     filterInput.sortBy = SortOption.PRICE;
-
+    filterInput.timeOptions = [];  
+  
     const result = await tripResolver.getTrip(filterInput);
-
+ 
     expect(Trip.find).toHaveBeenCalledWith({
       where: expect.anything(),
       order: { price: "ASC" },
@@ -87,11 +93,14 @@ describe("Filters trip tests", () => {
         passengers: true,
       },
     });
+    
+    expect(result.length).toBeGreaterThan(0);
+    
     const prices = result.map((trip) => trip.price as number);
     expect(prices[0]).toBeLessThanOrEqual(prices[1]);
     expect(prices[1]).toBeLessThanOrEqual(prices[2]);
     expect(prices[2]).toBeLessThanOrEqual(prices[3]);
-  });
+  })
 
   //it should sort trips by earliest hours
 
