@@ -1,0 +1,34 @@
+name: client-test-workflow
+
+on:
+  pull_request:
+    branches:
+      - main
+      - dev
+    types: [opened, synchronize, reopened]
+
+jobs:
+  test-client:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+      
+      - name: Install pnpm
+        run: npm install -g pnpm
+      
+      - name: Install dependencies
+        working-directory: ./Frontend
+        run: |
+          pnpm i
+
+      - name: Run vitest tests
+        working-directory: ./Frontend
+        run: |
+          pnpm test
