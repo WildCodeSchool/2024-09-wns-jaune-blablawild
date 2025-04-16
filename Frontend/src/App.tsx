@@ -13,6 +13,7 @@ import TripForm from "./pages/TripForm";
 import UserJourneys from "./pages/UserJourneys";
 import UserProfilePage from "./pages/UserProfile/UserProfilePage";
 import SearchTrip from "./pages/SearchTrip/SearchTrip";
+import Settings from "./pages/Settings/Settings";
 
 const AppRoutes = () => {
   const location = useLocation();
@@ -31,6 +32,7 @@ const AppRoutes = () => {
         <Route path="tripform" element={<TripForm />} />
         <Route path="userjourneys" element={<UserJourneys />} />
         <Route path="404" element={<Page404 />} />
+        <Route path="settings" element={<Settings />} />
       </Routes>
     </Layout>
   );

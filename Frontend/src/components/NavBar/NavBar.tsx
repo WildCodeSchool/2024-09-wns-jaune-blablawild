@@ -4,7 +4,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Separator } from "@/components/ui/separator";
-import { CircleUserRound } from "lucide-react";
+import { CircleUserRound, Settings } from "lucide-react";
 import { CarTaxiFront } from "lucide-react";
 import { UserRound } from "lucide-react";
 import { MessageSquareText } from "lucide-react";
@@ -38,6 +38,16 @@ export default function NavBar() {
           <li className="flex justify-between">
             <div className="flex justify-center gap-2 cursor-pointer">
               <UserRound /> Profile
+            </div>
+            <ChevronRight />
+          </li>
+          <Separator />
+          <li
+            className="flex justify-between"
+            onClick={() => navigate("/settings")}
+          >
+            <div className="flex justify-center gap-2 cursor-pointer">
+              <Settings /> Paramètres
             </div>
             <ChevronRight />
           </li>
