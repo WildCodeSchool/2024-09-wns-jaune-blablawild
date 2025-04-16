@@ -1,7 +1,9 @@
 services:
   backend:
     container_name: driveup-prod-backend
-    build: ./backend
+    build: 
+      context: ./backend
+      dockerfile: Dockerfile.prod
     volumes:
       - ./backend/src:/app/src
     environment:
@@ -16,7 +18,9 @@ services:
 
   frontend:
     container_name: driveup-prod-frontend
-    build: ./frontend
+    build: 
+      context: ./frontend
+      dockerfile: Dockerfile.prod
     volumes:
       - ./frontend/src/:/app/src/
     environment:
