@@ -21,11 +21,11 @@ jobs:
           node-version: '18'
       
       - name: Install dependencies
-        working-directory: ./backend
+        working-directory: ./Backend
         run: |
           npm ci
 
       - name: Run Jest tests
-        working-directory: ./backend
+        working-directory: ./Backend
         run: |
-          npm test
+          npm jest

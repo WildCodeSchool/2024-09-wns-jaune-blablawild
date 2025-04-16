@@ -21,11 +21,11 @@ jobs:
           node-version: '18'
       
       - name: Install dependencies
-        working-directory: ./frontend
+        working-directory: ./Frontend
         run: |
           pnpm ci
 
       - name: Run vitest tests
-        working-directory: ./frontend
+        working-directory: ./Frontend
         run: |
           pnpm test
