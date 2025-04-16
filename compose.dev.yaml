@@ -1,3 +1,7 @@
+networks:
+  development:
+    name: dev-network
+
 services:
   driveup-dev-backend:
     container_name: driveup-dev-backend
@@ -16,6 +20,8 @@ services:
     depends_on:
       driveup-dev-database :
         condition: service_healthy
+    networks:
+      - development
 
   driveup-dev-frontend:
     container_name: driveup-dev-frontend
@@ -30,6 +36,8 @@ services:
       VITE_FRONTEND_HOST: ${FRONTEND_HOST}
     depends_on:
       - driveup-dev-backend
+    networks:
+      - development
 
   driveup-dev-database:
     container_name: driveup-dev-database
@@ -45,10 +53,14 @@ services:
       test: ["CMD-SHELL", "pg_isready -U ${DB_USER}"]
       interval: 5s
       retries: 5
+    networks:
+      - development
 
   driveup-dev-visualizer:
     container_name: driveup-dev-visualizer
     image: adminer
+    networks:
+      - development
 
   driveup-dev-gateway: 
     container_name: driveup-dev-gateway
@@ -58,3 +70,5 @@ services:
       - ${GATEWAY_PORT}:80
     volumes:
       - ./nginx.dev.conf:/etc/nginx/nginx.conf
+    networks:
+      - development

@@ -1,5 +1,10 @@
+networks:
+  production:
+    name: production
+    driver: bridge
+
 services:
-  backend:
+  driveup-prod-backend:
     container_name: driveup-prod-backend
     build: 
       context: ./backend
@@ -14,9 +19,12 @@ services:
       APP_SECRET: ${APP_SECRET}
       JWT_SECRET: ${JWT_SECRET}
     depends_on:
-      - database
+      driveup-prod-database :
+        condition: service_healthy
+    networks:
+      - production
 
-  frontend:
+  driveup-prod-frontend:
     container_name: driveup-prod-frontend
     build: 
       context: ./frontend
@@ -28,24 +36,37 @@ services:
       VITE_BACKEND_HOST: ${BACKEND_HOST}
       VITE_FRONTEND_HOST: ${FRONTEND_HOST}
     depends_on:
-      - backend
+      - driveup-prod-backend
+    networks:
+      - production
 
-  database:
+  driveup-prod-database:
     container_name: driveup-prod-database
     image: postgres
     volumes:
-      - ./persist/data/:/var/lib/postgresql/data
+      - ./persist/prod-data:/var/lib/postgresql/data
     environment:
       POSTGRES_PASSWORD: ${DB_PASSWORD}
       POSTGRES_DB: ${DB_SCHEMA}
       POSTGRES_USER: ${DB_USER}
       POSTGRES_HOST: ${DB_HOST}
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER}"]
+      interval: 5s
+      retries: 5
+    networks:
+      - production
 
-  gateway: 
+  driveup-prod-gateway: 
     container_name: driveup-prod-gateway
     image: nginx
     restart: always
     ports: 
       - ${GATEWAY_PORT}:80
     volumes:
-      - ./nginx.dev.conf:/etc/nginx/nginx.conf
+      - ./nginx.prod.conf:/etc/nginx/nginx.conf
+    depends_on:
+      - driveup-prod-backend
+      - driveup-prod-frontend
+    networks:
+      - production

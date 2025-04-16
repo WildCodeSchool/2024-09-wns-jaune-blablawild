@@ -21,9 +21,6 @@ RUN npm run build
 # container final dans lequel sera copiée l'appli une fois build
 FROM node:lts-alpine
 WORKDIR /app
-COPY --from=builder /app/build ./build
-COPY package*.json
-RUN npm i --production
-
-
-CMD ["npm", "run", "dev"]
+COPY --from=builder /app/dist ./dist
+RUN npm install -g serve
+CMD ["serve", "-s", "dist", "-l", "5173"]
