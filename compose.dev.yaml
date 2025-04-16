@@ -1,5 +1,5 @@
 services:
-  backend:
+  driveup-dev-backend:
     container_name: driveup-dev-backend
     build: 
       context: ./backend
@@ -14,22 +14,24 @@ services:
       APP_SECRET: ${APP_SECRET}
       JWT_SECRET: ${JWT_SECRET}
     depends_on:
-      - database
+      driveup-dev-database :
+        condition: service_healthy
 
-  frontend:
+  driveup-dev-frontend:
     container_name: driveup-dev-frontend
     build: 
       context: ./frontend
-
-   dockerfile: Dockerfile.dev 
+      dockerfile: Dockerfile.dev 
     volumes:
       - ./frontend/src/:/app/src/
     environment:
       VITE_GATEWAY_PORT: ${GATEWAY_PORT}
+      VITE_BACKEND_HOST: ${BACKEND_HOST}
+      VITE_FRONTEND_HOST: ${FRONTEND_HOST}
     depends_on:
-      - backend
+      - driveup-dev-backend
 
-  database:
+  driveup-dev-database:
     container_name: driveup-dev-database
     image: postgres
     volumes:
@@ -39,12 +41,16 @@ services:
       POSTGRES_DB: ${DB_SCHEMA}
       POSTGRES_USER: ${DB_USER}
       POSTGRES_HOST: ${DB_HOST}
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER}"]
+      interval: 5s
+      retries: 5
 
-  visualizer:
+  driveup-dev-visualizer:
     container_name: driveup-dev-visualizer
     image: adminer
 
-  gateway: 
+  driveup-dev-gateway: 
     container_name: driveup-dev-gateway
     image: nginx
     restart: always

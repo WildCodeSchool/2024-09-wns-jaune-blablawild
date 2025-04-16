@@ -25,6 +25,8 @@ services:
       - ./frontend/src/:/app/src/
     environment:
       VITE_GATEWAY_PORT: ${GATEWAY_PORT}
+      VITE_BACKEND_HOST: ${BACKEND_HOST}
+      VITE_FRONTEND_HOST: ${FRONTEND_HOST}
     depends_on:
       - backend
 
