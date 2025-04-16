@@ -1,9 +1,0 @@
-query GetUserById($id: String!) {
-  getUserById(id: $id) {
-    email
-    firstname
-    id
-    image
-    lastname
-  }
-}
