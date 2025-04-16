@@ -128,14 +128,14 @@ export default function SearchTrip() {
 
   return (
     <section className="h-screen w-screen">
-      <section className="relative w-full h-[55vh] flex justify-center items-center">
+      <section className="relative w-full h-[65vh] md:h-[55vh] flex justify-center items-center">
         <img
           src="/searchTripImg.png"
           alt="Main picture on search trip details"
           className="absolute object-cover top-0 w-full h-full"
         />
         <div className="flex flex-col justify-center items-center gap-7 z-1 w-[70%] md:w-[80%]">
-          <p className="text-white text-2xl">Où souhaitez-vous aller ?</p>
+          <p className="text-white whitespace-nowrap text-xl md:text-3xl">Où souhaitez-vous aller ?</p>
           <div className="w-full">
             <SearchBar />
           </div>
