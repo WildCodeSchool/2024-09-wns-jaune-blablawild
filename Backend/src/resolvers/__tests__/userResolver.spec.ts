@@ -1,4 +1,4 @@
-import { UserResolver } from "../userResolver";
+import { LoginInput, UserResolver } from "../userResolver";
 import { faker } from "@faker-js/faker";
 import { User } from "../../entities/user";
 import { NewUserInput } from "../userResolver";
@@ -88,8 +88,40 @@ describe("User resolver tests", () => {
   it("should successfully login a user", async () => {
     const existingUser = {
       ...newUser,
+      id: faker.string.uuid(),
       password: "hashed_password",
     };
+
+    const userLoginInput: LoginInput = {
+      email: existingUser.email,
+      password: "clear_password",
+    };
+
+    User.findOne = jest.fn().mockResolvedValueOnce(existingUser);
+    (argon.verify as jest.Mock).mockResolvedValueOnce(true);
+    const { generateToken } = require("../../services/UserServices");
+
+    const result = await userResolver.login(userLoginInput, {
+      res: mockResponse,
+    });
+
+    expect(User.findOne).toHaveBeenCalledWith({
+      where: { email: userLoginInput.email },
+    });
+    expect(argon.verify).toHaveBeenCalledWith(
+      existingUser.password,
+      userLoginInput.password
+    );
+    expect(generateToken).toHaveBeenCalledWith(existingUser.id, mockResponse);
+
+    expect(result).toBe(
+      JSON.stringify({
+        id: existingUser.id,
+        email: existingUser.email,
+        firstname: existingUser.firstname,
+        lastname: existingUser.lastname,
+      })
+    );
   });
 });
 
