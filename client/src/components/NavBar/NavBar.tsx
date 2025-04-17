@@ -95,7 +95,7 @@ export default function NavBar() {
             <>
               <Modal
                 trigger={
-                  <Button className="w-full rounded-3xl bg-accent hover:bg-accent/90">
+                  <Button className="w-full rounded-3xl bg-accent hover:bg-secondary">
                     S'inscrire
                   </Button>
                 }
@@ -105,7 +105,7 @@ export default function NavBar() {
               <Modal
                 trigger={
                   <Button
-                    className="w-full rounded-3xl border-accent text-accent hover:bg-accent/10"
+                    className="w-full rounded-3xl border-accent text-accent hover:bg-accent/10 hover:text-accent"
                     variant="outline"
                   >
                     Se connecter
