@@ -46,5 +46,4 @@ jobs:
           context: ./backend
           file: ./backend/Dockerfile.prod
           push: true
-          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/${{ secrets.DOCKER_HUB_DRIVEUP_
-          _IMAGE_NAME }}:latest
+          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/${{ secrets.DOCKER_HUB_DRIVEUP_BACKEND_IMAGE_NAME }}:latest
