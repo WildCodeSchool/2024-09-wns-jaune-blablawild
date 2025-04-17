@@ -4,13 +4,13 @@ networks:
     driver: bridge
 
 services:
-  driveup-staging-backend:
-    container_name: driveup-staging-backend
+  driveup-staging-server:
+    container_name: driveup-staging-server
     build: 
-      context: ./backend
+      context: ./server
       dockerfile: Dockerfile.staging
     volumes:
-      - ./backend/src:/app/src
+      - ./server/src:/app/src
     environment:
       DB_PASSWORD: ${DB_PASSWORD}
       DB_SCHEMA: ${DB_SCHEMA}
@@ -24,19 +24,19 @@ services:
     networks:
       - staging
 
-  driveup-staging-frontend:
-    container_name: driveup-staging-frontend
+  driveup-staging-client:
+    container_name: driveup-staging-client
     build: 
-      context: ./frontend
+      context: ./client
       dockerfile: Dockerfile.staging
     volumes:
-      - ./frontend/src/:/app/src/
+      - ./client/src/:/app/src/
     environment:
       VITE_GATEWAY_PORT: ${GATEWAY_PORT}
-      VITE_BACKEND_HOST: ${BACKEND_HOST}
-      VITE_FRONTEND_HOST: ${FRONTEND_HOST}
+      VITE_SERVER_HOST: ${SERVER_HOST}
+      VITE_CLIENT_HOST: ${CLIENT_HOST}
     depends_on:
-      - driveup-staging-backend
+      - driveup-staging-server
     networks:
       - staging
 
@@ -66,7 +66,7 @@ services:
     volumes:
       - ./nginx.staging.conf:/etc/nginx/nginx.conf
     depends_on:
-      - driveup-staging-backend
-      - driveup-staging-frontend
+      - driveup-staging-server
+      - driveup-staging-client
     networks:
       - staging

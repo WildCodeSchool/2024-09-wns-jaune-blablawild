@@ -43,7 +43,7 @@ jobs:
       - uses: docker/build-push-action@v2
         name: Build and push
         with:
-          context: ./Backend
-          file: ./Backend/Dockerfile.prod
+          context: ./server
+          file: ./server/Dockerfile.prod
           push: true
-          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/${{ secrets.DOCKER_HUB_DRIVEUP_BACKEND_IMAGE_NAME }}:latest
+          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/${{ secrets.DOCKER_HUB_DRIVEUP_SERVER_IMAGE_NAME }}:latest

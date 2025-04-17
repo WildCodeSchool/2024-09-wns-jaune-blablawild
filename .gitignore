@@ -4,5 +4,6 @@ persist/
 .cursor
 node_modules
 .idea
+coverage/
 
 !.env.sample

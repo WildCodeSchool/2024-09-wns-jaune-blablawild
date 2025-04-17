@@ -3,13 +3,13 @@ networks:
     name: dev-network
 
 services:
-  driveup-dev-backend:
-    container_name: driveup-dev-backend
+  driveup-dev-server:
+    container_name: driveup-dev-server
     build: 
-      context: ./backend
+      context: ./server
       dockerfile: Dockerfile.dev
     volumes:
-      - ./backend/src:/app/src
+      - ./server/src:/app/src
     environment:
       DB_PASSWORD: ${DB_PASSWORD}
       DB_SCHEMA: ${DB_SCHEMA}
@@ -23,19 +23,19 @@ services:
     networks:
       - development
 
-  driveup-dev-frontend:
-    container_name: driveup-dev-frontend
+  driveup-dev-client:
+    container_name: driveup-dev-client
     build: 
-      context: ./frontend
+      context: ./client
       dockerfile: Dockerfile.dev 
     volumes:
-      - ./frontend/src/:/app/src/
+      - ./client/src/:/app/src/
     environment:
       VITE_GATEWAY_PORT: ${GATEWAY_PORT}
-      VITE_BACKEND_HOST: ${BACKEND_HOST}
-      VITE_FRONTEND_HOST: ${FRONTEND_HOST}
+      VITE_SERVER_HOST: ${SERVER_HOST}
+      VITE_CLIENT_HOST: ${CLIENT_HOST}
     depends_on:
-      - driveup-dev-backend
+      - driveup-dev-server
     networks:
       - development
 
