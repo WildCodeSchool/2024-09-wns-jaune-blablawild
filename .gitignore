@@ -5,3 +5,5 @@ persist/
 node_modules
 .idea
 coverage/
+
+!.env.sample
