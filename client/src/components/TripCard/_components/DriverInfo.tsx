@@ -9,7 +9,7 @@ export function DriverInfo({
 
   const driverInfo: DriverInfoProps = {
     firstname: driver.firstname,
-    image: driver.image,
+    image: driver.image || "",
   };
 
   return (

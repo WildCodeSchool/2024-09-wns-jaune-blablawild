@@ -25,32 +25,35 @@ export default function UserJourneys() {
   const trips = data?.getTripByUser ?? [];
 
   return (
-    <section
-      className="flex flex-col items-center"
-      style={{ backgroundImage: `url(${van_image})` }}
-    >
-      <div className="flex-col h-screen justify-center w-[65%] bg-white p-5 overflow-y-scroll">
-        <h1 className="self-start text-3xl">Mes Trajets</h1>
-        <div className="flex justify-center">
-          <ul className="flex w-full max-w-3xl justify-between border-b border-gray-200 mb-8">
-            {tabs.map((tab) => (
-              <li
-                key={tab}
-                onClick={() => setActiveTab(tab)}
-                className={`flex-1 text-center pb-3 cursor-pointer text-lg font-medium transition-all duration-200 ${
-                  activeTab === tab
-                    ? "border-b-2 border-secondary text-secondary"
-                    : "border-b-2 border-transparent text-foreground hover:text-gray-800"
-                }`}
-              >
-                {tab}
-              </li>
-            ))}
-          </ul>
-        </div>
-        <div>
-          <TripCard trips={trips as Trip[]} />
-        </div>
+    <section className="flex min-h-screen">
+      <div className="w-[15%] hidden lg:block">
+        <img src={van_image} alt="van" className="h-full w-full object-cover" />
+      </div>
+      <div className="w-full lg:w-[70%] bg-white p-8 overflow-y-auto">
+        <h1 className="text-3xl mb-4">Mes trajets</h1>
+        <ul className="flex justify-between border-b border-gray-200 mb-8">
+          {tabs.map((tab) => (
+            <li
+              key={tab}
+              onClick={() => setActiveTab(tab)}
+              className={`flex-1 text-center pb-3 cursor-pointer text-lg font-medium transition-all duration-200 ${
+                activeTab === tab
+                  ? "border-b-2 border-secondary text-secondary"
+                  : "border-b-2 border-transparent text-foreground hover:text-gray-800"
+              }`}
+            >
+              {tab}
+            </li>
+          ))}
+        </ul>
+        <TripCard trips={trips as Trip[]} />
+      </div>
+      <div className="w-[15%] hidden lg:block">
+        <img
+          src={van_image}
+          alt="van"
+          className="h-full w-full object-cover object-[75%_center]"
+        />
       </div>
     </section>
   );
