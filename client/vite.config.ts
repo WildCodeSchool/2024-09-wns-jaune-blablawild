@@ -12,7 +12,7 @@ export default defineConfig(({ mode }) => {
   return {
     plugins: [react(), tailwindcss()],
   server: {
-    allowedHosts: [env.VITE_FRONTEND_HOST],
+    allowedHosts: [env.VITE_CLIENT_HOST],
     host: true,
     hmr: { path: "hmr" }
   },
