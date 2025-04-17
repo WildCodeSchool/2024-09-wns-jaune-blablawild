@@ -1,6 +1,5 @@
 import * as argon from "argon2";
 import { Response } from "express";
-import * as jwt from "jsonwebtoken";
 import {
   Arg,
   Ctx,
@@ -71,18 +70,11 @@ export class UserResolver {
 
       generateToken(user.id, res);
 
-      const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET!, {
-        expiresIn: "1h",
-      });
-
       return JSON.stringify({
-        user: {
-          id: user.id,
-          firstname: user.firstname,
-          lastname: user.lastname,
-          email: user.email,
-        },
-        token,
+        id: user.id,
+        firstname: user.firstname,
+        lastname: user.lastname,
+        email: user.email,
       });
     } catch (error) {
       console.error("Error creating user:", error);
@@ -111,19 +103,14 @@ export class UserResolver {
 
       generateToken(user.id, res);
 
-      const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET!, {
-        expiresIn: "1h",
-      });
+      const userData = {
+        id: user.id,
+        email: user.email,
+        firstname: user.firstname,
+        lastname: user.lastname,
+      };
 
-      return JSON.stringify({
-        user: {
-          id: user.id,
-          firstname: user.firstname,
-          lastname: user.lastname,
-          email: user.email,
-        },
-        token,
-      });
+      return JSON.stringify(userData);
     } catch (error) {
       throw error;
     }
