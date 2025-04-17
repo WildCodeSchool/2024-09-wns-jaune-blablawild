@@ -33,7 +33,7 @@ export const ReviewCard = ({ review }: ReviewCardProps) => {
   console.log("review", review);
   
   return (
-    <section className="bg-gray-50 p-4 rounded-lg w-[80vw] md:w-[60vw]">
+    <section className="bg-gray-50 p-4 rounded-lg w-[80vw] md:w-full">
       <div className="flex items-start mb-4">
         <div className="flex items-center">
           <div className="relative w-5 h-5 md:w-8 md:h-8 rounded-full overflow-hidden mr-3">
