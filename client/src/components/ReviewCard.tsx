@@ -30,18 +30,21 @@ export const ReviewCard = ({ review }: ReviewCardProps) => {
     return new Intl.DateTimeFormat("fr-FR").format(new Date(date));
   };
 
+  console.log("review", review);
+  
   return (
     <section className="bg-gray-50 p-4 rounded-lg w-[80vw] md:w-[60vw]">
       <div className="flex items-start mb-4">
         <div className="flex items-center">
           <div className="relative w-5 h-5 md:w-8 md:h-8 rounded-full overflow-hidden mr-3">
-            {review.sender?.profil?.image && (
+            {
               <img
-                src={review.sender?.profil?.image}
-                alt="Profile"
+              src={review.sender?.profil?.image || "/placeholder-portrait.png"}
+              alt="Profile"
                 className="w-full h-full rounded-full object-cover"
               />
-            )}
+            }
+            
           </div>
           <div>
             <h3 className="text-xs font-medium text-foreground">

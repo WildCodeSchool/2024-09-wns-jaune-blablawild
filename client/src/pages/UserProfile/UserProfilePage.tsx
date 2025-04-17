@@ -25,10 +25,10 @@ export default function UserProfilePage() {
 
   return (
     <main className="flex min-h-screen justify-center">
-      <div className="md:flex-1/8 hidden lg:block">
+      <div className="sm:flex-1/8 hidden md:block">
         <img src={img} alt="van" className="h-full w-full object-cover" />
       </div>
-      <section className="h-screen w-full self-center flex flex-col items-center md:w-2/3 md:bg-white md:px-24">
+      <section className="h-screen w-full self-center flex flex-col items-center md:w-2/3 md:bg-white md:px-18 lg:px-24">
         <div className="hidden md:block md:w-full md:mt-14">
           <h1 className="text-[#595959] text-[36px] text-left px-6 md:px-0">
             Mon profil
@@ -75,7 +75,7 @@ export default function UserProfilePage() {
             )}
           </div>
         </section>
-        <section className="hidden md:block">
+        <section className="hidden md:block w-full">
           {currentPage === "profile" && <About user={user.data.getUserById} />}
           {currentPage === "comments" && (
             <UserReviews user={user.data.getUserById} />

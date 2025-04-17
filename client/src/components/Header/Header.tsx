@@ -8,7 +8,7 @@ export default function Header() {
   const { isAuthenticated } = useUserStore();
 
   return (
-    <header className="flex justify-between items-center h-[3rem] border-b border-solid px-3 md:px-0">
+    <header className="flex sticky top-0 z-99 bg-white justify-between items-center h-[3rem] border-b border-solid px-3 md:px-0">
       <div className="md:hidden">
         <NavBar />
       </div>
