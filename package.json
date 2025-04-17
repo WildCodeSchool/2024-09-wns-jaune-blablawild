@@ -1,9 +1,0 @@
-{
-  "dependencies": {
-    "@radix-ui/react-avatar": "^1.1.4",
-    "date-fns": "^4.1.0"
-  },
-  "devDependencies": {
-    "@graphql-codegen/cli": "^5.0.5"
-  }
-}
