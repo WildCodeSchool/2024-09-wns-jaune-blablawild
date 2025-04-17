@@ -24,11 +24,11 @@ jobs:
         run: npm install -g pnpm
       
       - name: Install dependencies
-        working-directory: ./Frontend
+        working-directory: ./client
         run: |
           pnpm i
 
       - name: Run vitest tests
-        working-directory: ./Frontend
+        working-directory: ./client
         run: |
           pnpm test
