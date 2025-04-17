@@ -4,7 +4,9 @@
   "description": "",
   "main": "src/index.ts",
   "scripts": {
-    "start": "ts-node-dev ./src/index.ts",
+    "start": "node build/index.js",
+    "build": "npx tsc --outDir ./build",
+    "dev": "ts-node-dev ./src/index.ts",
     "seed": "ts-node-dev ./src/config/seed/init.ts",
     "test": "jest",
     "test:watch": "jest --watch",

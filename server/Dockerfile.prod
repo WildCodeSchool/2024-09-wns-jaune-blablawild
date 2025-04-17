@@ -1,0 +1,19 @@
+# container dans lequel l'appli est build
+FROM node:lts-alpine AS builder
+
+RUN mkdir /app
+WORKDIR /app
+
+COPY package*.json ./
+COPY tsconfig*.json ./
+RUN npm i
+COPY src src
+RUN npm run build
+
+# container dans lequel l'appli sera lancée une fois build
+FROM node:lts-alpine
+WORKDIR /app
+COPY --from=builder /app/build ./build
+COPY package*.json ./
+RUN npm i --production
+CMD ["npm", "run", "start"]

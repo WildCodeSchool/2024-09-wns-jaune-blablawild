@@ -14,6 +14,8 @@ module.exports = {
     "src/**/*.{ts,tsx}",
     "!src/**/*.d.ts",
     "!**/node_modules/**",
+    "!src/index.ts",
+    "!src/config/**"
   ],
   coverageThreshold: {
     global: {

@@ -21,7 +21,7 @@ export default function NavBar() {
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <CircleUserRound className="cursor-pointer" />
+        <CircleUserRound className="cursor-pointer" size={30} strokeWidth={1.5} />
       </PopoverTrigger>
       <PopoverContent className="w-screen h-screen md:w-[25vw] md:h-auto p-10 bg-background rounded-none mt-2">
         <ul className="flex flex-col space-y-6 text-md ">

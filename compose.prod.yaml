@@ -1,13 +1,14 @@
 networks:
-  development:
-    name: dev-network
+  production:
+    name: production
+    driver: bridge
 
 services:
-  driveup-dev-server:
-    container_name: driveup-dev-server
+  driveup-prod-server:
+    container_name: driveup-prod-server
     build: 
       context: ./server
-      dockerfile: Dockerfile.dev
+      dockerfile: Dockerfile.prod
     volumes:
       - ./server/src:/app/src
     environment:
@@ -18,16 +19,16 @@ services:
       APP_SECRET: ${APP_SECRET}
       JWT_SECRET: ${JWT_SECRET}
     depends_on:
-      driveup-dev-database :
+      driveup-prod-database :
         condition: service_healthy
     networks:
-      - development
+      - production
 
-  driveup-dev-client:
-    container_name: driveup-dev-client
+  driveup-prod-client:
+    container_name: driveup-prod-client
     build: 
       context: ./client
-      dockerfile: Dockerfile.dev 
+      dockerfile: Dockerfile.prod
     volumes:
       - ./client/src/:/app/src/
     environment:
@@ -35,15 +36,15 @@ services:
       VITE_SERVER_HOST: ${SERVER_HOST}
       VITE_CLIENT_HOST: ${CLIENT_HOST}
     depends_on:
-      - driveup-dev-server
+      - driveup-prod-server
     networks:
-      - development
+      - production
 
-  driveup-dev-database:
-    container_name: driveup-dev-database
+  driveup-prod-database:
+    container_name: driveup-prod-database
     image: postgres
     volumes:
-      - ./persist/data/:/var/lib/postgresql/data
+      - ./persist/prod-data:/var/lib/postgresql/data
     environment:
       POSTGRES_PASSWORD: ${DB_PASSWORD}
       POSTGRES_DB: ${DB_SCHEMA}
@@ -54,21 +55,18 @@ services:
       interval: 5s
       retries: 5
     networks:
-      - development
+      - production
 
-  driveup-dev-visualizer:
-    container_name: driveup-dev-visualizer
-    image: adminer
-    networks:
-      - development
-
-  driveup-dev-gateway: 
-    container_name: driveup-dev-gateway
+  driveup-prod-gateway: 
+    container_name: driveup-prod-gateway
     image: nginx
     restart: always
     ports: 
       - ${GATEWAY_PORT}:80
     volumes:
-      - ./nginx.dev.conf:/etc/nginx/nginx.conf
+      - ./nginx.prod.conf:/etc/nginx/nginx.conf
+    depends_on:
+      - driveup-prod-server
+      - driveup-prod-client
     networks:
-      - development
+      - production

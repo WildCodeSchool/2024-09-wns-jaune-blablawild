@@ -23,8 +23,6 @@ type ReviewCardProps = {
 };
 
 export const ReviewCard = ({ review }: ReviewCardProps) => {
-  // const locale = "fr";
-
   const formatShortDate = (date: string | Date) => {
     return new Intl.DateTimeFormat("fr-FR").format(new Date(date));
   };
@@ -48,7 +46,6 @@ export const ReviewCard = ({ review }: ReviewCardProps) => {
             </h3>
           </div>
         </div>
-
         <div className="ml-auto text-xs text-foreground">
           Publié le {formatShortDate(review.date)}
         </div>

@@ -44,10 +44,11 @@ export default function CarrouselTrip() {
   };
 
   return (
-    <section className="flex flex-col items-center w-full gap-15">
-      <h1 className="md:text-3xl text-2xl text-center font-semibold">
+    <section className="flex flex-col items-center w-full gap-10 ">
+      <h1 className="px-4 md:text-3xl text-2xl text-center font-semibold">
         Nos itinéraires les plus populaires
       </h1>
+ 
       <Carousel
         opts={{
           align: "start",
@@ -55,6 +56,10 @@ export default function CarrouselTrip() {
         }}
         className="max-w-2/3 md:max-w-[90%] w-full"
       >
+          <div className="flex justify-center items-center gap-4 mb-6 md:mb-10">
+        <CarouselPrevious className="static translate-y-0 translate-x-0" />
+        <CarouselNext className="static translate-y-0 translate-x-0" />
+      </div>
         <CarouselContent>
           {data?.getPopularTrip.map((trip, index) => (
             <CarouselItem
@@ -91,8 +96,7 @@ export default function CarrouselTrip() {
             </CarouselItem>
           ))}
         </CarouselContent>
-        <CarouselPrevious />
-        <CarouselNext />
+      
       </Carousel>
     </section>
   );

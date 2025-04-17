@@ -3,4 +3,5 @@ persist/
 .DS_Store
 .cursor
 node_modules
-
+.idea
+coverage/
