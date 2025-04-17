@@ -29,6 +29,7 @@
   --chart-4: hsl(43 74% 66%);
   --chart-5: hsl(27 87% 67%);
   --radius: 0.6rem;
+  --hover: #f5f5f5
 }
 
 @theme inline {
