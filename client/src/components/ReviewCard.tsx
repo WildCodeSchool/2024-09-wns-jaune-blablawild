@@ -1,5 +1,3 @@
-import { formatDate } from "@/utils/FormatDate";
-
 type ReviewSender = {
   firstname: string;
   image?: string | null;
