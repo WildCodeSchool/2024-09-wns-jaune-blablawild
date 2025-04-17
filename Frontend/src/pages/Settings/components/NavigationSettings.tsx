@@ -2,19 +2,26 @@ import { useNavigate } from "react-router-dom";
 import LinkContent from "./LinkContent";
 import { Separator } from "@/components/ui/separator";
 
+type SettingItem = {
+  label: string;
+  value: string;
+  className?: string;
+  showArrow?: boolean;
+};
+
+type SettingsGroup = {
+  groupName: string;
+  settings: SettingItem[];
+};
+
 type NavigationSettingsProps = {
-  allSettings: {
-    label: string;
-    value: string;
-    className?: string;
-    showArrow?: boolean;
-  }[];
+  settingsGroups: SettingsGroup[];
   setActiveSettings: (value: string) => void;
   activeSettings: string;
 };
 
 export default function NavigationSettings({
-  allSettings,
+  settingsGroups,
   setActiveSettings,
   activeSettings,
 }: NavigationSettingsProps) {
@@ -25,19 +32,28 @@ export default function NavigationSettings({
   };
   return (
     <section className="py-5">
-      {allSettings.map((s, i) => (
-        <>
-          <div
-            key={s.value}
-            onClick={() => handleNavigate(s.value)}
-            className={`cursor-pointer w-full h-15 flex items-center justify-center p-4 my-1 rounded-sm ${
-              s.className
-            } ${activeSettings === s.value && "bg-input"} hover:bg-input`}
-          >
-            <LinkContent label={s.label} showArrow={s.showArrow} />
-          </div>
-          {i !== allSettings.length - 1 && <Separator />}
-        </>
+      {settingsGroups.map((group, groupIndex) => (
+        <div key={group.groupName}>
+          {group.settings.map((setting) => (
+            <div
+              key={setting.value}
+              onClick={() => handleNavigate(setting.value)}
+              className={`cursor-pointer w-full h-12 flex items-center justify-center p-4 my-1 rounded-2xl ${
+                setting.className
+              } ${
+                activeSettings === setting.value && "bg-input"
+              } hover:bg-input`}
+            >
+              <LinkContent
+                label={setting.label}
+                showArrow={setting.showArrow}
+              />
+            </div>
+          ))}
+          {groupIndex < settingsGroups.length - 1 && (
+            <Separator className="my-3" />
+          )}
+        </div>
       ))}
     </section>
   );

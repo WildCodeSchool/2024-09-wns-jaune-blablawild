@@ -15,11 +15,23 @@ import UserCreationForm from "../UserCreationForm/UserCreationForm";
 import { Button } from "../ui/button";
 import Modal from "../Modal/Modal";
 import UserLoginForm from "../UserLoginForm/UserLoginForm";
+import { useState } from "react";
 
 export default function NavBar() {
   const navigate = useNavigate();
+  const [isOpen, setIsOpen] = useState(false);
+
+  const handleNavigation = (path: string) => {
+    navigate(path);
+    setIsOpen(false);
+  };
+
+  const handleLogout = () => {
+    setIsOpen(false);
+  };
+
   return (
-    <Popover>
+    <Popover open={isOpen} onOpenChange={setIsOpen}>
       <PopoverTrigger asChild>
         <CircleUserRound className="cursor-pointer" />
       </PopoverTrigger>
@@ -27,7 +39,7 @@ export default function NavBar() {
         <ul className="flex flex-col space-y-6 text-md ">
           <li
             className="flex justify-between"
-            onClick={() => navigate("userjourneys")}
+            onClick={() => handleNavigation("/userjourneys")}
           >
             <div className="flex justify-center gap-2 cursor-pointer">
               <CarTaxiFront /> Mes Trajets
@@ -35,7 +47,10 @@ export default function NavBar() {
             <ChevronRight />
           </li>
           <Separator />
-          <li className="flex justify-between">
+          <li
+            className="flex justify-between"
+            onClick={() => handleNavigation("/profile")}
+          >
             <div className="flex justify-center gap-2 cursor-pointer">
               <UserRound /> Profile
             </div>
@@ -44,7 +59,7 @@ export default function NavBar() {
           <Separator />
           <li
             className="flex justify-between"
-            onClick={() => navigate("/settings")}
+            onClick={() => handleNavigation("/settings")}
           >
             <div className="flex justify-center gap-2 cursor-pointer">
               <Settings /> Paramètres
@@ -52,7 +67,10 @@ export default function NavBar() {
             <ChevronRight />
           </li>
           <Separator />
-          <li className="flex justify-between">
+          <li
+            className="flex justify-between"
+            onClick={() => handleNavigation("/messages")}
+          >
             <div className="flex justify-center gap-2 cursor-pointer">
               <MessageSquareText /> Messages
             </div>
@@ -60,17 +78,21 @@ export default function NavBar() {
           </li>
           <Separator />
           <Modal
-            trigger={<Button>Inscription</Button>}
+            trigger={
+              <Button onClick={() => setIsOpen(false)}>Inscription</Button>
+            }
             content={<UserCreationForm />}
             moduleTitle="Inscription"
           />
           <Modal
-            trigger={<Button>Se connecter</Button>}
+            trigger={
+              <Button onClick={() => setIsOpen(false)}>Se connecter</Button>
+            }
             content={<UserLoginForm />}
             moduleTitle="Se connecter"
           />
           <Separator />
-          <li className="flex gap-2 cursor-pointer">
+          <li className="flex gap-2 cursor-pointer" onClick={handleLogout}>
             <LogOut /> Déconnexion
           </li>
         </ul>

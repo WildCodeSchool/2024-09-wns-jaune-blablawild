@@ -10,37 +10,70 @@ export default function Settings() {
   const params = getUrlParams();
   const [activeSettings, setActiveSettings] = useState<string>(params.tab);
 
-  const allSettings = [
+  const settingsGroups = [
     {
-      label: "Mot de passe",
-      value: "updatePassword",
+      groupName: "profile",
+      settings: [
+        {
+          label: "Mot de passe",
+          value: "updatePassword",
+        },
+        {
+          label: "Adresse postale",
+          value: "updateAdress",
+        },
+      ],
     },
     {
-      label: "Déconnexion",
-      value: "logout",
-      className: "text-accent",
-      showArrow: false,
+      groupName: "preference",
+      settings: [
+        {
+          label: "Préférences",
+          value: "preferences",
+        },
+      ],
+    },
+    {
+      groupName: "paiement",
+      settings: [
+        {
+          label: "Modes de paiements",
+          value: "paymentMethods",
+        },
+      ],
+    },
+    {
+      groupName: "account",
+      settings: [
+        {
+          label: "Déconnexion",
+          value: "logout",
+          className: "text-accent",
+          showArrow: false,
+        },
+      ],
     },
   ];
+
   return (
-    <section className="h-full w-full flex flex-col md:flex-row">
+    <section className="flex justify-center items-center w-full h-full">
       <section
         className={`${
           activeSettings ? "hidden" : "flex"
-        } md:flex h-full w-full md:w-1/5 flex-col gap-4`}
+        } h-full w-full md:w-1/2 flex-col gap-4`}
       >
         <NavigationSettings
-          allSettings={allSettings}
+          settingsGroups={settingsGroups}
           setActiveSettings={setActiveSettings}
           activeSettings={activeSettings}
         />
       </section>
       {activeSettings && (
         <section
-          className={`w-full md:w-1/2 flex flex-col items-center justify-center gap-8 p-6`}
+          className={`md:w-1/2 w-full flex flex-col items-center justify-center gap-8 p-6`}
         >
           <div
-            className="flex items-center justify-start w-full md:hidden"
+            className="flex items-center justify-start w-full cursor-pointer"
             onClick={() => {
               navigate("/settings");
               setActiveSettings("");

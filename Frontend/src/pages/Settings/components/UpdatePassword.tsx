@@ -106,7 +106,7 @@ export default function UpdatePassword() {
                     {...field}
                   />
                 </FormControl>
-                <FormMessage className="col-span-4 col-start-2 text-primary" />
+                <FormMessage className="col-span-4 col-start-1 text-primary" />
               </FormItem>
             )}
           />
@@ -124,7 +124,7 @@ export default function UpdatePassword() {
                     {...field}
                   />
                 </FormControl>
-                <FormMessage className="col-span-4 col-start-2 text-primary" />
+                <FormMessage className="col-span-4 col-start-1 text-primary" />
               </FormItem>
             )}
           />
