@@ -24,7 +24,7 @@ export default function TripDateSelection() {
             mode="single"
             selected={date}
             onSelect={setDate}
-            className="rounded-md mt-3 border-none text-black"
+            className="rounded-md mt-3 border-none text-[#4e598c]"
           />
         </FormControl>
       </FormItem>
