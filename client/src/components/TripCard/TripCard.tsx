@@ -15,7 +15,6 @@ export default function TripCard({
   trips,
   mode = "search",
 }: Readonly<TripCardProps>) {
-
   return (
     <section className="w-full px-2 py-4 md:p-8">
       <div className="space-y-4">
@@ -41,7 +40,12 @@ export default function TripCard({
                     <div className="text-lg font-medium text-gray-900">
                       {formatHourFromTime(trip.departure_time)}
                     </div>
-                    <div className="text-base text-gray-600">
+                    <div className="text-lg font-medium text-gray-900 max-w-[100px] truncate md:max-w-none block md:hidden">
+                      {trip.departure_city.length > 5
+                        ? `${trip.departure_city.slice(0, 5)}…`
+                        : trip.departure_city}
+                    </div>
+                    <div className="text-base text-gray-600 hidden md:block">
                       {trip.departure_city}
                     </div>
                   </div>
@@ -57,7 +61,12 @@ export default function TripCard({
                     <div className="text-lg font-medium text-gray-900">
                       {formatHourFromTime(arrivalTime)}
                     </div>
-                    <div className="text-base text-gray-600">
+                    <div className="text-lg font-medium text-gray-900 max-w-[100px] truncate md:max-w-none block md:hidden">
+                      {trip.arrival_city.length > 5
+                        ? `${trip.arrival_city.slice(0, 5)}…`
+                        : trip.arrival_city}
+                    </div>
+                    <div className="text-base text-gray-600 hidden md:block">
                       {trip.arrival_city}
                     </div>
                   </div>
@@ -81,7 +90,6 @@ export default function TripCard({
                   <PassengersList passengers={trip.passengers} />
                 )}
               </div>
-
               <div className="w-1/3 relative flex items-center justify-center">
                 <img
                   src={getImageUrl(trip.arrival_city)}

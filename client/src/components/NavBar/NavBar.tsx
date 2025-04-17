@@ -26,52 +26,50 @@ export default function NavBar() {
     setIsOpen(false);
   };
 
-  const handleLogout = () => {
-    setIsOpen(false);
-  };
+  const liClassName =
+    "flex justify-between cursor-pointer transition-colors duration-200 hover:text-accent";
+  const divClassName = "flex justify-center gap-2";
 
   return (
     <Popover open={isOpen} onOpenChange={setIsOpen}>
       <PopoverTrigger asChild>
-        <CircleUserRound className="cursor-pointer" size={30} strokeWidth={1.5} />
+        <CircleUserRound
+          className="cursor-pointer"
+          size={30}
+          strokeWidth={1.5}
+        />
       </PopoverTrigger>
       <PopoverContent className="w-screen h-screen md:w-[25vw] md:h-auto p-10 bg-background rounded-none mt-2">
         <ul className="flex flex-col space-y-6 text-md ">
-          <li
-            className="flex justify-between"
-            onClick={() => handleNavigation("/userjourneys")}
-          >
-            <div className="flex justify-center gap-2 cursor-pointer">
+          <li className={liClassName} onClick={() => navigate("userjourneys")}>
+            <div className={divClassName}>
               <CarTaxiFront /> Mes Trajets
             </div>
             <ChevronRight />
           </li>
           <Separator />
-          <li
-            className="flex justify-between"
-            onClick={() => handleNavigation("/profile")}
-          >
-            <div className="flex justify-center gap-2 cursor-pointer">
+          <li className={liClassName}>
+            <div className={divClassName}>
               <UserRound /> Profile
             </div>
             <ChevronRight />
           </li>
           <Separator />
           <li
-            className="flex justify-between"
+            className={liClassName}
             onClick={() => handleNavigation("/settings")}
           >
-            <div className="flex justify-center gap-2 cursor-pointer">
+            <div className={divClassName}>
               <Settings /> Paramètres
             </div>
             <ChevronRight />
           </li>
           <Separator />
           <li
-            className="flex justify-between"
+            className={liClassName}
             onClick={() => handleNavigation("/messages")}
           >
-            <div className="flex justify-center gap-2 cursor-pointer">
+            <div className={divClassName}>
               <MessageSquareText /> Messages
             </div>
             <ChevronRight />
@@ -92,8 +90,10 @@ export default function NavBar() {
             moduleTitle="Se connecter"
           />
           <Separator />
-          <li className="flex gap-2 cursor-pointer" onClick={handleLogout}>
-            <LogOut /> Déconnexion
+          <li className={liClassName}>
+            <div className={divClassName}>
+              <LogOut /> Déconnexion
+            </div>
           </li>
         </ul>
       </PopoverContent>

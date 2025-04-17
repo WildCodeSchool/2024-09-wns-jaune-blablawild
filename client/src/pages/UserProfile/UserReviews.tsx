@@ -16,7 +16,7 @@ export default function UserReviews({ user }: Props) {
   
 
   return (
-    <section className="flex flex-col justify-center items-center gap-4 mt-10">
+    <section className="flex flex-col justify-center items-center gap-4 mt-8">
     {data?.getReviewsByUser.map((review) => (
       <ReviewCard key={review.id} review={review} />
     ))}
