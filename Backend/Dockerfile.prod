@@ -10,8 +10,6 @@ RUN npm i
 COPY src src
 RUN npm run build
 
-RUN ls -la
-
 # container dans lequel l'appli sera lancée une fois build
 FROM node:lts-alpine
 WORKDIR /app
