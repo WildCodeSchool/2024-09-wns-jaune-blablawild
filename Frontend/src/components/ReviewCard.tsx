@@ -1,8 +1,12 @@
 import { formatDate } from "@/utils/FormatDate";
 
+type SenderProfile = {
+  image?: string | null;
+}; 
+
 type ReviewSender = {
   firstname: string;
-  image?: string | null;
+  profile: SenderProfile;
 };
 
 type ReviewReceiver = {
@@ -15,7 +19,6 @@ export type ReviewType = {
   date: any;
   notation: number;
   sender: ReviewSender;
-  receiver: ReviewReceiver;
 };
 
 type ReviewCardProps = {
@@ -30,9 +33,9 @@ export const ReviewCard = ({ review }: ReviewCardProps) => {
       <div className="flex items-start mb-4">
         <div className="flex items-center">
           <div className="relative w-12 h-12 rounded-full overflow-hidden mr-3">
-            {review.sender?.image && 
+            {review.sender?.profile.image && 
             <img
-              src={review.sender?.image}
+              src={review.sender?.profile.image}
               alt="Profile"
               className="rounded-full w-12 h-12 object-cover"
             />}

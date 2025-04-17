@@ -3,6 +3,7 @@ import { User } from "../entities/user";
 import * as argon from "argon2";
 import { generateToken } from "../services/UserServices";
 import { Response } from "express";
+import { Profile } from "../entities/profile";
 
 @InputType()
 export class NewUserInput {
@@ -54,6 +55,9 @@ export class UserResolver {
 
       const hashedPassword = await argon.hash(userData.password);
       user.password = hashedPassword
+
+      const profile = new Profile();
+      user.profile = profile;
 
       await user.save()
 

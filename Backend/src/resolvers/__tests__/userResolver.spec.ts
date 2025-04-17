@@ -1,5 +1,5 @@
 import { LoginInput, UserResolver } from "../userResolver";
-import { faker } from "@faker-js/faker";
+import { faker } from "@faker-js/faker/.";
 import { User } from "../../entities/user";
 import { NewUserInput } from "../userResolver";
 import * as argon from "argon2";

@@ -46,6 +46,7 @@ export type Mutation = {
   __typename?: 'Mutation';
   createTrip: Scalars['String']['output'];
   login: Scalars['String']['output'];
+  patchProfile: Profile;
   signup: Scalars['String']['output'];
 };
 
@@ -60,6 +61,12 @@ export type MutationLoginArgs = {
 };
 
 
+export type MutationPatchProfileArgs = {
+  profileInput: ProfileInput;
+  userId: Scalars['String']['input'];
+};
+
+
 export type MutationSignupArgs = {
   data: NewUserInput;
 };
@@ -69,6 +76,23 @@ export type NewUserInput = {
   firstname: Scalars['String']['input'];
   lastname: Scalars['String']['input'];
   password: Scalars['String']['input'];
+};
+
+export type Profile = {
+  __typename?: 'Profile';
+  description: Scalars['String']['output'];
+  id: Scalars['ID']['output'];
+  image?: Maybe<Scalars['String']['output']>;
+  phone_number: Scalars['String']['output'];
+  user: User;
+};
+
+export type ProfileInput = {
+  description: Scalars['String']['input'];
+  firstname: Scalars['String']['input'];
+  image: Scalars['String']['input'];
+  lastname: Scalars['String']['input'];
+  phoneNumber: Scalars['String']['input'];
 };
 
 export type Query = {
@@ -167,11 +191,11 @@ export type User = {
   email: Scalars['String']['output'];
   firstname: Scalars['String']['output'];
   id: Scalars['ID']['output'];
-  image?: Maybe<Scalars['String']['output']>;
   lastname: Scalars['String']['output'];
   passenger_trips?: Maybe<Array<Trip>>;
   password: Scalars['String']['output'];
   pot: Scalars['Float']['output'];
+  profile: Profile;
   received_review?: Maybe<Array<Review>>;
   sent_review?: Maybe<Array<Review>>;
   transaction_received?: Maybe<Array<Transaction>>;
@@ -224,14 +248,14 @@ export type GetReviewsByUserQueryVariables = Exact<{
 }>;
 
 
-export type GetReviewsByUserQuery = { __typename?: 'Query', getReviewsByUser: Array<{ __typename?: 'Review', comment: string, date: any, notation: number, id: string, sender: { __typename?: 'User', firstname: string, image?: string | null }, receiver: { __typename?: 'User', firstname: string } }> };
+export type GetReviewsByUserQuery = { __typename?: 'Query', getReviewsByUser: Array<{ __typename?: 'Review', date: any, comment: string, id: string, notation: number, sender: { __typename?: 'User', firstname: string, profile: { __typename?: 'Profile', image?: string | null } } }> };
 
 export type GetUserByIdQueryVariables = Exact<{
   id: Scalars['String']['input'];
 }>;
 
 
-export type GetUserByIdQuery = { __typename?: 'Query', getUserById: { __typename?: 'User', email: string, firstname: string, id: string, image?: string | null, lastname: string } };
+export type GetUserByIdQuery = { __typename?: 'Query', getUserById: { __typename?: 'User', email: string, firstname: string, id: string, lastname: string } };
 
 
 export const CreateTripDocument = gql`
@@ -476,15 +500,14 @@ export type GetTripByUserQueryResult = Apollo.QueryResult<GetTripByUserQuery, Ge
 export const GetReviewsByUserDocument = gql`
     query GetReviewsByUser($userId: String!) {
   getReviewsByUser(userId: $userId) {
-    comment
     date
-    notation
+    comment
     id
+    notation
     sender {
-      firstname
-      image
-    }
-    receiver {
+      profile {
+        image
+      }
       firstname
     }
   }
@@ -529,7 +552,6 @@ export const GetUserByIdDocument = gql`
     email
     firstname
     id
-    image
     lastname
   }
 }
