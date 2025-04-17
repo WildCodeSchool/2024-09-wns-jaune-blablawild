@@ -8,8 +8,8 @@ type ToastContextType = {
 };
 
 const ToastContext = createContext<ToastContextType>({
-  success: (message: string) => {},
-  error: (message: string) => {},
+  success: (_message: string) => {},
+  error: (_message: string) => {},
 });
 
 interface ToasterProviderProps {
