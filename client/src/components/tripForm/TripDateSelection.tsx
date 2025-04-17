@@ -2,6 +2,8 @@ import { Calendar } from "../ui/calendar";
 import { useEffect, useState } from "react";
 import { FormControl, FormItem } from "../ui/form";
 import { useFormContext } from "react-hook-form";
+import { fr } from "date-fns/locale";
+import { startOfToday } from "date-fns";
 
 export default function TripDateSelection() {
   const { setValue, watch } = useFormContext();
@@ -14,7 +16,7 @@ export default function TripDateSelection() {
   }, [date, setValue]);
 
   return (
-    <div className="flex flex-col items-center">
+    <div className="flex flex-col items-center gap-2 text-foreground shadow-none cursor-pointer hover:bg-[var(--hover)] md:px-2 md:py-2 px-3 py-4 md:rounded-lg">
       <h1 className="text-secondary text-xl font-semibold">
         Quand partez-vous ?
       </h1>
@@ -22,9 +24,17 @@ export default function TripDateSelection() {
         <FormControl>
           <Calendar
             mode="single"
+            locale={fr}
             selected={date}
             onSelect={setDate}
-            className="rounded-md mt-3 border-none text-[#4e598c]"
+            fromDate={startOfToday()} 
+            className="text-[#4e598c]"
+            classNames={{
+              day: "h-9 w-9 text-center p-0 font-normal cursor-pointer",
+              day_selected: "rounded-md bg-[#ff8c42] text-white hover:bg-[#ff8c42] focus:bg-[#ff8c42]",
+              day_today: "font-semibold text-[#ff8c42]",
+              day_disabled: "text-gray-400 opacity-50",
+            }}
           />
         </FormControl>
       </FormItem>
