@@ -3,7 +3,9 @@ query GetUserById($id: String!) {
     email
     firstname
     id
-    image
+    profile {
+      image
+    }
     lastname
   }
 }

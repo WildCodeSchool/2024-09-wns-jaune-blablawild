@@ -2,7 +2,7 @@ import { ReviewCard } from "@/components/ReviewCard";
 import { useGetReviewsByUserQuery, User } from "@/graphql/hooks";
 
 type Props = {
-  user: Partial<User>
+  user: { id: string } 
 }
 
 export default function UserReviews({ user }: Props) {

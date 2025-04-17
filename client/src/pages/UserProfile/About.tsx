@@ -1,9 +1,14 @@
 import { Separator } from "@/components/ui/separator";
-import { User } from "@/graphql/hooks";
+import { Profile } from "@/graphql/hooks";
 
 type Props = {
-    user: Partial<User>
-}
+  user: {
+    firstname?: string;
+    lastname?: string;
+    email?: string;
+    profile?: Partial<Profile> | null;
+  };
+};
 
 export default function About({user}: Props) {
 
@@ -11,7 +16,7 @@ export default function About({user}: Props) {
         <section className="flex flex-col justify-center items-center gap-4 mt-6">
             <div className="flex flex-col w-full items-center md:flex-row-reverse md:justify-between">
                 <img 
-                    src={user.image || '/placeholder-portrait.png'} alt={`${user.firstname} ${user.lastname}`}
+                    src={user.profile?.image || '/placeholder-portrait.png'} alt={`${user.firstname} ${user.lastname}`}
                     className="w-1/3 self-center rounded-full"/>
                 
                 <div className="flex flex-col items-center my-6 gap-6 md:my-6 md:gap-8 md:items-start text-black">

@@ -46,6 +46,7 @@ export type Mutation = {
   __typename?: 'Mutation';
   createTrip: Scalars['String']['output'];
   login: Scalars['String']['output'];
+  patchProfile: Profile;
   signup: Scalars['String']['output'];
   updatePassword: Scalars['String']['output'];
 };
@@ -58,6 +59,12 @@ export type MutationCreateTripArgs = {
 
 export type MutationLoginArgs = {
   data: LoginInput;
+};
+
+
+export type MutationPatchProfileArgs = {
+  profileInput: ProfileInput;
+  userId: Scalars['String']['input'];
 };
 
 
@@ -77,14 +84,37 @@ export type NewUserInput = {
   password: Scalars['String']['input'];
 };
 
+export type Profile = {
+  __typename?: 'Profile';
+  description?: Maybe<Scalars['String']['output']>;
+  id: Scalars['ID']['output'];
+  image?: Maybe<Scalars['String']['output']>;
+  phoneNumber?: Maybe<Scalars['String']['output']>;
+  user?: Maybe<User>;
+};
+
+export type ProfileInput = {
+  description?: InputMaybe<Scalars['String']['input']>;
+  firstname: Scalars['String']['input'];
+  image?: InputMaybe<Scalars['String']['input']>;
+  lastname: Scalars['String']['input'];
+  phoneNumber?: InputMaybe<Scalars['String']['input']>;
+};
+
 export type Query = {
   __typename?: 'Query';
   getPopularTrip: Array<Trip>;
+  getProfile: Profile;
   getReviewsByUser: Array<Review>;
   getTrip: Array<Trip>;
   getTripByUser: Array<Trip>;
   getUserById: User;
   getUsers: Array<User>;
+};
+
+
+export type QueryGetProfileArgs = {
+  userId: Scalars['String']['input'];
 };
 
 
@@ -179,11 +209,11 @@ export type User = {
   email: Scalars['String']['output'];
   firstname: Scalars['String']['output'];
   id: Scalars['ID']['output'];
-  image?: Maybe<Scalars['String']['output']>;
   lastname: Scalars['String']['output'];
   passenger_trips?: Maybe<Array<Trip>>;
   password: Scalars['String']['output'];
   pot: Scalars['Float']['output'];
+  profile?: Maybe<Profile>;
   received_review?: Maybe<Array<Review>>;
   sent_review?: Maybe<Array<Review>>;
   transaction_received?: Maybe<Array<Transaction>>;
@@ -238,19 +268,26 @@ export type GetTripByUserQueryVariables = Exact<{
 
 export type GetTripByUserQuery = { __typename?: 'Query', getTripByUser: Array<{ __typename?: 'Trip', id: string, departure_time: any, departure_city: string, arrival_city: string, price: number, passengers?: Array<{ __typename?: 'User', id: string, firstname: string }> | null }> };
 
+export type GetProfileQueryVariables = Exact<{
+  userId: Scalars['String']['input'];
+}>;
+
+
+export type GetProfileQuery = { __typename?: 'Query', getProfile: { __typename?: 'Profile', id: string, phoneNumber?: string | null, image?: string | null, description?: string | null, user?: { __typename?: 'User', firstname: string, lastname: string, id: string } | null } };
+
 export type GetReviewsByUserQueryVariables = Exact<{
   userId: Scalars['String']['input'];
 }>;
 
 
-export type GetReviewsByUserQuery = { __typename?: 'Query', getReviewsByUser: Array<{ __typename?: 'Review', comment: string, date: any, notation: number, id: string, sender: { __typename?: 'User', firstname: string, image?: string | null }, receiver: { __typename?: 'User', firstname: string } }> };
+export type GetReviewsByUserQuery = { __typename?: 'Query', getReviewsByUser: Array<{ __typename?: 'Review', comment: string, date: any, notation: number, id: string, sender: { __typename?: 'User', firstname: string, profile?: { __typename?: 'Profile', image?: string | null } | null }, receiver: { __typename?: 'User', firstname: string } }> };
 
 export type GetUserByIdQueryVariables = Exact<{
   id: Scalars['String']['input'];
 }>;
 
 
-export type GetUserByIdQuery = { __typename?: 'Query', getUserById: { __typename?: 'User', email: string, firstname: string, id: string, image?: string | null, lastname: string } };
+export type GetUserByIdQuery = { __typename?: 'Query', getUserById: { __typename?: 'User', email: string, firstname: string, id: string, lastname: string, profile?: { __typename?: 'Profile', image?: string | null } | null } };
 
 
 export const CreateTripDocument = gql`
@@ -523,6 +560,54 @@ export type GetTripByUserQueryHookResult = ReturnType<typeof useGetTripByUserQue
 export type GetTripByUserLazyQueryHookResult = ReturnType<typeof useGetTripByUserLazyQuery>;
 export type GetTripByUserSuspenseQueryHookResult = ReturnType<typeof useGetTripByUserSuspenseQuery>;
 export type GetTripByUserQueryResult = Apollo.QueryResult<GetTripByUserQuery, GetTripByUserQueryVariables>;
+export const GetProfileDocument = gql`
+    query GetProfile($userId: String!) {
+  getProfile(userId: $userId) {
+    id
+    phoneNumber
+    image
+    description
+    user {
+      firstname
+      lastname
+      id
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetProfileQuery__
+ *
+ * To run a query within a React component, call `useGetProfileQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetProfileQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetProfileQuery({
+ *   variables: {
+ *      userId: // value for 'userId'
+ *   },
+ * });
+ */
+export function useGetProfileQuery(baseOptions: Apollo.QueryHookOptions<GetProfileQuery, GetProfileQueryVariables> & ({ variables: GetProfileQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetProfileQuery, GetProfileQueryVariables>(GetProfileDocument, options);
+      }
+export function useGetProfileLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetProfileQuery, GetProfileQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetProfileQuery, GetProfileQueryVariables>(GetProfileDocument, options);
+        }
+export function useGetProfileSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetProfileQuery, GetProfileQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetProfileQuery, GetProfileQueryVariables>(GetProfileDocument, options);
+        }
+export type GetProfileQueryHookResult = ReturnType<typeof useGetProfileQuery>;
+export type GetProfileLazyQueryHookResult = ReturnType<typeof useGetProfileLazyQuery>;
+export type GetProfileSuspenseQueryHookResult = ReturnType<typeof useGetProfileSuspenseQuery>;
+export type GetProfileQueryResult = Apollo.QueryResult<GetProfileQuery, GetProfileQueryVariables>;
 export const GetReviewsByUserDocument = gql`
     query GetReviewsByUser($userId: String!) {
   getReviewsByUser(userId: $userId) {
@@ -532,7 +617,9 @@ export const GetReviewsByUserDocument = gql`
     id
     sender {
       firstname
-      image
+      profile {
+        image
+      }
     }
     receiver {
       firstname
@@ -579,7 +666,9 @@ export const GetUserByIdDocument = gql`
     email
     firstname
     id
-    image
+    profile {
+      image
+    }
     lastname
   }
 }

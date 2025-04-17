@@ -1,6 +1,11 @@
+
+type SenderProfile = {
+  image?: string | null;
+};
+
 type ReviewSender = {
   firstname: string;
-  image?: string | null;
+  profil?: SenderProfile;
 };
 
 type ReviewReceiver = {
@@ -30,9 +35,9 @@ export const ReviewCard = ({ review }: ReviewCardProps) => {
       <div className="flex items-start mb-4">
         <div className="flex items-center">
           <div className="relative w-5 h-5 md:w-8 md:h-8 rounded-full overflow-hidden mr-3">
-            {review.sender?.image && (
+            {review.sender?.profil?.image && (
               <img
-                src={review.sender?.image}
+                src={review.sender?.profil?.image}
                 alt="Profile"
                 className="w-full h-full rounded-full object-cover"
               />
