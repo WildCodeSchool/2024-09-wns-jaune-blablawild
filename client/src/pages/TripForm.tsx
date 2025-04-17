@@ -83,7 +83,7 @@ export default function TripForm() {
   };
 
   return (
-    <section className="flex gap-2 justify-center item-center bg-pr h-screen">
+    <section className="flex gap-2 justify-center item-center bg-pr h-full">
       <div className="flex-1 flex flex-col justify-center items-center">
         <Form {...form}>
           {isSubmitted ? <Confirmation /> : step}

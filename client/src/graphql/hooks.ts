@@ -95,9 +95,7 @@ export type Profile = {
 
 export type ProfileInput = {
   description?: InputMaybe<Scalars['String']['input']>;
-  firstname: Scalars['String']['input'];
   image?: InputMaybe<Scalars['String']['input']>;
-  lastname: Scalars['String']['input'];
   phoneNumber?: InputMaybe<Scalars['String']['input']>;
 };
 
@@ -288,6 +286,14 @@ export type GetUserByIdQueryVariables = Exact<{
 
 
 export type GetUserByIdQuery = { __typename?: 'Query', getUserById: { __typename?: 'User', email: string, firstname: string, id: string, lastname: string, profile?: { __typename?: 'Profile', image?: string | null } | null } };
+
+export type PatchProfileMutationVariables = Exact<{
+  profileInput: ProfileInput;
+  userId: Scalars['String']['input'];
+}>;
+
+
+export type PatchProfileMutation = { __typename?: 'Mutation', patchProfile: { __typename?: 'Profile', description?: string | null, image?: string | null, phoneNumber?: string | null } };
 
 
 export const CreateTripDocument = gql`
@@ -706,3 +712,39 @@ export type GetUserByIdQueryHookResult = ReturnType<typeof useGetUserByIdQuery>;
 export type GetUserByIdLazyQueryHookResult = ReturnType<typeof useGetUserByIdLazyQuery>;
 export type GetUserByIdSuspenseQueryHookResult = ReturnType<typeof useGetUserByIdSuspenseQuery>;
 export type GetUserByIdQueryResult = Apollo.QueryResult<GetUserByIdQuery, GetUserByIdQueryVariables>;
+export const PatchProfileDocument = gql`
+    mutation PatchProfile($profileInput: ProfileInput!, $userId: String!) {
+  patchProfile(profileInput: $profileInput, userId: $userId) {
+    description
+    image
+    phoneNumber
+  }
+}
+    `;
+export type PatchProfileMutationFn = Apollo.MutationFunction<PatchProfileMutation, PatchProfileMutationVariables>;
+
+/**
+ * __usePatchProfileMutation__
+ *
+ * To run a mutation, you first call `usePatchProfileMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `usePatchProfileMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [patchProfileMutation, { data, loading, error }] = usePatchProfileMutation({
+ *   variables: {
+ *      profileInput: // value for 'profileInput'
+ *      userId: // value for 'userId'
+ *   },
+ * });
+ */
+export function usePatchProfileMutation(baseOptions?: Apollo.MutationHookOptions<PatchProfileMutation, PatchProfileMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<PatchProfileMutation, PatchProfileMutationVariables>(PatchProfileDocument, options);
+      }
+export type PatchProfileMutationHookResult = ReturnType<typeof usePatchProfileMutation>;
+export type PatchProfileMutationResult = Apollo.MutationResult<PatchProfileMutation>;
+export type PatchProfileMutationOptions = Apollo.BaseMutationOptions<PatchProfileMutation, PatchProfileMutationVariables>;
