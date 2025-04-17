@@ -67,7 +67,7 @@ export default function SearchBar({ path }: SearchBarProps) {
   return (
     <section className="w-full md:h-[55px] flex flex-col md:flex-row items-center overflow-hidden rounded-xl bg-background md:bg-white">
       <section className="w-full h-full md:flex-1 flex flex-col md:flex-row items-center md:gap-1 px-5 md:p-1">
-        <section className="w-full h-full md:flex-1 flex items-center justify-center gap-2 bg-background md:bg-white hover:bg-gray-200 focus-within:bg-gray-200 py-2 px-3 md:px-2 md:py-0 md:rounded-lg">
+        <section className="w-full h-full md:flex-1 flex items-center justify-center gap-2 bg-background md:bg-white cursor-pointer hover:bg-[var(--hover)] focus-within:bg-gray-200 py-2 px-3 md:px-2 md:py-0 md:rounded-lg">
           <MapPin className="size-5 " />
           <Input
             type="text"
@@ -86,7 +86,7 @@ export default function SearchBar({ path }: SearchBarProps) {
         </section>
         <Separator className="hidden md:block" orientation="vertical" />
         <Separator className="block md:hidden" orientation="horizontal" />
-        <div className="w-full h-full md:flex-1 flex items-center gap-2 bg-background md:bg-white hover:bg-gray-200 focus-within:bg-gray-200 py-2 px-3 md:py-0 md:px-2 md:rounded-lg">
+        <div className="w-full h-full md:flex-1 flex items-center gap-2 bg-background md:bg-white cursor-pointer hover:bg-[var(--hover)] focus-within:bg-gray-200 py-2 px-3 md:py-0 md:px-2 md:rounded-lg">
           <MapPin className="size-5" />
           <Input
             type="text"
@@ -101,7 +101,7 @@ export default function SearchBar({ path }: SearchBarProps) {
         <div className="h-full hidden md:block md:flex-[0.8]">
           <Popover open={openCalendar} onOpenChange={setOpenCalendar}>
             <PopoverTrigger asChild>
-              <div className="w-full h-full flex items-center gap-2 bg-white text-foreground shadow-none cursor-pointer hover:bg-gray-200 md:px-2 md:py-2 px-3 py-4 md:rounded-lg">
+              <div className="w-full h-full flex items-center gap-2 bg-white text-foreground shadow-none cursor-pointer hover:bg-[var(--hover)] md:px-2 md:py-2 px-3 py-4 md:rounded-lg">
                 <CalendarDays className="size-5" />
                 <p className="text-md">
                   {isToday(departureTime)
@@ -124,7 +124,7 @@ export default function SearchBar({ path }: SearchBarProps) {
         <div className="block md:hidden w-full">
           <Dialog>
             <DialogTrigger asChild>
-              <div className="w-full flex items-center gap-2 bg-background text-foreground shadow-none cursor-pointer hover:bg-gray-200 px-3 py-4 rounded-md">
+              <div className="w-full flex items-center gap-2 bg-background text-foreground shadow-none cursor-pointer hover:bg-[var(--hover)] px-3 py-4 rounded-md">
                 <CalendarDays className="size-5" />
                 <p className="md:text-sm">
                   {isToday(departureTime)
@@ -156,7 +156,7 @@ export default function SearchBar({ path }: SearchBarProps) {
         <div className="h-full hidden md:block md:flex-[0.8]">
           <Popover>
             <PopoverTrigger asChild>
-              <div className="w-full h-full flex items-center gap-2 bg-white text-foreground shadow-none cursor-pointer hover:bg-gray-200 md:px-2 md:py-2 px-3 py-4 md:rounded-lg">
+              <div className="w-full h-full flex items-center gap-2 bg-white text-foreground shadow-none cursor-pointer hover:bg-[var(--hover)] md:px-2 md:py-2 px-3 py-4 md:rounded-lg">
                 <User className="size-5" />
                 <p className="text-md">
                   {countPassenger} {`passager${countPassenger > 1 ? "s" : ""}`}
@@ -174,7 +174,7 @@ export default function SearchBar({ path }: SearchBarProps) {
         <div className="block md:hidden w-full">
           <Dialog>
             <DialogTrigger asChild>
-              <div className="w-full flex items-center gap-2 bg-background text-foreground shadow-none cursor-pointer hover:bg-gray-200 md:px-2 md:py-2 px-3 py-4 md:rounded-md">
+              <div className="w-full flex items-center gap-2 bg-background text-foreground shadow-none cursor-pointer hover:bg-[var(--hover)] md:px-2 md:py-2 px-3 py-4 md:rounded-md">
                 <User className="size-5" />
                 {countPassenger > 0 ? (
                   <p className="md:text-sm">

@@ -26,24 +26,24 @@ export default function NavBar() {
       <PopoverContent className="w-screen h-screen md:w-[25vw] md:h-auto p-10 bg-background rounded-none mt-2">
         <ul className="flex flex-col space-y-6 text-md ">
           <li
-            className="flex justify-between"
+            className="flex justify-between cursor-pointer px-4 py-2 transition-colors duration-200 hover:text-primary"
             onClick={() => navigate("userjourneys")}
           >
-            <div className="flex justify-center gap-2 cursor-pointer">
+            <div className="flex justify-center gap-2">
               <CarTaxiFront /> Mes Trajets
             </div>
             <ChevronRight />
           </li>
           <Separator />
-          <li className="flex justify-between">
-            <div className="flex justify-center gap-2 cursor-pointer">
+          <li className="flex justify-between cursor-pointer px-4 py-2 transition-colors duration-200 hover:text-primary">
+            <div className="flex justify-center gap-2">
               <UserRound /> Profile
             </div>
             <ChevronRight />
           </li>
           <Separator />
-          <li className="flex justify-between">
-            <div className="flex justify-center gap-2 cursor-pointer">
+          <li className="flex justify-between cursor-pointer px-4 py-2 transition-colors duration-200 hover:text-primary">
+            <div className="flex justify-center gap-2">
               <MessageSquareText /> Messages
             </div>
             <ChevronRight />
@@ -60,7 +60,7 @@ export default function NavBar() {
             moduleTitle="Se connecter"
           />
           <Separator />
-          <li className="flex gap-2 cursor-pointer">
+          <li className="flex gap-2 cursor-pointer px-4 py-2 transition-colors duration-200 hover:text-primary">
             <LogOut /> Déconnexion
           </li>
         </ul>
