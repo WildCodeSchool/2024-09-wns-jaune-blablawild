@@ -3,6 +3,14 @@ import { render, screen, waitFor } from '@testing-library/react';
 import { vi } from 'vitest';
 
 
+vi.mock('@/store/useUserStore', () => ({
+  useUserStore: () => ({
+    user: {
+      id: '1'
+    }
+  })
+}));
+
 vi.mock('react-router-dom', () => {
   return {
     useParams: () => ({ id: '1' }),
