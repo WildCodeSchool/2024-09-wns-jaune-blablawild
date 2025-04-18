@@ -1,9 +1,9 @@
 import { useGetUserByIdQuery } from "@/graphql/hooks";
-import img from "/home-background.jpg";
-import About from "./About";
-import { useParams } from "react-router-dom";
 import { useState } from "react";
+import { useParams } from "react-router-dom";
+import About from "./About";
 import UserReviews from "./UserReviews";
+import img from "/home-background.jpg";
 
 export default function UserProfilePage() {
   const { id } = useParams();
@@ -47,8 +47,11 @@ export default function UserProfilePage() {
           >
             A propos
           </div>
-          <div onClick={() => setCurrentPage("comments")} className={`w-1/2 text-center uppercase text-base font-medium cursor-pointer pb-4
-                            ${currentPage === "comments"
+          <div
+            onClick={() => setCurrentPage("comments")}
+            className={`w-1/2 text-center uppercase text-base font-medium cursor-pointer pb-4
+                            ${
+                              currentPage === "comments"
                                 ? "text-accent border-b-3 border-accent"
                                 : "text-[#595959] opacity-90 border-b-2 border-border-grey"
                             }
@@ -63,20 +66,28 @@ export default function UserProfilePage() {
         >
           <div className="absolute inset-0 bg-white/70 z-0"></div>
           <div className="relative z-10 w-full h-full overflow-y-auto flex flex-col items-center px-6 py-8">
-              <h1 className="text-[#4e598c] text-[36px]">
-                Mon profil
-              </h1>
-            {currentPage === "profile" && (<About user={user.data.getUserById} />)}
-            {currentPage === "comments" && (<UserReviews user={user.data.getUserById} />)}
+            <h1 className="text-[#4e598c] text-[36px]">Mon profil</h1>
+            {currentPage === "profile" && (
+              <About user={user.data.getUserById} />
+            )}
+            {currentPage === "comments" && (
+              <UserReviews user={user.data.getUserById} />
+            )}
           </div>
         </section>
         <section className="hidden md:block">
           {currentPage === "profile" && <About user={user.data.getUserById} />}
-          {currentPage === "comments" && (<UserReviews user={user.data.getUserById} />)}
+          {currentPage === "comments" && (
+            <UserReviews user={user.data.getUserById} />
+          )}
         </section>
       </section>
       <div className="md:flex-1/8 hidden lg:block">
-        <img src={img} alt="van" className="h-full w-full object-cover object-[75%_center]"/>
+        <img
+          src={img}
+          alt="van"
+          className="h-full w-full object-cover object-[75%_center]"
+        />
       </div>
     </main>
   );

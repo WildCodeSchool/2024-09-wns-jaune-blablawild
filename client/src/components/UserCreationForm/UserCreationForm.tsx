@@ -1,8 +1,10 @@
-import { Button } from "../ui/button";
-import { Input } from "../ui/input";
-import { z } from "zod";
-import { useForm } from "react-hook-form";
+import { useToast } from "@/contexts/ToasterContext";
+import { useSignupMutation } from "@/graphql/hooks";
+import { useUserStore } from "@/store/useUserStore";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
+import { Button } from "../ui/button";
 import {
   Form,
   FormControl,
@@ -10,21 +12,24 @@ import {
   FormItem,
   FormMessage,
 } from "../ui/form";
-import { useSignupMutation } from "@/graphql/hooks";
-import { useToast } from "@/contexts/ToasterContext";
+import { Input } from "../ui/input";
+import { SignupFormData, formSchema, handleSignup } from "./utils";
 
-const formSchema = z.object({
-  name: z.string().min(1, "Name is required"),
-  lastname: z.string().min(1, "Lastname is required"),
-  email: z.string().email("Invalid email address"),
-  password: z.string().min(6, "Password must be at least 6 characters"),
-});
+type UserCreationFormProps = {
+  closeModal?: () => void;
+  closeNavbar?: () => void;
+};
 
-export default function UserCreationForm() {
+export default function UserCreationForm({
+  closeModal,
+  closeNavbar,
+}: UserCreationFormProps) {
   const [signup] = useSignupMutation();
   const { success } = useToast();
+  const setUser = useUserStore((state) => state.setUser);
+  const navigate = useNavigate();
 
-  const form = useForm<z.infer<typeof formSchema>>({
+  const form = useForm<SignupFormData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: "",
@@ -34,22 +39,16 @@ export default function UserCreationForm() {
     },
   });
 
-  const onSubmit = async (data: z.infer<typeof formSchema>) => {
-    try {
-      await signup({
-        variables: {
-          data: {
-            firstname: data.name,
-            lastname: data.lastname,
-            email: data.email,
-            password: data.password,
-          },
-        },
-      });
-      success("Utilisateur créer");
-    } catch (error) {
-      console.error("Error submitting form:", error);
-    }
+  const onSubmit = async (data: SignupFormData) => {
+    await handleSignup({
+      data,
+      signup,
+      setUser,
+      closeModal,
+      closeNavbar,
+      navigate,
+      success,
+    });
   };
 
   return (

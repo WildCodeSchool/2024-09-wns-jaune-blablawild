@@ -49,7 +49,11 @@ export default function UserJourneys() {
         <TripCard trips={trips as Trip[]} />
       </div>
       <div className="w-[15%] hidden lg:block">
-        <img src={van_image} alt="van" className="h-full w-full object-cover object-[75%_center]" />
+        <img
+          src={van_image}
+          alt="van"
+          className="h-full w-full object-cover object-[75%_center]"
+        />
       </div>
     </section>
   );
