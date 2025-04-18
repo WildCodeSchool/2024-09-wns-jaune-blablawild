@@ -115,7 +115,7 @@ export default function UserProfilePage() {
         {!editMode &&  <Button
               onClick={() => setEditMode(true)}
               variant={"link"}
-              className="hover:no-underline hover:opacity-70 text-accent"
+              className="md:hidden hover:no-underline hover:opacity-70 text-accent"
             >
               Modifier mon profil
             </Button>}
