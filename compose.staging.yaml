@@ -6,9 +6,8 @@ networks:
 services:
   driveup-staging-server:
     container_name: driveup-staging-server
-    build: 
-      context: ./server
-      dockerfile: Dockerfile.staging
+    image: yannlahellec1025/driveupstagingserver
+    command: sh -c "npm run start"
     volumes:
       - ./server/src:/app/src
     environment:
@@ -26,9 +25,8 @@ services:
 
   driveup-staging-client:
     container_name: driveup-staging-client
-    build: 
-      context: ./client
-      dockerfile: Dockerfile.staging
+    image: yannlahellec1025/driveupstagingclient
+    command: sh -c "npm run start"
     volumes:
       - ./client/src/:/app/src/
     environment:
