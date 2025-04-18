@@ -1,7 +1,5 @@
-// UserProfilePage.test.tsx
 import { render, screen, waitFor } from '@testing-library/react';
 import { vi } from 'vitest';
-
 
 vi.mock('@/store/useUserStore', () => ({
   useUserStore: () => ({
@@ -31,15 +29,22 @@ vi.mock('@/graphql/hooks', () => ({
     loading: false,
     error: null,
   }),
+  useGetProfileQuery: () => ({
+    data: {
+      getProfile: {
+        id: '1',
+      }
+    },
+    loading: false,
+    error: null,
+  })
 }));
 
-
 test('renders user data in About component', async () => {
-
     const {default: UserProfilePage} = await import('../UserProfilePage');
     render(<UserProfilePage />);
 
     await waitFor(() => {
       expect(screen.getAllByText("John Doe").length).toBeGreaterThan(0);
     });
-  });
+});
