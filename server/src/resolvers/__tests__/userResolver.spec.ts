@@ -1,12 +1,15 @@
-import { LoginInput, UserResolver } from "../userResolver";
 import { faker } from "@faker-js/faker";
-import { User } from "../../entities/user";
-import { NewUserInput } from "../userResolver";
 import * as argon from "argon2";
+import * as jwt from "jsonwebtoken";
+import { User } from "../../entities/user";
+import { LoginInput, NewUserInput, UserResolver } from "../userResolver";
+
+process.env.JWT_SECRET = "test_secret_key";
 
 jest.mock("argon2");
 jest.mock("../../entities/user");
 jest.mock("../../services/UserServices");
+jest.mock("jsonwebtoken");
 
 describe("User resolver tests", () => {
   let userResolver: UserResolver;
@@ -21,16 +24,22 @@ describe("User resolver tests", () => {
       email: faker.internet.email(),
       password: faker.internet.password(),
     };
+    (jwt.sign as jest.Mock).mockImplementation((payload, secret, options) => {
+      return "fake_token_for_testing";
+    });
     jest.clearAllMocks();
   });
 
   it("should create a new user", async () => {
     const id = faker.string.uuid();
-    const expectedUser = {
-      id: id,
-      firstname: newUser.firstname,
-      lastname: newUser.lastname,
-      email: newUser.email,
+    const expectedResponse = {
+      user: {
+        id: id,
+        firstname: newUser.firstname,
+        lastname: newUser.lastname,
+        email: newUser.email,
+      },
+      token: "fake_token_for_testing",
     };
 
     (User.findOne as jest.Mock).mockResolvedValueOnce(null);
@@ -47,10 +56,13 @@ describe("User resolver tests", () => {
 
     const result = await userResolver.signup(newUser, { res: mockResponse });
 
-    expect(result).toBe(JSON.stringify(expectedUser));
+    expect(JSON.parse(result)).toEqual(expectedResponse);
 
     expect(argon.hash).toHaveBeenCalledWith(newUser.password);
     expect(userInstance.save).toHaveBeenCalled();
+    expect(jwt.sign).toHaveBeenCalledWith({ id }, "test_secret_key", {
+      expiresIn: "1h",
+    });
   });
 
   it("should not create user if email already exists", async () => {
@@ -101,6 +113,16 @@ describe("User resolver tests", () => {
     (argon.verify as jest.Mock).mockResolvedValueOnce(true);
     const { generateToken } = require("../../services/UserServices");
 
+    const expectedResponse = {
+      user: {
+        id: existingUser.id,
+        firstname: existingUser.firstname,
+        lastname: existingUser.lastname,
+        email: existingUser.email,
+      },
+      token: "fake_token_for_testing",
+    };
+
     const result = await userResolver.login(userLoginInput, {
       res: mockResponse,
     });
@@ -114,14 +136,8 @@ describe("User resolver tests", () => {
     );
     expect(generateToken).toHaveBeenCalledWith(existingUser.id, mockResponse);
 
-    expect(result).toBe(
-      JSON.stringify({
-        id: existingUser.id,
-        email: existingUser.email,
-        firstname: existingUser.firstname,
-        lastname: existingUser.lastname,
-      })
-    );
+    expect(JSON.parse(result)).toEqual(expectedResponse);
+    expect(jwt.sign).toHaveBeenCalled();
   });
 });
 
