@@ -4,10 +4,6 @@ import { User } from "../entities/user";
 
 @InputType()
 export class ProfileInput {
-  @Field()
-  firstname!: string;
-  @Field()
-  lastname!: string;
   @Field({ nullable: true })
   phoneNumber?: string;
 
@@ -62,9 +58,6 @@ export class ProfileResolver {
       user.profile.user = user;
     }
     Object.assign(user.profile, profileInput);
-
-    if (profileInput.firstname) user.firstname = profileInput.firstname;
-    if (profileInput.lastname) user.lastname = profileInput.lastname;
 
     await user.profile.save();
     await user.save();
