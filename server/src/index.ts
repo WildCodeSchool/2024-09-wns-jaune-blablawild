@@ -7,11 +7,12 @@ import * as jwt from "jsonwebtoken";
 import { TripResolver } from "./resolvers/tripResolver";
 import { UserResolver } from "./resolvers/userResolver";
 import { ReviewResolver } from "./resolvers/reviewsResolver";
+import { ProfileResolver } from "./resolvers/userProfileResolver";
 
 async function StartGraphQLServer() {
   await dataSource.initialize();
   const schema = await buildSchema({
-    resolvers: [TripResolver, UserResolver, ReviewResolver],
+    resolvers: [TripResolver, UserResolver, ReviewResolver, ProfileResolver],
     authChecker: ({ context }) => {
       if (context.user) return true;
       return false;

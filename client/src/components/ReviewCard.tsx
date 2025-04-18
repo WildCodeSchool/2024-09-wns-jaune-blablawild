@@ -1,6 +1,13 @@
+import { useNavigate } from "react-router-dom";
+
+type SenderProfile = {
+  image?: string | null;
+};
+
 type ReviewSender = {
   firstname: string;
-  image?: string | null;
+  id: string;
+  profil?: SenderProfile;
 };
 
 type ReviewReceiver = {
@@ -25,18 +32,25 @@ export const ReviewCard = ({ review }: ReviewCardProps) => {
     return new Intl.DateTimeFormat("fr-FR").format(new Date(date));
   };
 
+  const navigate = useNavigate();
+  
+  const handleNavigateProfile = (id: string) => {
+    navigate(`/user/${id}`)
+  }  
   return (
-    <section className="bg-gray-50 p-4 rounded-lg w-[80vw] md:w-[60vw]">
+    <section className="bg-gray-50 p-4 rounded-lg w-[80vw] md:w-full">
       <div className="flex items-start mb-4">
-        <div className="flex items-center">
+        <div onClick={()=> handleNavigateProfile(review.sender.id)}
+        className="flex items-center">
           <div className="relative w-5 h-5 md:w-8 md:h-8 rounded-full overflow-hidden mr-3">
-            {review.sender?.image && (
+            {
               <img
-                src={review.sender?.image}
-                alt="Profile"
+              src={review.sender?.profil?.image || "/placeholder-portrait.png"}
+              alt="Profile"
                 className="w-full h-full rounded-full object-cover"
               />
-            )}
+            }
+            
           </div>
           <div>
             <h3 className="text-xs font-medium text-foreground">

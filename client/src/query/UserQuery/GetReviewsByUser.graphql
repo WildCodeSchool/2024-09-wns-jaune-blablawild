@@ -4,9 +4,12 @@ query GetReviewsByUser($userId: String!) {
     date
     notation
     id
-    sender {
+   sender {
       firstname
-      image
+      id
+      profile {
+        image
+      }
     }
     receiver {
       firstname

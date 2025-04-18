@@ -1,7 +1,13 @@
-// UserProfilePage.test.tsx
 import { render, screen, waitFor } from '@testing-library/react';
 import { vi } from 'vitest';
 
+vi.mock('@/store/useUserStore', () => ({
+  useUserStore: () => ({
+    user: {
+      id: '1'
+    }
+  })
+}));
 
 vi.mock('react-router-dom', () => {
   return {
@@ -23,15 +29,28 @@ vi.mock('@/graphql/hooks', () => ({
     loading: false,
     error: null,
   }),
+  useGetProfileQuery: () => ({
+    data: {
+      getProfile: {
+        id: '1',
+        phoneNumber: '123-456-7890',
+        description: 'Test description'
+      }
+    },
+    loading: false,
+    error: null,
+  })
 }));
 
-
-test('renders user data in About component', async () => {
-
-    const {default: UserProfilePage} = await import('../UserProfilePage');
-    render(<UserProfilePage />);
-
-    await waitFor(() => {
-      expect(screen.getAllByText("John Doe").length).toBeGreaterThan(0);
-    });
+test('renders user profile page correctly', async () => {
+  const {default: UserProfilePage} = await import('../UserProfilePage');
+  render(<UserProfilePage />);
+  
+  await waitFor(() => {
+    expect(screen.getAllByText("Mon profil").length).toBeGreaterThan(0);
+    
+    const emailElements = screen.getAllByTestId("user-email");
+    expect(emailElements.length).toBeGreaterThan(0);
+    expect(emailElements[0]).toHaveTextContent("john.doe@gmail.com");
   });
+});

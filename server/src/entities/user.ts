@@ -3,13 +3,16 @@ import {
   BaseEntity,
   Column,
   Entity,
+  JoinColumn,
   ManyToMany,
   OneToMany,
+  OneToOne,
   PrimaryGeneratedColumn,
 } from "typeorm";
 import { Trip } from "./trip";
 import { Review } from "./review";
 import { Transaction } from "./transaction";
+import { Profile } from "./profile";
 
 @ObjectType()
 @Entity()
@@ -33,10 +36,6 @@ export class User extends BaseEntity {
   @Field()
   @Column()
   password!: string;
-
-  @Field({nullable: true})
-  @Column({nullable: true})
-  image?: string;
 
   // Role for user to define later if needed
   // @Field()
@@ -70,4 +69,9 @@ export class User extends BaseEntity {
   @Field(() => [Transaction], { nullable: true })
   @OneToMany(() => Transaction, (transaction) => transaction.sender)
   transaction_sent?: Transaction[];
+
+  @Field(() => Profile, { nullable: true })
+  @OneToOne(() => Profile, (profile) => profile.user, { cascade: true })
+  @JoinColumn()
+  profile?: Profile;
 }

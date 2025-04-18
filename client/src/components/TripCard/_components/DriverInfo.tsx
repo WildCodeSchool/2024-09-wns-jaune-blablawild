@@ -1,6 +1,7 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { User } from "@/graphql/hooks";
 import { DriverInfoProps } from "../_types/types";
+import { useNavigate } from "react-router-dom";
 
 export function DriverInfo({
   driver,
@@ -9,11 +10,17 @@ export function DriverInfo({
 
   const driverInfo: DriverInfoProps = {
     firstname: driver.firstname,
-    image: driver.image || "",
+    image: driver.profile?.image || "",
   };
 
+    const navigate = useNavigate();
+  
+    const handleNavigateProfile = (id: string) => {
+      navigate(`/user/${id}`)
+    }
+
   return (
-    <div className="flex items-center gap-3">
+    <div onClick={() => handleNavigateProfile(driver.id)} className="flex items-center gap-3 hover:opacity-70">
       <div className="relative">
         <Avatar>
           <AvatarImage src={driverInfo.image} alt={driverInfo.firstname} />

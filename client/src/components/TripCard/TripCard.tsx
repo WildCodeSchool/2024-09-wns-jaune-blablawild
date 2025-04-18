@@ -15,6 +15,8 @@ export default function TripCard({
   trips,
   mode = "search",
 }: Readonly<TripCardProps>) {
+
+
   return (
     <section className="w-full px-2 py-4 md:p-8">
       <div className="space-y-4">

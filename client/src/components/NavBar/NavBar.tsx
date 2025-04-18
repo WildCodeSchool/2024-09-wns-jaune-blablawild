@@ -21,6 +21,7 @@ import Modal from "../Modal/Modal";
 import UserCreationForm from "../UserCreationForm/UserCreationForm";
 import UserLoginForm from "../UserLoginForm/UserLoginForm";
 import { Button } from "../ui/button";
+import { useGetProfileQuery } from "@/graphql/hooks";
 
 export default function NavBar() {
   const [open, setOpen] = useState(false);
@@ -44,14 +45,35 @@ export default function NavBar() {
     closeNavbar();
   };
 
+  let stringUserId = null; 
+  if (user && user.id) {
+    stringUserId = String(user.id);
+  }
+  
+  const { data } = useGetProfileQuery({
+    skip: !isAuthenticated || !stringUserId,
+    variables: {
+      userId: stringUserId || "",
+    },
+  });
+
+  let profileImage = null;
+  if (data?.getProfile.image) {
+  profileImage = data?.getProfile.image;
+  }
+
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
-        <CircleUserRound
-          className="cursor-pointer"
-          size={30}
-          strokeWidth={1.5}
-        />
+        {profileImage ? (
+          <img src={profileImage} className="w-8 h-8 rounded-full" />
+        ) : (
+          <CircleUserRound
+            className="cursor-pointer"
+            size={30}
+            strokeWidth={1.5}
+          />
+        )}
       </PopoverTrigger>
       <PopoverContent className="w-screen h-screen md:w-[25vw] md:h-auto p-10 bg-background rounded-none mt-2 shadow-lg">
         <ul className="flex flex-col space-y-6 text-md">

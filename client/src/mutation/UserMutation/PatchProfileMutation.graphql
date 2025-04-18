@@ -1,0 +1,7 @@
+mutation PatchProfile($profileInput: ProfileInput!, $userId: String!) {
+  patchProfile(profileInput: $profileInput, userId: $userId) {
+    description
+    image
+    phoneNumber
+  }
+}

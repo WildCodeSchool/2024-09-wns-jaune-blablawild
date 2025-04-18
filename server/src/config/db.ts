@@ -4,6 +4,7 @@ import { Trip } from "../entities/trip";
 import { Review } from "../entities/review";
 import { User } from "../entities/user";
 import { Transaction } from "../entities/transaction";
+import { Profile } from "../entities/profile";
 
 config();
 
@@ -16,6 +17,6 @@ export const dataSource = new DataSource({
   password: DB_PASSWORD,
   database: DB_SCHEMA,
   port: 5432,
-  entities: [Trip, Review, User, Transaction],
+  entities: [Trip, Review, User, Transaction, Profile],
   synchronize: true,
 });
