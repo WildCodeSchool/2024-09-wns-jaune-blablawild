@@ -5,6 +5,7 @@ import { faker } from "@faker-js/faker/locale/fr";
 import { Trip } from "../../entities/trip";
 import { Transaction } from "../../entities/transaction";
 import { Review } from "../../entities/review";
+import { Profile } from "../../entities/profile";
 
 const seedDatabase = async () => {
     await dataSource.initialize();
@@ -26,10 +27,16 @@ const seedDatabase = async () => {
             user.lastname = faker.person.lastName();
             user.email = faker.internet.email();
             user.password = faker.internet.password();
-            user.image = faker.image.avatar();
-            // user.role = "driver"; add later when role defined
-            user.pot = 0
-            users.push(await dataSource.getRepository(User).save(user))
+            user.pot = 0;
+            
+            const profile = new Profile();
+            profile.image = faker.image.avatar();
+            profile.description = faker.lorem.sentence();
+            profile.phoneNumber = faker.phone.number();
+            
+            user.profile = profile;
+            
+            users.push(await dataSource.getRepository(User).save(user));
         }
 
         console.log("💪 Users seeded !")
