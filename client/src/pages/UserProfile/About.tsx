@@ -1,6 +1,7 @@
 import { Separator } from "@/components/ui/separator";
 import { Profile, useGetProfileQuery } from "@/graphql/hooks";
 import { useParams } from "react-router-dom";
+import { Check, Mail, Phone } from "lucide-react";
 
 type Props = {
   user: {
@@ -18,7 +19,7 @@ export default function About({ user }: Props) {
   const { data } = useGetProfileQuery({
     skip: !user.id,
     variables: { userId: id || "" },
-});
+  });
 
   return (
     <section className="flex flex-col justify-center items-center gap-8 mt-6 pb-12 w-full">
@@ -31,10 +32,19 @@ export default function About({ user }: Props) {
 
         <div className="flex flex-col items-center gap-6 md:gap-8 md:items-start text-black">
           {data?.getProfile?.phoneNumber && (
-            <p>{data.getProfile.phoneNumber}</p>
+            <div className="flex items-center">
+              <Phone size={16} className="mr-2" />
+              <p>{data.getProfile.phoneNumber}</p>
+            </div>
           )}
-          <p data-testid="user-email">{user.email}</p>
+          <div className="flex items-center">
+            <Mail size={16} className="mr-2" />
+            <p data-testid="user-email">{user.email}</p>
+          </div>
+          <div className="flex items-center">
+          <Check size={16} className="mr-2" />
           <p>Profil verifié</p>
+          </div>
         </div>
       </div>
 
