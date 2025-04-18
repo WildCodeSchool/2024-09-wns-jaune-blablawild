@@ -9,6 +9,7 @@ on:
   workflow_dispatch:
 
 jobs:
+
   build:
     runs-on: ubuntu-latest
     strategy:
@@ -41,12 +42,13 @@ jobs:
           file: ./${{ matrix.service }}/Dockerfile.prod
           push: true
           tags: ${{ secrets.DOCKER_HUB_USERNAME }}/driveupstaging${{ matrix.service }}:latest
-
-
-    notify-server:
-      needs: build
-      runs-on: ubuntu-latest
-      steps:
-        - name: Notify server
-          run: |
+  
+  notify-server:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Notify server
+        run: |
             curl -X POST http://51.68.58.81:9000/hooks/update-staging-driveup
+
+    
