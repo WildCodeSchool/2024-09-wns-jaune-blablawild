@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+// import { Button } from "../ui/button";
 import { FormItem } from "../ui/form";
 import { useFormContext } from "react-hook-form";
 import { Input } from "../ui/input";
@@ -22,7 +23,7 @@ export default function NumberPassengers() {
       <FormItem>
         <div className="flex items-center gap-10">
           <Minus
-            color="black"
+            color="#4e598c"
             onClick={() =>
               setNumberPassengers((prev: number) => Math.max(0, prev - 1))
             }
@@ -31,7 +32,7 @@ export default function NumberPassengers() {
             {numberPassengers}
           </p>
           <Plus
-            color="black"
+            color="#4e598c"
             onClick={() => setNumberPassengers((prev: number) => prev + 1)}
           />
         </div>

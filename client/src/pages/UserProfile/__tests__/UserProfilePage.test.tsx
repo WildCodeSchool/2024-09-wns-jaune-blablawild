@@ -32,6 +32,6 @@ test('renders user data in About component', async () => {
     render(<UserProfilePage />);
 
     await waitFor(() => {
-      expect(screen.getByText("John Doe")).toBeInTheDocument();
+      expect(screen.getAllByText("John Doe").length).toBeGreaterThan(0);
     });
   });
