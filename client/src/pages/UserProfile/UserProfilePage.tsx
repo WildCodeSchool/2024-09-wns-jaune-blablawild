@@ -6,12 +6,13 @@ import UserReviews from "./UserReviews";
 import img from "/home-background.jpg";
 import { Button } from "@/components/ui/button";
 import EditAbout from "./EditAbout";
+import { useUserStore } from "@/store/useUserStore";
 
 export default function UserProfilePage() {
   const { id } = useParams();
   if (!id) throw new Error("no id provided");
 
-  const user = useGetUserByIdQuery({
+  const userData = useGetUserByIdQuery({
     skip: !id,
     variables: { id: id! },
   });
@@ -21,10 +22,12 @@ export default function UserProfilePage() {
   );
   const [editMode, setEditMode] = useState<boolean>(false);
 
-  if (user.error)
-    return <p>Une erreur s'est produite : {user.error.message}</p>;
-  if (user.loading) return <p>Chargement...</p>;
-  if (!user.data) return <p>Aucun utilisateur n'a été trouvé</p>;
+  const { user } = useUserStore();  
+
+  if (userData.error)
+    return <p>Une erreur s'est produite : {userData.error.message}</p>;
+  if (userData.loading) return <p>Chargement...</p>;
+  if (!userData.data) return <p>Aucun utilisateur n'a été trouvé</p>;
 
   const handleCancel = () => {
     setEditMode(false)
@@ -40,9 +43,9 @@ export default function UserProfilePage() {
         <div className="sticky top-0 bg-white w-full z-10">
           <div className="hidden md:flex flex-row justify-between items-center md:w-full md:mt-10">
             <h1 className="text-[#595959] md:text-3xl lg:text-[36px] text-left font-medium px-6 md:px-0">
-              Mon profil
+              {id == user.id ? "Mon profil" : `${userData.data.getUserById.firstname} ${userData.data.getUserById.lastname} `}
             </h1>
-           {!editMode &&  <Button
+           {!editMode && id == user.id  &&  <Button
               onClick={() => setEditMode(true)}
               variant={"link"}
               className="hover:no-underline hover:opacity-70 text-forecast"
@@ -85,17 +88,17 @@ export default function UserProfilePage() {
             <div className="absolute inset-0 bg-white/70 z-0"></div>
             <div className="relative z-10 w-full h-full flex flex-col items-center px-6 py-8">
               <h1 className="text-[#4e598c] text-3xl md:text- lg:text-[36px]">
-                Mon profil
+              {id == user.id ? "Mon profil" : `${userData.data.getUserById.firstname} ${userData.data.getUserById.lastname} `}
               </h1>
               
               {currentPage === "profile" &&
                 (editMode ? (
-                  <EditAbout user={user.data.getUserById} onCancel={handleCancel}/>
+                  <EditAbout user={userData.data.getUserById} onCancel={handleCancel}/>
                 ) : (
-                  <About user={user.data.getUserById} />
+                  <About user={userData.data.getUserById} />
                 ))}
               {currentPage === "comments" && (
-                <UserReviews user={user.data.getUserById} />
+                <UserReviews user={userData.data.getUserById} />
               )}
             </div>
           </section>
@@ -103,16 +106,16 @@ export default function UserProfilePage() {
           <section className="hidden md:block w-full">
             {currentPage === "profile" &&
               (editMode ? (
-                <EditAbout user={user.data.getUserById} onCancel={handleCancel} />
+                <EditAbout user={userData.data.getUserById} onCancel={handleCancel} />
               ) : (
-                <About user={user.data.getUserById} />
+                <About user={userData.data.getUserById} />
               ))}{" "}
             {currentPage === "comments" && (
-              <UserReviews user={user.data.getUserById} />
+              <UserReviews user={userData.data.getUserById} />
             )}
           </section>
         </div>
-        {!editMode &&  <Button
+        {!editMode && id == user.id  &&  <Button
               onClick={() => setEditMode(true)}
               variant={"link"}
               className="md:hidden hover:no-underline hover:opacity-70 text-accent"

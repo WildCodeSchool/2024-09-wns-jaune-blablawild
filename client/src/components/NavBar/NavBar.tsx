@@ -47,7 +47,7 @@ export default function NavBar() {
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
-        <CircleUserRound
+      <CircleUserRound
           className="cursor-pointer"
           size={30}
           strokeWidth={1.5}

@@ -1,5 +1,6 @@
 import { Separator } from "@/components/ui/separator";
 import { Profile, useGetProfileQuery } from "@/graphql/hooks";
+import { useParams } from "react-router-dom";
 
 type Props = {
   user: {
@@ -8,15 +9,16 @@ type Props = {
     lastname?: string;
     email?: string;
     profile?: Partial<Profile> | null;
-  }
+  };
 };
 
 export default function About({ user }: Props) {
+  const { id } = useParams();
+
   const { data } = useGetProfileQuery({
     skip: !user.id,
-    variables: { userId: "13" }
-  });
-  
+    variables: { userId: id || "" },
+});
 
   return (
     <section className="flex flex-col justify-center items-center gap-8 mt-6 pb-12 w-full">
@@ -35,15 +37,15 @@ export default function About({ user }: Props) {
           <p>Profil verifié</p>
         </div>
       </div>
-      
+
       <Separator className="bg-[#949393]" />
-      
+
       <div className="flex flex-col items-center gap-6 md:gap-8 w-full md:items-start text-black lg:w-10/12">
         <p>Faible taux d'annulation</p>
         <p>Délai de réponse rapide</p>
         <p>Excellents avis</p>
       </div>
-      
+
       {data?.getProfile?.description && (
         <>
           <Separator className="bg-[#949393]" />

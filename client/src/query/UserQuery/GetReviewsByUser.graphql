@@ -6,6 +6,7 @@ query GetReviewsByUser($userId: String!) {
     id
    sender {
       firstname
+      id
       profile {
         image
       }
