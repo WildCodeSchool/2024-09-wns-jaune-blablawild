@@ -29,14 +29,14 @@ export default function UserJourneys() {
       <div className="w-[15%] hidden lg:block">
         <img src={van_image} alt="van" className="h-full w-full object-cover" />
       </div>
-      <div className="w-full lg:w-[70%] bg-white p-8 overflow-y-auto">
-        <h1 className="text-3xl mb-4">Mes trajets</h1>
+      <div className="w-full lg:w-[70%] bg-white md:p-8 overflow-y-auto">
+        <h1 className="text-2xl my-4 px-6 md:px-0 md:text-3xl md:mb-8">Mes trajets</h1>
         <ul className="flex justify-between border-b border-gray-200 mb-8">
           {tabs.map((tab) => (
             <li
               key={tab}
               onClick={() => setActiveTab(tab)}
-              className={`flex-1 text-center pb-3 cursor-pointer text-lg font-medium transition-all duration-200 ${
+              className={`flex-1 text-center pb-3 cursor-pointer text-sm md:text-base font-medium transition-all duration-200 ${
                 activeTab === tab
                   ? "border-b-2 border-secondary text-secondary"
                   : "border-b-2 border-transparent text-foreground hover:text-gray-800"

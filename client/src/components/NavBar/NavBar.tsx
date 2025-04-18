@@ -18,7 +18,6 @@ import {
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Modal from "../Modal/Modal";
-import UserCreationForm from "../UserCreationForm/UserCreationForm";
 import UserLoginForm from "../UserLoginForm/UserLoginForm";
 import { Button } from "../ui/button";
 import { useGetProfileQuery } from "@/graphql/hooks";
@@ -59,34 +58,45 @@ export default function NavBar() {
 
   let profileImage = null;
   if (data?.getProfile.image) {
-  profileImage = data?.getProfile.image;
+    profileImage = data?.getProfile.image;
   }
 
   return (
-    <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger asChild>
-        {profileImage ? (
-          <img src={profileImage} className="w-8 h-8 rounded-full" />
-        ) : (
-          <CircleUserRound
-            className="cursor-pointer"
-            size={30}
-            strokeWidth={1.5}
-          />
-        )}
-      </PopoverTrigger>
-      <PopoverContent className="w-screen h-screen md:w-[25vw] md:h-auto p-10 bg-background rounded-none mt-2 shadow-lg">
-        <ul className="flex flex-col space-y-6 text-md">
-          {isAuthenticated ? (
-            <>
+    <>
+      {!isAuthenticated ? (
+        <Modal
+        trigger={
+          <Button className="rounded-full px-6 bg-transparent" variant="outline">
+            Se connecter
+          </Button>
+        }
+        content={<UserLoginForm closeNavbar={closeNavbar} />}
+        moduleTitle="Se connecter"
+        dialogStyle="w-[350px]"
+        />
+      ) : (
+        <Popover open={open} onOpenChange={setOpen}>
+          <PopoverTrigger asChild>
+            {profileImage ? (
+              <img src={profileImage} className="w-8 h-8 rounded-full cursor-pointer" alt="Profile" />
+            ) : (
+              <CircleUserRound
+                className="cursor-pointer"
+                size={30}
+                strokeWidth={1.5}
+              />
+            )}
+          </PopoverTrigger>
+          <PopoverContent className="w-screen h-screen md:w-[25vw] md:h-auto p-10 bg-background rounded-none shadow-lg">
+            <ul className="flex flex-col space-y-6 text-sm">
               <li
                 className={liClassName}
                 onClick={() => handleNavigation("userjourneys")}
               >
                 <div className={divClassName}>
-                  <CarTaxiFront /> Mes Trajets
+                  <CarTaxiFront size={20} /> Mes Trajets
                 </div>
-                <ChevronRight />
+                <ChevronRight size={20} />
               </li>
               <Separator />
               <li
@@ -94,9 +104,9 @@ export default function NavBar() {
                 onClick={() => handleNavigation(`/user/${user?.id}`)}
               >
                 <div className={divClassName}>
-                  <UserRound /> Profil
+                  <UserRound size={20} /> Profil
                 </div>
-                <ChevronRight />
+                <ChevronRight size={20} />
               </li>
               <Separator />
               <li
@@ -104,16 +114,16 @@ export default function NavBar() {
                 onClick={() => handleNavigation("/settings")}
               >
                 <div className={divClassName}>
-                  <Settings /> Paramètres
+                  <Settings size={20} /> Paramètres
                 </div>
-                <ChevronRight />
+                <ChevronRight size={20} />
               </li>
               <Separator />
               <li className={liClassName}>
                 <div className={divClassName}>
-                  <MessageSquareText /> Messages
+                  <MessageSquareText size={20} /> Messages
                 </div>
-                <ChevronRight />
+                <ChevronRight size={20} />
               </li>
               <Separator />
               <li
@@ -121,44 +131,20 @@ export default function NavBar() {
                 onClick={() => handleNavigation("/tripform")}
               >
                 <div className={divClassName}>
-                  <PlusCircle /> Publier un trajet
+                  <PlusCircle size={20} /> Publier un trajet
                 </div>
-                <ChevronRight />
+                <ChevronRight size={20} />
               </li>
               <Separator />
               <li className={liClassName} onClick={handleLogout}>
                 <div className={divClassName}>
-                  <LogOut /> Déconnexion
+                  <LogOut size={20} /> Déconnexion
                 </div>
               </li>
-            </>
-          ) : (
-            <>
-              <Modal
-                trigger={
-                  <Button className="w-full rounded-3xl bg-accent hover:bg-secondary">
-                    S'inscrire
-                  </Button>
-                }
-                content={<UserCreationForm closeNavbar={closeNavbar} />}
-                moduleTitle="Inscription"
-              />
-              <Modal
-                trigger={
-                  <Button
-                    className="w-full rounded-3xl border-accent text-accent hover:bg-accent/10 hover:text-accent"
-                    variant="outline"
-                  >
-                    Se connecter
-                  </Button>
-                }
-                content={<UserLoginForm closeNavbar={closeNavbar} />}
-                moduleTitle="Se connecter"
-              />
-            </>
-          )}
-        </ul>
-      </PopoverContent>
-    </Popover>
+            </ul>
+          </PopoverContent>
+        </Popover>
+      )}
+    </>
   );
 }

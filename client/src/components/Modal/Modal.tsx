@@ -17,11 +17,13 @@ type ModalProps = {
   trigger: ReactNode;
   moduleTitle: string;
   description?: string;
+  dialogStyle?: string;
 };
 
 export default function Modal({
   content,
   trigger,
+  dialogStyle,
   moduleTitle,
   description = "Formulaire",
 }: ModalProps) {
@@ -36,7 +38,7 @@ export default function Modal({
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>{trigger}</DialogTrigger>
-      <DialogContent>
+      <DialogContent className={dialogStyle}>
         <DialogHeader>
           <DialogTitle className="text-2xl">{moduleTitle}</DialogTitle>
           <DialogDescription>{description}</DialogDescription>

@@ -129,9 +129,9 @@ export default function UserCreationForm({
           />
         </div>
 
-        <div className="flex justify-center">
-          <Button type="submit" className="w-40 bg-accent rounded-3xl p-5">
-            Valider
+        <div className="flex justify-center mt-10">
+          <Button type="submit" className="w-40 bg-accent w-full rounded-3xl p-5">
+            S'inscrire
           </Button>
         </div>
       </form>
