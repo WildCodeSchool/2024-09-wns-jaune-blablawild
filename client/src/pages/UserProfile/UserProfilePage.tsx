@@ -24,7 +24,7 @@ export default function UserProfilePage() {
 
   const { user } = useUserStore(); 
   
-  const stringUserId = String(user.id)
+  const stringUserId = user ? String(user.id) : "";
   
   if (userData.error)
     return <p>Une erreur s'est produite : {userData.error.message}</p>;
