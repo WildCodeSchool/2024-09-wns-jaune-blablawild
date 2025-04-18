@@ -22,8 +22,10 @@ export default function UserProfilePage() {
   );
   const [editMode, setEditMode] = useState<boolean>(false);
 
-  const { user } = useUserStore();  
-
+  const { user } = useUserStore(); 
+  
+  const stringUserId = String(user.id)
+  
   if (userData.error)
     return <p>Une erreur s'est produite : {userData.error.message}</p>;
   if (userData.loading) return <p>Chargement...</p>;
@@ -43,9 +45,9 @@ export default function UserProfilePage() {
         <div className="sticky top-0 bg-white w-full z-10">
           <div className="hidden md:flex flex-row justify-between items-center md:w-full md:mt-10">
             <h1 className="text-[#595959] md:text-3xl lg:text-[36px] text-left font-medium px-6 md:px-0">
-              {id == user.id ? "Mon profil" : `${userData.data.getUserById.firstname} ${userData.data.getUserById.lastname} `}
+              {id === stringUserId ? "Mon profil" : `${userData.data.getUserById.firstname} ${userData.data.getUserById.lastname} `}
             </h1>
-           {!editMode && id == user.id  &&  <Button
+           {!editMode && id === stringUserId  &&  <Button
               onClick={() => setEditMode(true)}
               variant={"link"}
               className="hover:no-underline hover:opacity-70 text-forecast"
@@ -88,7 +90,7 @@ export default function UserProfilePage() {
             <div className="absolute inset-0 bg-white/70 z-0"></div>
             <div className="relative z-10 w-full h-full flex flex-col items-center px-6 py-8">
               <h1 className="text-[#4e598c] text-3xl md:text- lg:text-[36px]">
-              {id == user.id ? "Mon profil" : `${userData.data.getUserById.firstname} ${userData.data.getUserById.lastname} `}
+              {id === stringUserId ? "Mon profil" : `${userData.data.getUserById.firstname} ${userData.data.getUserById.lastname} `}
               </h1>
               
               {currentPage === "profile" &&
@@ -115,7 +117,7 @@ export default function UserProfilePage() {
             )}
           </section>
         </div>
-        {!editMode && id == user.id  &&  <Button
+        {!editMode && id === stringUserId  &&  <Button
               onClick={() => setEditMode(true)}
               variant={"link"}
               className="md:hidden hover:no-underline hover:opacity-70 text-accent"
