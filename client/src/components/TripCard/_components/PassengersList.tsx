@@ -23,7 +23,7 @@ export function PassengersList({ passengers }: Readonly<PassengersListProps>) {
           <div key={passenger.id} className="flex items-center gap-2">
             <Avatar className="w-6 h-6">
               <AvatarImage
-                src={passenger.image || undefined}
+                src={passenger.profile?.image || undefined}
                 alt={passenger.firstname}
               />
               <AvatarFallback>{passenger.firstname.charAt(0)}</AvatarFallback>
