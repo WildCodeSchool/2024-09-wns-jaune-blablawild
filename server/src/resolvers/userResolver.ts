@@ -3,6 +3,7 @@ import { Response } from "express";
 import * as jwt from "jsonwebtoken";
 import {
   Arg,
+  Authorized,
   Ctx,
   Field,
   InputType,
@@ -31,6 +32,16 @@ export class LoginInput {
   email!: string;
   @Field()
   password!: string;
+}
+
+@InputType()
+export class UpdatePasswordInput {
+  @Field()
+  oldPassword!: string;
+  @Field()
+  newPassword!: string;
+  @Field()
+  confirmPassword!: string;
 }
 
 @Resolver(User)
@@ -127,5 +138,22 @@ export class UserResolver {
     } catch (error) {
       throw error;
     }
+  }
+
+  @Authorized()
+  @Mutation(() => String)
+  async updatePassword(
+    @Arg("data") data: UpdatePasswordInput,
+    @Ctx() context: { user: User }
+  ) {
+    const user = await User.findOneBy({ id: context.user.id });
+    if (!user) throw new Error("Utilisateur non trouvé");
+    const isPasswordValid = await argon.verify(user.password, data.oldPassword);
+    if (!isPasswordValid)
+      throw new Error("L'ancien mot de passe est incorrect");
+    const hashedPassword = await argon.hash(data.newPassword);
+    user.password = hashedPassword;
+    await user.save();
+    return JSON.stringify("Le mot de passe a bien été modifié");
   }
 }

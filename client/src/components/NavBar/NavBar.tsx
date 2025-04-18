@@ -12,6 +12,7 @@ import {
   LogOut,
   MessageSquareText,
   PlusCircle,
+  Settings,
   UserRound,
 } from "lucide-react";
 import { useState } from "react";
@@ -34,6 +35,15 @@ export default function NavBar() {
 
   const closeNavbar = () => setOpen(false);
 
+  const liClassName =
+    "flex justify-between cursor-pointer transition-colors duration-200 hover:text-accent";
+  const divClassName = "flex justify-center gap-2";
+
+  const handleNavigation = (path: string) => {
+    navigate(path);
+    closeNavbar();
+  };
+
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
@@ -48,47 +58,56 @@ export default function NavBar() {
           {isAuthenticated ? (
             <>
               <li
-                className="flex justify-between"
-                onClick={() => navigate("userjourneys")}
+                className={liClassName}
+                onClick={() => handleNavigation("userjourneys")}
               >
-                <div className="flex justify-center gap-2 cursor-pointer">
+                <div className={divClassName}>
                   <CarTaxiFront /> Mes Trajets
                 </div>
                 <ChevronRight />
               </li>
               <Separator />
               <li
-                className="flex justify-between"
-                onClick={() => navigate(`/user/${user?.id}`)}
+                className={liClassName}
+                onClick={() => handleNavigation(`/user/${user?.id}`)}
               >
-                <div className="flex justify-center gap-2 cursor-pointer">
+                <div className={divClassName}>
                   <UserRound /> Profil
                 </div>
                 <ChevronRight />
               </li>
               <Separator />
-              <li className="flex justify-between">
-                <div className="flex justify-center gap-2 cursor-pointer">
+              <li
+                className={liClassName}
+                onClick={() => handleNavigation("/settings")}
+              >
+                <div className={divClassName}>
+                  <Settings /> Paramètres
+                </div>
+                <ChevronRight />
+              </li>
+              <Separator />
+              <li className={liClassName}>
+                <div className={divClassName}>
                   <MessageSquareText /> Messages
                 </div>
                 <ChevronRight />
               </li>
               <Separator />
               <li
-                className="flex justify-between"
-                onClick={() => navigate("/tripform")}
+                className={liClassName}
+                onClick={() => handleNavigation("/tripform")}
               >
-                <div className="flex justify-center gap-2 cursor-pointer">
-                  <PlusCircle /> Ajouter un trajet
+                <div className={divClassName}>
+                  <PlusCircle /> Publier un trajet
                 </div>
                 <ChevronRight />
               </li>
               <Separator />
-              <li
-                className="flex gap-2 cursor-pointer hover:text-accent"
-                onClick={handleLogout}
-              >
-                <LogOut /> Déconnexion
+              <li className={liClassName} onClick={handleLogout}>
+                <div className={divClassName}>
+                  <LogOut /> Déconnexion
+                </div>
               </li>
             </>
           ) : (
