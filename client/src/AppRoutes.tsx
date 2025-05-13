@@ -9,6 +9,7 @@ import TripForm from "./pages/TripForm";
 import UserJourneys from "./pages/UserJourneys";
 import UserProfilePage from "./pages/UserProfile/UserProfilePage";
 import Settings from "./pages/Settings/Settings";
+import { TripDetailsPage } from "./pages/TripDetailsPage";
 
 export default function AppRoutes() {
   const location = useLocation();
@@ -27,6 +28,7 @@ export default function AppRoutes() {
         <Route path="userjourneys" element={<UserJourneys />} />
         <Route path="404" element={<Page404 />} />
         <Route path="settings" element={<Settings />} />
+        <Route path="trip/:id" element={<TripDetailsPage />} />
       </Routes>
     </Layout>
   );

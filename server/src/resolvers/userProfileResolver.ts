@@ -1,6 +1,21 @@
 import { Arg, Field, InputType, Mutation, Query, Resolver } from "type-graphql";
 import { Profile } from "../entities/profile";
 import { User } from "../entities/user";
+import path from "path";
+import { createReadStream, createWriteStream, existsSync, mkdirSync } from "fs";
+import { GraphQLUpload } from "graphql-upload-ts";
+
+interface FileUpload {
+  filename: string;
+  mimetype: string;
+  encoding: string;
+  createReadStream: () => NodeJS.ReadableStream;
+}
+
+const uploadDir = path.join(process.cwd(), "uploads");
+if (!existsSync(uploadDir)) {
+  mkdirSync(uploadDir, { recursive: true });
+}
 
 @InputType()
 export class ProfileInput {
@@ -62,6 +77,41 @@ export class ProfileResolver {
     await user.profile.save();
     await user.save();
 
+    return user.profile;
+  }
+
+  @Mutation(() => Profile)
+  async uploadProfileImage(
+    @Arg("userId") userId: string,
+    @Arg("file", () => GraphQLUpload)
+    file: FileUpload
+  ): Promise<Profile> {
+    const user = await User.findOne({
+      where: { id: userId },
+      relations: ["profile"],
+    });
+
+    if (!user) {
+      throw new Error("Utilisateur non trouvé");
+    }
+
+    if (!user.profile) {
+      throw new Error("Profil utilisateur non trouvé");
+    }
+
+    const { createReadStream, filename } = file;
+    const uniqueFilename = `${userId}_${Date.now()}_${filename}`;
+    const filePath = path.join(uploadDir, uniqueFilename);
+    const stream = createReadStream();
+    const writeStream = createWriteStream(filePath);
+    await new Promise<void>((resolve, reject) => {
+      stream
+        .pipe(writeStream)
+        .on("finish", () => resolve())
+        .on("error", (error) => reject(error));
+    });
+    user.profile.image = `/uploads/${uniqueFilename}`;
+    await user.profile.save();
     return user.profile;
   }
 }
