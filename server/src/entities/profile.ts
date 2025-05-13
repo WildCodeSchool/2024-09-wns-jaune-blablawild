@@ -8,6 +8,8 @@ import {
 } from "typeorm";
 import { User } from "./user";
 
+const DEFAULT_PROFILE_IMAGE = "/placeholder-portrait.png";
+
 @ObjectType()
 @Entity()
 export class Profile extends BaseEntity {
@@ -20,7 +22,7 @@ export class Profile extends BaseEntity {
   phoneNumber?: string;
 
   @Field({nullable: true})
-  @Column({nullable: true})
+@Column({ nullable: true, default: DEFAULT_PROFILE_IMAGE })
   image?: string;
 
   @Field({nullable: true})

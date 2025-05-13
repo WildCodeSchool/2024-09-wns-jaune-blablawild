@@ -18,8 +18,6 @@ export default function TripCard({
 }: Readonly<TripCardProps>) {
   const navigate = useNavigate();
 
-  console.log("trips", trips);
-
   return (
     <section className="w-full px-2 py-4 md:p-8">
       <div className="space-y-4">

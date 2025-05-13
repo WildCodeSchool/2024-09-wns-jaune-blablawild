@@ -13,8 +13,10 @@ import { TripDetailsPage } from "./pages/TripDetailsPage";
 
 export default function AppRoutes() {
   const location = useLocation();
-  const routesWithFooter = ["/"];
-  const showFooter = routesWithFooter.includes(location.pathname);
+  const routesWithFooter = ["/", "/trip"];
+  const showFooter = routesWithFooter.some((route) =>
+    location.pathname.startsWith(route)
+  );
 
   return (
     <Layout showFooter={showFooter}>
