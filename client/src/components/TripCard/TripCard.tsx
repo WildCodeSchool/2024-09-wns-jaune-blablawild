@@ -10,12 +10,15 @@ import {
   formatHourFromTime,
   getImageUrl,
 } from "./_utils/utils";
+import { useNavigate } from "react-router-dom";
 
 export default function TripCard({
   trips,
   mode = "search",
 }: Readonly<TripCardProps>) {
+  const navigate = useNavigate();
 
+  console.log("trips", trips);
 
   return (
     <section className="w-full px-2 py-4 md:p-8">
@@ -26,6 +29,7 @@ export default function TripCard({
           return (
             <article
               key={trip.id}
+              onClick={() => navigate(`/trip/${trip.id}`)}
               className="relative flex md:h-[232px] bg-white rounded-xl border-solid border-[#E5E5E5] border-1 overflow-hidden hover:shadow-lg transition-shadow duration-150 hover:cursor-pointer hover:ring-2 hover:ring-primary xl:max-w-[1000px]"
             >
               {trip.capacity === 0 && (

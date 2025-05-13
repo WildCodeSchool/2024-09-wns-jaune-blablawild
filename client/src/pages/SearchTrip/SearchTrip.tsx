@@ -113,7 +113,7 @@ export default function SearchTrip() {
   }, [location.search]);
 
   const allTrips = dataTrip?.getTrip || [];
-  
+    
   const displayNoTrips = () => {
       
     return (
