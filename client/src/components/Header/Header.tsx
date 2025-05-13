@@ -15,7 +15,6 @@ export default function Header() {
             <img src="/logo2.png" alt="logo" className="w-[10rem]" />
           </Link>
         </div>
-
         <div>
           <NavBar />
         </div>
