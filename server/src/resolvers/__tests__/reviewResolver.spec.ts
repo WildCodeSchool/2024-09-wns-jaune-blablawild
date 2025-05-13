@@ -86,39 +86,70 @@ describe('leaveReview Mutation', () => {
         // Configuration des mocks
         (Trip.findOne as jest.Mock).mockResolvedValue(mockTrip);
         (User.findOne as jest.Mock).mockImplementation((options) => {
-        if (options.where.id === "1") return Promise.resolve(mockSender);
-        if (options.where.id === "2") return Promise.resolve(mockReceiver);
-        return Promise.resolve(null);
+            if (options.where.id === "1") return Promise.resolve(mockSender);
+            if (options.where.id === "2") return Promise.resolve(mockReceiver);
+            return Promise.resolve(null);
         });
-    (Review.findOne as jest.Mock).mockResolvedValue(null); // Pas de review existante
-    (Review.prototype.save as jest.Mock).mockResolvedValue(true);
-    
-    // Configurer les fonctions de vérification
-    (isDriver as jest.Mock).mockImplementation((user, trip) => user.id === trip.driver.id);
-    (isPassenger as jest.Mock).mockImplementation((user, trip) => 
-      trip.passengers.some((p: any) => p.id === user.id)
-    );
+        (Review.findOne as jest.Mock).mockResolvedValue(null); // Pas de review existante
+        (Review.prototype.save as jest.Mock).mockResolvedValue(true);
+        
+        // Configurer les fonctions de vérification
+        (isDriver as jest.Mock).mockImplementation((user, trip) => user.id === trip.driver.id);
+        (isPassenger as jest.Mock).mockImplementation((user, trip) => 
+        trip.passengers.some((p: any) => p.id === user.id)
+        );
 
-    // Appel de la mutation
-    const result = await reviewResolver.leaveReview(mockReviewInput);
+        // Appel de la mutation
+        const result = await reviewResolver.leaveReview(mockReviewInput);
+        
+        // Vérifications
+        expect(Trip.findOne).toHaveBeenCalledWith({
+        where: { id: "1" },
+        relations: { passengers: true, driver: true }
+        });
+        expect(User.findOne).toHaveBeenCalledWith({ where: { id: "1" } });
+        expect(User.findOne).toHaveBeenCalledWith({ where: { id: "2" } });
+        expect(Review.findOne).toHaveBeenCalledWith({
+        where: {
+            sender: { id: "1" },
+            receiver: { id: "2" },
+            trip: { id: "1" }
+        }
+        });
+        expect(Review.prototype.save).toHaveBeenCalled();
+        expect(result).toBe("Votre retour d'expérience a bien été créé");
+    });
+
+    test("should fail if trip doesn't exist", async () => {
+        (Trip.findOne as jest.Mock).mockResolvedValue(null);
+
+        await expect(reviewResolver.leaveReview(mockReviewInput)).rejects.toThrow("Le trajet n'existe pas");
+        expect(Review.prototype.save).not.toHaveBeenCalled();
+    })
+
+    test("should fail if no sender found", async () => {
+        (Trip.findOne as jest.Mock).mockResolvedValue(mockTrip);
+        (User.findOne as jest.Mock).mockImplementation((options) => {
+            if (options.where.id === "1") return Promise.resolve(null);
+            if (options.where.id === "2") return Promise.resolve(mockReceiver);
+            return Promise.resolve(null);
+        });
     
-    // Vérifications
-    expect(Trip.findOne).toHaveBeenCalledWith({
-      where: { id: "1" },
-      relations: { passengers: true, driver: true }
-    });
-    expect(User.findOne).toHaveBeenCalledWith({ where: { id: "1" } });
-    expect(User.findOne).toHaveBeenCalledWith({ where: { id: "2" } });
-    expect(Review.findOne).toHaveBeenCalledWith({
-      where: {
-        sender: { id: "1" },
-        receiver: { id: "2" },
-        trip: { id: "1" }
-      }
-    });
-    expect(Review.prototype.save).toHaveBeenCalled();
-    expect(result).toBe("Votre retour d'expérience a bien été créé");
-  });
+        await expect(reviewResolver.leaveReview(mockReviewInput)).rejects.toThrow("L'utilisateur n'existe pas");
+        expect(Review.prototype.save).not.toHaveBeenCalled();
+    })
+
+    test("should fail if no receiver found", async () => {
+        (Trip.findOne as jest.Mock).mockResolvedValue(mockTrip);
+        (User.findOne as jest.Mock).mockImplementation((options) => {
+            if (options.where.id === "1") return Promise.resolve(mockSender);
+            if (options.where.id === "2") return Promise.resolve(null);
+            return Promise.resolve(null);
+        });
+    
+        await expect(reviewResolver.leaveReview(mockReviewInput)).rejects.toThrow("L'utilisateur n'existe pas");
+        expect(Review.prototype.save).not.toHaveBeenCalled();
+    })
 })
 
 
