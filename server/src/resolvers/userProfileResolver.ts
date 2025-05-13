@@ -29,6 +29,8 @@ export class ProfileInput {
   image?: string;
 }
 
+const DEFAULT_PROFILE_IMAGE = "/placeholder-portrait.png";
+
 @Resolver(Profile)
 export class ProfileResolver {
   @Query(() => Profile)
@@ -46,6 +48,7 @@ export class ProfileResolver {
       const newProfile = new Profile();
       newProfile.user = user;
       user.profile = newProfile;
+      newProfile.image = DEFAULT_PROFILE_IMAGE;
       await user.save();
     } else if (!user.profile.user) {
       user.profile.user = user;
