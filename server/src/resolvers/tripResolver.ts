@@ -45,15 +45,15 @@ export class TripResolver {
         },
       });
 
-      let filteredTrips = trips.filter(trip => 
-        trip.capacity >= data.passengers || trip.capacity === 0
+      let filteredTrips = trips.filter(
+        (trip) => trip.capacity >= data.passengers || trip.capacity === 0
       );
-      
+
       if (data.timeOptions && data.timeOptions.length > 0) {
-        filteredTrips = trips.filter(trip => {
+        filteredTrips = trips.filter((trip) => {
           const departureHour = new Date(trip.departure_time).getUTCHours();
-          
-          return data.timeOptions?.some(option => {
+
+          return data.timeOptions?.some((option) => {
             switch (option) {
               case TimeOption.Before_6:
                 return departureHour < 6;
@@ -110,6 +110,20 @@ export class TripResolver {
     }
 
     return trips;
+  }
+
+  @Query(() => Trip)
+  async getTripById(@Arg("tripId") tripId: string) {
+    const trip = await Trip.findOne({
+      where: { id: tripId },
+      relations: { passengers: true, driver: true },
+    });
+
+    if (!trip) {
+      throw new Error("No trip found for this id");
+    }
+
+    return trip;
   }
 
   @Mutation(() => String)
