@@ -22,7 +22,7 @@ export class Profile extends BaseEntity {
   phoneNumber?: string;
 
   @Field({nullable: true})
-@Column({ nullable: true, default: DEFAULT_PROFILE_IMAGE })
+  @Column({ nullable: true, default: DEFAULT_PROFILE_IMAGE })
   image?: string;
 
   @Field({nullable: true})
