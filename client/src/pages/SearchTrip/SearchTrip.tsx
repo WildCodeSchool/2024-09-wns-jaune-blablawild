@@ -37,8 +37,6 @@ export default function SearchTrip() {
     variables: { data: filterData },
   });
 
- 
-  
   const handleSortChange = (sort: string | null): void => {
     setCurrentSort(sort);
     
@@ -55,7 +53,6 @@ export default function SearchTrip() {
     }
     
     setFilterData(newData);
-    
   };
   
   const handleTimeRangeChange = (timeRange: TimeOption[]): void => {
@@ -72,8 +69,6 @@ export default function SearchTrip() {
     }
     
     setFilterData(newData);
-    
-    
   };
   
   const handleReinstateFilter = () => {
@@ -91,7 +86,6 @@ export default function SearchTrip() {
       data: newData
     });
   }
-
 
   useEffect(() => {
     const newParams = getUrlParams();
@@ -115,19 +109,17 @@ export default function SearchTrip() {
   const allTrips = dataTrip?.getTrip || [];
     
   const displayNoTrips = () => {
-      
     return (
       <section className="p-10 min-h-[500px] flex items-center justify-center">
         <div className="text-center">
           <p className="md:text-xl">{`Aucun trajet trouvé de ${filterData.departure} à ${filterData.arrival} pour cette période.`}</p>
-          
         </div>
       </section>
     );
   };
 
   return (
-    <section className="h-screen w-screen">
+    <div className="flex flex-col min-h-screen">
       <section className="relative w-full h-[55vh] flex justify-center items-center">
         <img
           src="/searchTripImg.png"
@@ -150,7 +142,7 @@ export default function SearchTrip() {
         currentTimeRange={currentTimeRange}
         children={
           !loadingTrip ? (
-            <section className="min-h-[500px]">
+            <section className="min-h-[300px]">
               {allTrips.length === 0 ? (
                 displayNoTrips()
               ) : (
@@ -158,12 +150,12 @@ export default function SearchTrip() {
               )}
             </section>
           ) : (
-            <section className="flex justify-center items-center min-h-[500px]">
+            <section className="flex justify-center items-center min-h-[300px]">
               <Loader2 className="animate-spin w-8 h-8" />
             </section>
           )
         }
       />
-    </section>
+    </div>
   );
 }

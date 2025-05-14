@@ -40,14 +40,14 @@ export const TripDetailsSummary: React.FC<TripDetailsSummaryProps> = ({
   };
 
   return (
-    <div className="w-[395px] bg-background rounded-lg border-1 border-[#E5E5E5] overflow-hidden mb-6">
-      <div className="p-5">
-        <h2 className="text-accent text-xl font-medium">
+    <div className="w-full sm:w-11/12 md:w-full lg:w-[345px] xl:w-[395px] bg-background rounded-lg border-1 border-[#E5E5E5] overflow-hidden mb-6">
+      <div className="p-4 md:p-5">
+        <h2 className="text-accent text-lg md:text-xl font-medium">
           {formatDate(date, "fr")}
         </h2>
       </div>
 
-      <div className="px-6 py-8 border-b border-gray-200">
+      <div className="px-4 md:px-6 py-6 md:py-8 border-b border-gray-200">
         <TripLine
           departureTime={departureTime}
           departureCity={departureCity}
@@ -61,18 +61,18 @@ export const TripDetailsSummary: React.FC<TripDetailsSummaryProps> = ({
 
       <div
         onClick={() => handleNavigateProfile(driverId)}
-        className="cursor-pointer p-4 flex items-center justify-between"
+        className="cursor-pointer p-3 md:p-4 flex items-center justify-between"
       >
         <div className="flex items-center">
-          <Car color="#4E598C" strokeWidth={1} className="mr-3" />
+          <Car color="#4E598C" strokeWidth={1} className="mr-2 md:mr-3" />
           <img
             src={driverImage || "/placeholder-portrait.png"}
             alt={`${driverName}`}
-            className="w-8 mr-1 self-center rounded-full"
+            className="w-6 h-6 md:w-8 md:h-8 mr-1 self-center rounded-full"
           />
 
           <div>
-            <span className="capitalize text-black font-medium">
+            <span className="capitalize text-black text-sm md:text-base font-medium">
               {driverName}
             </span>
             <div className="flex items-center">

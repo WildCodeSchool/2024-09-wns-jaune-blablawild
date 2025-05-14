@@ -25,7 +25,7 @@ export const TripDetailsDriver: React.FC<TripDetailsDriverProps> = ({
   return (
     <div
       onClick={() => handleNavigateProfile(driverId)}
-      className="w-[583px] bg-background cursor-pointer border-[#E5E5E5] border-1 rounded-lg px-6 py-8 mb-6"
+      className="w-full sm:w-11/12 md:w-full lg:w-[480px] xl:w-[583px] bg-background cursor-pointer border-[#E5E5E5] border-1 rounded-lg px-4 md:px-6 py-6 md:py-8 mb-6"
     >
       <div className="flex items-center justify-between">
         <div className="flex items-center">
@@ -33,12 +33,12 @@ export const TripDetailsDriver: React.FC<TripDetailsDriverProps> = ({
             <img
               src={profileImage || "/placeholder-portrait.png"}
               alt={`${driverName}`}
-              className="w-10 h-10 rounded-full object-cover"
+              className="w-8 h-8 md:w-10 md:h-10 rounded-full object-cover"
             />
           </div>
           <div>
             <div className="flex items-center">
-              <p className="text-lg capitalize font-medium text-black">
+              <p className="text-base md:text-lg capitalize font-medium text-black">
                 {driverName}
               </p>
             </div>

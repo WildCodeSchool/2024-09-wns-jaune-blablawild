@@ -21,18 +21,18 @@ export const TripDetailsPage = () => {
   const trip = data?.getTripById;
 
   return (
-    <div className="pt-10 pb-10 bg-white px-30 flex flex-col items-center">
-      <div className="max-w-[1100px] w-full">
-        <h1 className="text-accent text-3xl pb-7">
+    <div className="pt-6 md:pt-10 pb-6 md:pb-10 bg-white px-4 md:px-30 flex flex-col items-center">
+      <div className="w-11/12 md:max-w-[1100px] md:w-full">
+        <h1 className="text-accent text-2xl md:text-3xl pb-4 md:pb-7">
           {formatDate(trip?.departure_time, "fr")}
         </h1>
 
-        <section className="flex flex-row justify-between">
-          <div className="">
+        <section className="flex flex-col lg:flex-row lg:justify-between">
+          <div className="w-full lg:w-auto mb-6 lg:mb-0">
             <h2 className="text-black text-lg font-semibold pb-3">
               Votre trajet
             </h2>
-            <div className="bg-background w-[583px] border-[#E5E5E5] border-1 rounded-lg px-6 py-8 mb-6">
+            <div className="bg-background w-full sm:w-11/12 md:w-full lg:w-[480px] xl:w-[583px] border-[#E5E5E5] border-1 rounded-lg px-4 md:px-6 py-6 md:py-8 mb-6">
               <TripLine
                 departureTime={trip?.departure_time || ""}
                 departureCity={trip?.departure_city || ""}
@@ -65,7 +65,7 @@ export const TripDetailsPage = () => {
             )}
           </div>
 
-          <div className="flex flex-col">
+          <div className="flex flex-col w-full sm:w-11/12 md:w-full lg:w-auto">
             <TripDetailsSummary
               date={trip?.departure_time || ""}
               departureTime={trip?.departure_time || ""}
