@@ -2,12 +2,14 @@ import { faker } from "@faker-js/faker";
 import * as argon from "argon2";
 import * as jwt from "jsonwebtoken";
 import { User } from "../../entities/user";
+import { Profile } from "../../entities/profile";
 import { LoginInput, NewUserInput, UserResolver } from "../userResolver";
 
 process.env.JWT_SECRET = "test_secret_key";
 
 jest.mock("argon2");
 jest.mock("../../entities/user");
+jest.mock("../../entities/profile");
 jest.mock("../../services/UserServices");
 jest.mock("jsonwebtoken");
 
@@ -45,6 +47,11 @@ describe("User resolver tests", () => {
     (User.findOne as jest.Mock).mockResolvedValueOnce(null);
     (argon.hash as jest.Mock).mockResolvedValueOnce("hashed_password");
 
+    const mockProfile = {
+      save: jest.fn().mockResolvedValueOnce(undefined),
+    };
+    (Profile as unknown as jest.Mock).mockImplementationOnce(() => mockProfile);
+
     const userInstance = {
       id,
       ...newUser,
@@ -60,6 +67,7 @@ describe("User resolver tests", () => {
 
     expect(argon.hash).toHaveBeenCalledWith(newUser.password);
     expect(userInstance.save).toHaveBeenCalled();
+    expect(mockProfile.save).toHaveBeenCalled();
     expect(jwt.sign).toHaveBeenCalledWith({ id }, "test_secret_key", {
       expiresIn: "1h",
     });
@@ -161,9 +169,7 @@ describe("User queries tests", () => {
 
     expect(User.findOneBy).toHaveBeenCalledWith({ id: id });
     expect(result).toEqual(user);
-  })
-
-  
+  });
 });
 
 describe("updatePassword resolver", () => {
