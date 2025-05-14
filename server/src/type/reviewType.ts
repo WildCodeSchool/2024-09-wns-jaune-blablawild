@@ -9,7 +9,7 @@ export class ReviewInput {
     comment!: string;
     
     @Field()
-    date!: Date;
+    date!: string;
     
     @Field()
     receiver!: string;
