@@ -1,4 +1,4 @@
-import { BaseFactory, FactoryOptions } from "./baseFactory";
+import { BaseFactory, FactoryOptions } from "../baseFactory";
 import { User } from "../../../entities/user";
 import * as argon from "argon2";
 
@@ -22,6 +22,8 @@ export class UserFactory extends BaseFactory<User> {
     this._shouldHashPassword = false;
     return this;
   }
+
+  
 
   async build(options: FactoryOptions<User> = {}): Promise<User> {
     const user = await super.build(options);

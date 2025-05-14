@@ -1,4 +1,4 @@
-import { BaseFactory, FactoryOptions } from "./baseFactory";
+import { BaseFactory, FactoryOptions } from "../baseFactory";
 import { NewUserInput } from "../../userResolver";
 
 // La factory hérite de BaseFactory avec le type NewUserInput
