@@ -9,6 +9,7 @@ const HomePage = () => {
   const hasTrips = data?.getPopularTrip && data.getPopularTrip.length > 0;
 
   return (
+
     <section className="flex flex-col w-screen md:gap-35 gap-20">
       <section className="relative w-full h-[60vh] flex justify-center items-center">
         <div className="z-1 w-[70%] md:w-[80%]">
