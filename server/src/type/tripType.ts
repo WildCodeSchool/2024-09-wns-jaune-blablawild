@@ -88,3 +88,24 @@ export class FilterTripInput {
   @Field(() => SortOption, { nullable: true })
   sortBy?: SortOption;
 }
+
+@InputType()
+export class BookTripInput {
+  @Field()
+  tripId!: string;
+
+  @Field()
+  userId!: string;
+
+  @Field({ nullable: true })
+  seatsCount?: number;
+}
+
+@InputType()
+export class CancelTripBookingInput {
+  @Field()
+  tripId!: string;
+
+  @Field()
+  userId!: string;
+}
