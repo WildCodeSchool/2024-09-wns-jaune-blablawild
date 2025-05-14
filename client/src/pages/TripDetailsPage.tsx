@@ -18,7 +18,7 @@ export const TripDetailsPage = () => {
   if (loading) return <div>Chargement en cours...</div>;
   if (error) return <div>Erreur: {error.message}</div>;
 
-  const trip = data?.getTripById;
+  const trip = data?.getTripById;  
 
   return (
     <div className="pt-6 md:pt-10 pb-6 md:pb-10 bg-white px-4 md:px-30 flex flex-col items-center">

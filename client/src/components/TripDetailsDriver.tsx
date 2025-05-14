@@ -25,7 +25,7 @@ export const TripDetailsDriver: React.FC<TripDetailsDriverProps> = ({
   return (
     <div
       onClick={() => handleNavigateProfile(driverId)}
-      className="w-full sm:w-11/12 md:w-full lg:w-[480px] xl:w-[583px] bg-background cursor-pointer border-[#E5E5E5] border-1 rounded-lg px-4 md:px-6 py-6 md:py-8 mb-6"
+      className="w-full sm:w-11/12 md:w-full lg:w-[480px] xl:w-[583px] bg-background cursor-pointer border-[#E5E5E5] border-1 rounded-lg px-4 md:px-6 py-6 md:py-8 mb-6 hover:opacity-85"
     >
       <div className="flex items-center justify-between">
         <div className="flex items-center">
