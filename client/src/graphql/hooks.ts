@@ -16,6 +16,7 @@ export type Scalars = {
   Int: { input: number; output: number; }
   Float: { input: number; output: number; }
   DateTimeISO: { input: any; output: any; }
+  Upload: { input: any; output: any; }
 };
 
 export type CreateTripInput = {
@@ -45,15 +46,22 @@ export type LoginInput = {
 export type Mutation = {
   __typename?: 'Mutation';
   createTrip: Scalars['String']['output'];
+  leaveReview: Scalars['String']['output'];
   login: Scalars['String']['output'];
   patchProfile: Profile;
   signup: Scalars['String']['output'];
   updatePassword: Scalars['String']['output'];
+  uploadProfileImage: Profile;
 };
 
 
 export type MutationCreateTripArgs = {
   data: CreateTripInput;
+};
+
+
+export type MutationLeaveReviewArgs = {
+  data: ReviewInput;
 };
 
 
@@ -75,6 +83,12 @@ export type MutationSignupArgs = {
 
 export type MutationUpdatePasswordArgs = {
   data: UpdatePasswordInput;
+};
+
+
+export type MutationUploadProfileImageArgs = {
+  file: Scalars['Upload']['input'];
+  userId: Scalars['String']['input'];
 };
 
 export type NewUserInput = {
@@ -105,6 +119,7 @@ export type Query = {
   getProfile: Profile;
   getReviewsByUser: Array<Review>;
   getTrip: Array<Trip>;
+  getTripById: Trip;
   getTripByUser: Array<Trip>;
   getUserById: User;
   getUsers: Array<User>;
@@ -123,6 +138,11 @@ export type QueryGetReviewsByUserArgs = {
 
 export type QueryGetTripArgs = {
   data: FilterTripInput;
+};
+
+
+export type QueryGetTripByIdArgs = {
+  tripId: Scalars['String']['input'];
 };
 
 
@@ -145,6 +165,15 @@ export type Review = {
   receiver: User;
   sender: User;
   trip: Trip;
+};
+
+export type ReviewInput = {
+  comment: Scalars['String']['input'];
+  date: Scalars['String']['input'];
+  notation: Scalars['Float']['input'];
+  receiver: Scalars['String']['input'];
+  sender: Scalars['String']['input'];
+  trip: Scalars['String']['input'];
 };
 
 /** Options for sorting trips */
@@ -253,6 +282,13 @@ export type UpdatePasswordMutationVariables = Exact<{
 
 
 export type UpdatePasswordMutation = { __typename?: 'Mutation', updatePassword: string };
+
+export type GetTripByIdQueryVariables = Exact<{
+  tripId: Scalars['String']['input'];
+}>;
+
+
+export type GetTripByIdQuery = { __typename?: 'Query', getTripById: { __typename?: 'Trip', id: string, departure_city: string, arrival_city: string, departure_time: any, price: number, capacity: number, status: TripStatus, passengers?: Array<{ __typename?: 'User', firstname: string, id: string, profile?: { __typename?: 'Profile', image?: string | null } | null }> | null, driver?: { __typename?: 'User', firstname: string, id: string, profile?: { __typename?: 'Profile', image?: string | null } | null } | null } };
 
 export type GetPopularTripQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -456,6 +492,66 @@ export function useUpdatePasswordMutation(baseOptions?: Apollo.MutationHookOptio
 export type UpdatePasswordMutationHookResult = ReturnType<typeof useUpdatePasswordMutation>;
 export type UpdatePasswordMutationResult = Apollo.MutationResult<UpdatePasswordMutation>;
 export type UpdatePasswordMutationOptions = Apollo.BaseMutationOptions<UpdatePasswordMutation, UpdatePasswordMutationVariables>;
+export const GetTripByIdDocument = gql`
+    query GetTripById($tripId: String!) {
+  getTripById(tripId: $tripId) {
+    id
+    departure_city
+    arrival_city
+    departure_time
+    price
+    capacity
+    status
+    passengers {
+      firstname
+      id
+      profile {
+        image
+      }
+    }
+    driver {
+      profile {
+        image
+      }
+      firstname
+      id
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetTripByIdQuery__
+ *
+ * To run a query within a React component, call `useGetTripByIdQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetTripByIdQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetTripByIdQuery({
+ *   variables: {
+ *      tripId: // value for 'tripId'
+ *   },
+ * });
+ */
+export function useGetTripByIdQuery(baseOptions: Apollo.QueryHookOptions<GetTripByIdQuery, GetTripByIdQueryVariables> & ({ variables: GetTripByIdQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetTripByIdQuery, GetTripByIdQueryVariables>(GetTripByIdDocument, options);
+      }
+export function useGetTripByIdLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetTripByIdQuery, GetTripByIdQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetTripByIdQuery, GetTripByIdQueryVariables>(GetTripByIdDocument, options);
+        }
+export function useGetTripByIdSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetTripByIdQuery, GetTripByIdQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetTripByIdQuery, GetTripByIdQueryVariables>(GetTripByIdDocument, options);
+        }
+export type GetTripByIdQueryHookResult = ReturnType<typeof useGetTripByIdQuery>;
+export type GetTripByIdLazyQueryHookResult = ReturnType<typeof useGetTripByIdLazyQuery>;
+export type GetTripByIdSuspenseQueryHookResult = ReturnType<typeof useGetTripByIdSuspenseQuery>;
+export type GetTripByIdQueryResult = Apollo.QueryResult<GetTripByIdQuery, GetTripByIdQueryVariables>;
 export const GetPopularTripDocument = gql`
     query GetPopularTrip {
   getPopularTrip {

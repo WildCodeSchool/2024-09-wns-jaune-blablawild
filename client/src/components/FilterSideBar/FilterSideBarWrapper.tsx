@@ -21,7 +21,7 @@ export const FilterSideBarWrapper = ({
   currentTimeRange,
 }: FilterSideBarWrapperProps) => {
   return (
-    <div className="w-full">
+    <div className="w-full flex-grow">
       <div className="relative">
         <MobileFilterDrawer
           onReinstateChange={onReinstateChange}
@@ -30,8 +30,8 @@ export const FilterSideBarWrapper = ({
           currentSort={currentSort}
           currentTimeRange={currentTimeRange}
         />
-
-        <div className="flex flex-row min-h-screen">
+        
+        <div className="flex flex-row">
           <aside className="hidden md:block shrink-0 md:w-[220px] lg:w-[318px] md:sticky md:top-0 md:self-start md:h-auto">
             <div className="h-full">
               <FilterSideBar
@@ -43,7 +43,7 @@ export const FilterSideBarWrapper = ({
               />
             </div>
           </aside>
-
+          
           <main className="flex-grow w-full">{children}</main>
         </div>
       </div>

@@ -1,15 +1,17 @@
 import { faker } from "@faker-js/faker/locale/fr";
-import { TripResolver } from "../tripResolver";
 import { Trip } from "../../entities/trip";
 import { User } from "../../entities/user";
 import {
+  BookTripInput,
+  CancelTripBookingInput,
   CreateTripInput,
-  TripStatus,
-  TripStatusFilter,
   FilterTripInput,
   SortOption,
   TimeOption,
+  TripStatus,
+  TripStatusFilter,
 } from "../../type/tripType";
+import { TripResolver } from "../tripResolver";
 
 jest.mock("../../entities/trip");
 jest.mock("../../entities/user");
@@ -71,20 +73,20 @@ describe("Filters trip tests", () => {
   //it should sort trips by cheapest price
   it("should filter trips by cheapest price", async () => {
     const orderedTrips = [
-      { ...createMockTrip(2, 30), price: 30, capacity: 5 },  
+      { ...createMockTrip(2, 30), price: 30, capacity: 5 },
       { ...createMockTrip(4, 32), price: 32, capacity: 5 },
       { ...createMockTrip(15, 45), price: 45, capacity: 5 },
-      { ...createMockTrip(20, 50), price: 50, capacity: 5 }  
+      { ...createMockTrip(20, 50), price: 50, capacity: 5 },
     ];
-    
+
     (Trip.find as jest.Mock).mockResolvedValue(orderedTrips);
-  
-    filterInput.passengers = 3; 
+
+    filterInput.passengers = 3;
     filterInput.sortBy = SortOption.PRICE;
-    filterInput.timeOptions = [];  
-  
+    filterInput.timeOptions = [];
+
     const result = await tripResolver.getTrip(filterInput);
- 
+
     expect(Trip.find).toHaveBeenCalledWith({
       where: expect.anything(),
       order: { price: "ASC" },
@@ -93,14 +95,14 @@ describe("Filters trip tests", () => {
         passengers: true,
       },
     });
-    
+
     expect(result.length).toBeGreaterThan(0);
-    
+
     const prices = result.map((trip) => trip.price as number);
     expect(prices[0]).toBeLessThanOrEqual(prices[1]);
     expect(prices[1]).toBeLessThanOrEqual(prices[2]);
     expect(prices[2]).toBeLessThanOrEqual(prices[3]);
-  })
+  });
 
   //it should sort trips by earliest hours
 
@@ -310,6 +312,181 @@ describe("Trip Resolver", () => {
       });
       expect(result).toBeInstanceOf(Array);
       expect(result).toHaveLength(expectedLength);
+    });
+  });
+});
+
+describe("Trip Booking Tests", () => {
+  let tripResolver: TripResolver;
+  let mockTrip: Partial<Trip>;
+  let mockUser: Partial<User>;
+
+  beforeEach(() => {
+    tripResolver = new TripResolver();
+
+    // Mock de l'utilisateur
+    mockUser = {
+      id: faker.string.uuid(),
+      firstname: faker.person.firstName(),
+      lastname: faker.person.lastName(),
+      email: faker.internet.email(),
+    };
+
+    // Mock du trajet
+    mockTrip = {
+      id: faker.string.uuid(),
+      departure_city: faker.location.city(),
+      arrival_city: faker.location.city(),
+      departure_time: faker.date.future(),
+      price: faker.number.int({ min: 20, max: 100 }),
+      capacity: 4,
+      status: TripStatus.OPEN,
+      passengers: [],
+      save: jest.fn().mockResolvedValue(true),
+    };
+
+    // Reset des mocks
+    jest.clearAllMocks();
+  });
+
+  describe("bookTrip", () => {
+    it("devrait réserver un trajet avec succès", async () => {
+      const bookingData: BookTripInput = {
+        tripId: mockTrip.id!,
+        userId: mockUser.id!,
+      };
+
+      (Trip.findOne as jest.Mock).mockResolvedValue(mockTrip);
+      (User.findOneBy as jest.Mock).mockResolvedValue(mockUser);
+
+      const result = await tripResolver.bookTrip(bookingData);
+
+      expect(result).toBe("Votre réservation a bien été enregistrée");
+      expect(mockTrip.passengers).toContainEqual(mockUser);
+      expect(mockTrip.save).toHaveBeenCalled();
+    });
+
+    it("devrait échouer si le trajet est complet", async () => {
+      const fullTrip = {
+        ...mockTrip,
+        status: TripStatus.FULL,
+      };
+
+      (Trip.findOne as jest.Mock).mockResolvedValue(fullTrip);
+
+      const bookingData: BookTripInput = {
+        tripId: fullTrip.id!,
+        userId: mockUser.id!,
+      };
+
+      await expect(tripResolver.bookTrip(bookingData)).rejects.toThrow(
+        "Ce trajet est déjà complet"
+      );
+    });
+
+    it("devrait échouer si pas assez de places disponibles", async () => {
+      const tripWithPassengers = {
+        ...mockTrip,
+        capacity: 2,
+        passengers: [{ id: faker.string.uuid() }, { id: faker.string.uuid() }],
+      };
+
+      (Trip.findOne as jest.Mock).mockResolvedValue(tripWithPassengers);
+      (User.findOneBy as jest.Mock).mockResolvedValue(mockUser);
+
+      const bookingData: BookTripInput = {
+        tripId: tripWithPassengers.id!,
+        userId: mockUser.id!,
+      };
+
+      await expect(tripResolver.bookTrip(bookingData)).rejects.toThrow(
+        "Il ne reste pas assez de places disponibles"
+      );
+    });
+
+    it("devrait échouer si l'utilisateur a déjà réservé", async () => {
+      const tripWithUser = {
+        ...mockTrip,
+        passengers: [mockUser],
+      };
+
+      (Trip.findOne as jest.Mock).mockResolvedValue(tripWithUser);
+      (User.findOneBy as jest.Mock).mockResolvedValue(mockUser);
+
+      const bookingData: BookTripInput = {
+        tripId: tripWithUser.id!,
+        userId: mockUser.id!,
+      };
+
+      await expect(tripResolver.bookTrip(bookingData)).rejects.toThrow(
+        "Vous avez déjà réservé ce trajet"
+      );
+    });
+  });
+
+  describe("cancelTripBooking", () => {
+    it("devrait annuler une réservation avec succès", async () => {
+      const tripWithUser = {
+        ...mockTrip,
+        passengers: [mockUser],
+        save: jest.fn().mockResolvedValue(true),
+      };
+
+      (Trip.findOne as jest.Mock).mockResolvedValue(tripWithUser);
+      (User.findOneBy as jest.Mock).mockResolvedValue(mockUser);
+
+      const cancelData: CancelTripBookingInput = {
+        tripId: tripWithUser.id!,
+        userId: mockUser.id!,
+      };
+
+      const result = await tripResolver.cancelTripBooking(cancelData);
+
+      expect(result).toBe("Votre réservation a bien été annulée");
+      expect(tripWithUser.passengers).not.toContainEqual(mockUser);
+      expect(tripWithUser.save).toHaveBeenCalled();
+    });
+
+    it("devrait échouer si l'utilisateur n'a pas réservé", async () => {
+      const tripWithoutUser = {
+        ...mockTrip,
+        passengers: [{ id: faker.string.uuid() }],
+      };
+
+      (Trip.findOne as jest.Mock).mockResolvedValue(tripWithoutUser);
+      (User.findOneBy as jest.Mock).mockResolvedValue(mockUser);
+
+      const cancelData: CancelTripBookingInput = {
+        tripId: tripWithoutUser.id!,
+        userId: mockUser.id!,
+      };
+
+      await expect(tripResolver.cancelTripBooking(cancelData)).rejects.toThrow(
+        "Vous n'avez pas réservé ce trajet"
+      );
+    });
+
+    it("devrait mettre à jour le statut de FULL à OPEN après annulation", async () => {
+      const fullTrip = {
+        ...mockTrip,
+        status: TripStatus.FULL,
+        capacity: 1,
+        passengers: [mockUser],
+        save: jest.fn().mockResolvedValue(true),
+      };
+
+      (Trip.findOne as jest.Mock).mockResolvedValue(fullTrip);
+      (User.findOneBy as jest.Mock).mockResolvedValue(mockUser);
+
+      const cancelData: CancelTripBookingInput = {
+        tripId: fullTrip.id!,
+        userId: mockUser.id!,
+      };
+
+      await tripResolver.cancelTripBooking(cancelData);
+
+      expect(fullTrip.status).toBe(TripStatus.OPEN);
+      expect(fullTrip.save).toHaveBeenCalled();
     });
   });
 });
