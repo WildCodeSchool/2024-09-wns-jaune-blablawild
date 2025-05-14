@@ -1,10 +1,11 @@
 import { faker } from "@faker-js/faker";
 import * as argon from "argon2";
 import * as jwt from "jsonwebtoken";
-import { User } from "../../../entities/user"
+import { User } from "../../../entities/user";
 import { LoginInput, NewUserInput, UserResolver } from "../../userResolver";
 import { userFactory } from "../../factories/userFactory/userFactory";
 import { userInputFactory } from "../../factories/userFactory/userInputFactory";
+import { Profile } from "../../../entities/profile";
 
 process.env.JWT_SECRET = "test_secret_key";
 
@@ -12,6 +13,7 @@ jest.mock("argon2");
 jest.mock("../../../entities/user");
 jest.mock("../../../services/UserServices");
 jest.mock("jsonwebtoken");
+jest.mock("../../../entities/profile");
 
 describe("User resolver tests", () => {
   let userResolver: UserResolver;
@@ -22,15 +24,15 @@ describe("User resolver tests", () => {
   beforeEach(async () => {
     userResolver = new UserResolver();
     existingUser = await userFactory.build();
-    newUser = await userInputFactory.build(),
-    (jwt.sign as jest.Mock).mockImplementation((payload, secret, options) => {
-      return "fake_token_for_testing";
-    });
+    (newUser = await userInputFactory.build()),
+      (jwt.sign as jest.Mock).mockImplementation((payload, secret, options) => {
+        return "fake_token_for_testing";
+      });
     jest.clearAllMocks();
   });
 
   it("should create a new user", async () => {
-    const id = faker.string.uuid()
+    const id = faker.string.uuid();
     const expectedResponse = {
       user: {
         id,
@@ -53,19 +55,29 @@ describe("User resolver tests", () => {
 
     (User as unknown as jest.Mock).mockImplementationOnce(() => userInstance);
 
+    const profileInstance = {
+      id: faker.string.uuid(),
+      user: userInstance,
+      save: jest.fn().mockResolvedValueOnce(undefined),
+    };
+
+    (Profile as unknown as jest.Mock).mockImplementationOnce(
+      () => profileInstance
+    );
+
     const result = await userResolver.signup(newUser, { res: mockResponse });
 
     expect(JSON.parse(result)).toEqual(expectedResponse);
 
     expect(argon.hash).toHaveBeenCalledWith(newUser.password);
     expect(userInstance.save).toHaveBeenCalled();
+    expect(profileInstance.save).toHaveBeenCalled();
     expect(jwt.sign).toHaveBeenCalledWith({ id }, "test_secret_key", {
       expiresIn: "1h",
     });
   });
 
   it("should not create user if email already exists", async () => {
-
     (User.findOne as jest.Mock).mockResolvedValueOnce(existingUser);
 
     const newUserWithExistingEmail = {
@@ -86,9 +98,8 @@ describe("User resolver tests", () => {
   });
 
   it("should successfully login a user", async () => {
- 
-    const clearPassword = "password123"
-    
+    const clearPassword = "password123";
+
     const userLoginInput: LoginInput = {
       email: existingUser.email,
       password: clearPassword,
