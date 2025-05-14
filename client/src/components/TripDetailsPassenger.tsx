@@ -28,7 +28,7 @@ export const TripDetailsPassenger = ({
   if (!passengers || passengers.length === 0) return null;
 
   return (
-    <div className="bg-gray-100 border-[#E5E5E5] border rounded-lg px-6 py-4 mb-6">
+    <div className="bg-background w-[583px] border-[#E5E5E5] border rounded-lg px-6 py-4 mb-6">
       <div className="grid grid-cols-2 gap-4">
         {passengers.map((passenger, index) => {
           if (!passenger.profile) return null;
@@ -44,12 +44,10 @@ export const TripDetailsPassenger = ({
                 alt={passenger.profile.user?.firstname || ""}
                 className="w-10 h-10 rounded-full object-cover mr-3"
               />
-              <span className="text-forecast">
+              <p className="text-forecast">
                 {passenger.profile.user?.firstname || ""}
-              </span>
-              <div className="ml-auto text-black">
-                <ChevronRight />
-              </div>
+              </p>
+                <ChevronRight strokeWidth={1} color="black"/>
             </div>
           );
         })}
