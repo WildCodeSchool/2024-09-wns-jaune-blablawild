@@ -21,8 +21,6 @@ export const TripDetailsPassenger = ({
   };
 
   if (!passengers || passengers.length === 0) return null;
-
-  console.log("passengers", passengers);
   
   return (
     <div className="bg-background w-full sm:w-11/12 md:w-full lg:w-[480px] xl:w-[583px] border-[#E5E5E5] border rounded-lg px-4 md:px-6 py-3 md:py-4 mb-6">
