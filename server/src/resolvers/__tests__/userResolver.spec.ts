@@ -3,6 +3,8 @@ import * as argon from "argon2";
 import * as jwt from "jsonwebtoken";
 import { User } from "../../entities/user";
 import { LoginInput, NewUserInput, UserResolver } from "../userResolver";
+import { userFactory } from "./factories/userFactory";
+import { userInputFactory } from "./factories/userInputFactory";
 
 process.env.JWT_SECRET = "test_secret_key";
 
@@ -14,16 +16,13 @@ jest.mock("jsonwebtoken");
 describe("User resolver tests", () => {
   let userResolver: UserResolver;
   let newUser: NewUserInput;
+  let existingUser: User;
   const mockResponse = { cookie: jest.fn() } as any;
 
-  beforeEach(() => {
+  beforeEach(async () => {
     userResolver = new UserResolver();
-    newUser = {
-      firstname: faker.person.firstName(),
-      lastname: faker.person.lastName(),
-      email: faker.internet.email(),
-      password: faker.internet.password(),
-    };
+    existingUser = await userFactory.withClearPassword().build();
+    newUser = await userInputFactory.build(),
     (jwt.sign as jest.Mock).mockImplementation((payload, secret, options) => {
       return "fake_token_for_testing";
     });
@@ -31,10 +30,10 @@ describe("User resolver tests", () => {
   });
 
   it("should create a new user", async () => {
-    const id = faker.string.uuid();
+    const id = faker.string.uuid()
     const expectedResponse = {
       user: {
-        id: id,
+        id,
         firstname: newUser.firstname,
         lastname: newUser.lastname,
         email: newUser.email,
