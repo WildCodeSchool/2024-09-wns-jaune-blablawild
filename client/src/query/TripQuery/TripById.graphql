@@ -8,12 +8,10 @@ query GetTripById($tripId: String!) {
     capacity
     status
     passengers {
+      firstname
+      id
       profile {
-        id
         image
-        user {
-          firstname
-        }
       }
     }
     driver {
