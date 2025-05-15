@@ -17,6 +17,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { Form } from "../components/ui/form";
 import { useMultiStepsForm } from "../hooks/useMultiStepsForm";
+import { useUserStore } from "@/store/useUserStore";
 
 const formSchema = z.object({
   departureCity: z.string(),
@@ -35,7 +36,7 @@ export default function TripForm() {
   const [departureMinutes, setDepartureMinutes] = useState(20);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [maxVisitedStep, setMaxVisitedStep] = useState(0);
-
+  const { user } = useUserStore();
   const steps = [
     {
       id: "destination",
@@ -117,6 +118,7 @@ export default function TripForm() {
           departure_time: data.departureDate,
           price: data.price,
           capacity: data.passengers,
+          driverId: String(user.id)
         },
       },
     }).then(() => {

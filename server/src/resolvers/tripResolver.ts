@@ -163,8 +163,16 @@ export class TripResolver {
   @Mutation(() => String)
   async createTrip(@Arg("data", () => CreateTripInput) data: CreateTripInput) {
     const driver = await User.findOneBy({ id: data.driverId });
+    
+     if (!driver) {
+    throw new Error("Conducteur non trouvé");
+  }
+
     const trip = new Trip();
+
     Object.assign(trip, data);
+    trip.driver = driver; 
+
     await trip.save();
     return "Le trajet a bien été créé";
   }
