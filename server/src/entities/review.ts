@@ -28,6 +28,10 @@ export class Review extends BaseEntity {
   @Column()
   date!: Date;
 
+  @Field()
+  @Column({ default: true })
+  reviewRequested!: boolean;
+
   @Field(() => User)
   @ManyToOne(() => User, (user) => user.received_review)
   receiver!: User;

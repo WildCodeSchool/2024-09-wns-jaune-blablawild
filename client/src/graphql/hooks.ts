@@ -170,6 +170,7 @@ export type QueryGetTripByIdArgs = {
 
 
 export type QueryGetTripByUserArgs = {
+  asPassenger?: InputMaybe<Scalars['Boolean']['input']>;
   filter?: InputMaybe<Scalars['String']['input']>;
   userId: Scalars['String']['input'];
 };
@@ -186,6 +187,7 @@ export type Review = {
   id: Scalars['ID']['output'];
   notation: Scalars['Float']['output'];
   receiver: User;
+  reviewRequested: Scalars['Boolean']['output'];
   sender: User;
   trip: Trip;
 };
@@ -195,6 +197,7 @@ export type ReviewInput = {
   date: Scalars['String']['input'];
   notation: Scalars['Float']['input'];
   receiver: Scalars['String']['input'];
+  reviewRequested?: InputMaybe<Scalars['Boolean']['input']>;
   sender: Scalars['String']['input'];
   trip: Scalars['String']['input'];
 };
@@ -284,6 +287,13 @@ export type BookTripMutationVariables = Exact<{
 
 export type BookTripMutation = { __typename?: 'Mutation', bookTrip: string };
 
+export type LeaveReviewMutationVariables = Exact<{
+  data: ReviewInput;
+}>;
+
+
+export type LeaveReviewMutation = { __typename?: 'Mutation', leaveReview: string };
+
 export type SignupMutationVariables = Exact<{
   data: NewUserInput;
 }>;
@@ -335,10 +345,11 @@ export type GetTripQuery = { __typename?: 'Query', getTrip: Array<{ __typename?:
 export type GetTripByUserQueryVariables = Exact<{
   userId: Scalars['String']['input'];
   filter?: InputMaybe<Scalars['String']['input']>;
+  asPassenger: Scalars['Boolean']['input'];
 }>;
 
 
-export type GetTripByUserQuery = { __typename?: 'Query', getTripByUser: Array<{ __typename?: 'Trip', id: string, departure_time: any, departure_city: string, arrival_city: string, price: number, passengers?: Array<{ __typename?: 'User', id: string, firstname: string }> | null }> };
+export type GetTripByUserQuery = { __typename?: 'Query', getTripByUser: Array<{ __typename?: 'Trip', id: string, departure_city: string, arrival_city: string, price: number, capacity: number, departure_time: any, status: TripStatus, passengers?: Array<{ __typename?: 'User', firstname: string, id: string }> | null, driver?: { __typename?: 'User', id: string, firstname: string } | null, reviews?: Array<{ __typename?: 'Review', comment: string, reviewRequested: boolean, id: string, notation: number, date: any, sender: { __typename?: 'User', firstname: string, id: string }, receiver: { __typename?: 'User', firstname: string, id: string } }> | null }> };
 
 export type GetProfileQueryVariables = Exact<{
   userId: Scalars['String']['input'];
@@ -424,6 +435,37 @@ export function useBookTripMutation(baseOptions?: Apollo.MutationHookOptions<Boo
 export type BookTripMutationHookResult = ReturnType<typeof useBookTripMutation>;
 export type BookTripMutationResult = Apollo.MutationResult<BookTripMutation>;
 export type BookTripMutationOptions = Apollo.BaseMutationOptions<BookTripMutation, BookTripMutationVariables>;
+export const LeaveReviewDocument = gql`
+    mutation LeaveReview($data: ReviewInput!) {
+  leaveReview(data: $data)
+}
+    `;
+export type LeaveReviewMutationFn = Apollo.MutationFunction<LeaveReviewMutation, LeaveReviewMutationVariables>;
+
+/**
+ * __useLeaveReviewMutation__
+ *
+ * To run a mutation, you first call `useLeaveReviewMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useLeaveReviewMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [leaveReviewMutation, { data, loading, error }] = useLeaveReviewMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useLeaveReviewMutation(baseOptions?: Apollo.MutationHookOptions<LeaveReviewMutation, LeaveReviewMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<LeaveReviewMutation, LeaveReviewMutationVariables>(LeaveReviewDocument, options);
+      }
+export type LeaveReviewMutationHookResult = ReturnType<typeof useLeaveReviewMutation>;
+export type LeaveReviewMutationResult = Apollo.MutationResult<LeaveReviewMutation>;
+export type LeaveReviewMutationOptions = Apollo.BaseMutationOptions<LeaveReviewMutation, LeaveReviewMutationVariables>;
 export const SignupDocument = gql`
     mutation Signup($data: NewUserInput!) {
   signup(data: $data)
@@ -711,16 +753,37 @@ export type GetTripLazyQueryHookResult = ReturnType<typeof useGetTripLazyQuery>;
 export type GetTripSuspenseQueryHookResult = ReturnType<typeof useGetTripSuspenseQuery>;
 export type GetTripQueryResult = Apollo.QueryResult<GetTripQuery, GetTripQueryVariables>;
 export const GetTripByUserDocument = gql`
-    query GetTripByUser($userId: String!, $filter: String) {
-  getTripByUser(userId: $userId, filter: $filter) {
+    query GetTripByUser($userId: String!, $filter: String, $asPassenger: Boolean!) {
+  getTripByUser(userId: $userId, filter: $filter, asPassenger: $asPassenger) {
     id
-    departure_time
     departure_city
     arrival_city
     price
     passengers {
+      firstname
+      id
+    }
+    driver {
       id
       firstname
+    }
+    capacity
+    departure_time
+    status
+    reviews {
+      comment
+      reviewRequested
+      id
+      notation
+      date
+      sender {
+        firstname
+        id
+      }
+      receiver {
+        firstname
+        id
+      }
     }
   }
 }
@@ -740,6 +803,7 @@ export const GetTripByUserDocument = gql`
  *   variables: {
  *      userId: // value for 'userId'
  *      filter: // value for 'filter'
+ *      asPassenger: // value for 'asPassenger'
  *   },
  * });
  */
