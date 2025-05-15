@@ -24,7 +24,7 @@ describe("User resolver tests", () => {
   beforeEach(async () => {
     userResolver = new UserResolver();
     existingUser = await userFactory.build();
-    (newUser = await userInputFactory.build()),
+    newUser = await userInputFactory.build(),
       (jwt.sign as jest.Mock).mockImplementation((payload, secret, options) => {
         return "fake_token_for_testing";
       });
