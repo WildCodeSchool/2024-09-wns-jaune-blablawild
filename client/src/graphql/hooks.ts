@@ -19,6 +19,17 @@ export type Scalars = {
   Upload: { input: any; output: any; }
 };
 
+export type BookTripInput = {
+  seatsCount?: InputMaybe<Scalars['Float']['input']>;
+  tripId: Scalars['String']['input'];
+  userId: Scalars['String']['input'];
+};
+
+export type CancelTripBookingInput = {
+  tripId: Scalars['String']['input'];
+  userId: Scalars['String']['input'];
+};
+
 export type CreateTripInput = {
   arrival_city: Scalars['String']['input'];
   capacity: Scalars['Float']['input'];
@@ -45,6 +56,8 @@ export type LoginInput = {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  bookTrip: Scalars['String']['output'];
+  cancelTripBooking: Scalars['String']['output'];
   createTrip: Scalars['String']['output'];
   leaveReview: Scalars['String']['output'];
   login: Scalars['String']['output'];
@@ -52,6 +65,16 @@ export type Mutation = {
   signup: Scalars['String']['output'];
   updatePassword: Scalars['String']['output'];
   uploadProfileImage: Profile;
+};
+
+
+export type MutationBookTripArgs = {
+  data: BookTripInput;
+};
+
+
+export type MutationCancelTripBookingArgs = {
+  data: CancelTripBookingInput;
 };
 
 
@@ -254,6 +277,13 @@ export type CreateTripMutationVariables = Exact<{
 
 export type CreateTripMutation = { __typename?: 'Mutation', createTrip: string };
 
+export type BookTripMutationVariables = Exact<{
+  data: BookTripInput;
+}>;
+
+
+export type BookTripMutation = { __typename?: 'Mutation', bookTrip: string };
+
 export type SignupMutationVariables = Exact<{
   data: NewUserInput;
 }>;
@@ -363,6 +393,37 @@ export function useCreateTripMutation(baseOptions?: Apollo.MutationHookOptions<C
 export type CreateTripMutationHookResult = ReturnType<typeof useCreateTripMutation>;
 export type CreateTripMutationResult = Apollo.MutationResult<CreateTripMutation>;
 export type CreateTripMutationOptions = Apollo.BaseMutationOptions<CreateTripMutation, CreateTripMutationVariables>;
+export const BookTripDocument = gql`
+    mutation BookTrip($data: BookTripInput!) {
+  bookTrip(data: $data)
+}
+    `;
+export type BookTripMutationFn = Apollo.MutationFunction<BookTripMutation, BookTripMutationVariables>;
+
+/**
+ * __useBookTripMutation__
+ *
+ * To run a mutation, you first call `useBookTripMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useBookTripMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [bookTripMutation, { data, loading, error }] = useBookTripMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useBookTripMutation(baseOptions?: Apollo.MutationHookOptions<BookTripMutation, BookTripMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<BookTripMutation, BookTripMutationVariables>(BookTripDocument, options);
+      }
+export type BookTripMutationHookResult = ReturnType<typeof useBookTripMutation>;
+export type BookTripMutationResult = Apollo.MutationResult<BookTripMutation>;
+export type BookTripMutationOptions = Apollo.BaseMutationOptions<BookTripMutation, BookTripMutationVariables>;
 export const SignupDocument = gql`
     mutation Signup($data: NewUserInput!) {
   signup(data: $data)
