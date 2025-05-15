@@ -1,5 +1,5 @@
 import { useGetTripByIdQuery } from "@/graphql/hooks";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { formatDate } from "@/utils/FormatDate";
 import { TripLine } from "@/components/ui/tripLine";
 import { TripDetailsDriver } from "@/components/TripDetailsDriver";
@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 
 export const TripDetailsPage = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
 
   const { data, loading, error } = useGetTripByIdQuery({
     variables: { tripId: id || "" },
@@ -18,7 +19,11 @@ export const TripDetailsPage = () => {
   if (loading) return <div>Chargement en cours...</div>;
   if (error) return <div>Erreur: {error.message}</div>;
 
-  const trip = data?.getTripById;  
+  const trip = data?.getTripById;
+
+  const handleClick = () => {
+    navigate(`/reservation/${id}`);
+  };
 
   return (
     <div className="pt-6 md:pt-10 pb-6 md:pb-10 bg-white px-4 md:px-30 flex flex-col items-center">
@@ -80,7 +85,10 @@ export const TripDetailsPage = () => {
               driverImage={trip?.driver?.profile?.image || undefined}
               driverId={trip?.driver?.id || ""}
             />
-            <Button className="mt-4 bg-accent h-[50px] rounded-full">
+            <Button
+              className="mt-4 bg-accent h-[50px] rounded-full"
+              onClick={handleClick}
+            >
               Réserver
             </Button>
           </div>
