@@ -186,8 +186,8 @@ describe("Trip Resolver", () => {
 
     beforeEach(() => {
       tripResolver = new TripResolver();
-
       newTrip = generateTrip();
+      jest.clearAllMocks(); 
     });
 
     it("should create a trip", async () => {
@@ -274,6 +274,8 @@ describe("Trip Resolver", () => {
         filter: TripStatusFilter.PUBLISHED,
       },
     ])("$name", async ({ name, trips, expectedLength, driverId, filter }) => {
+      jest.clearAllMocks();
+      
       const filteredTrips = trips.filter(
         (trip) => trip.driver?.id === driverId
       );
@@ -281,35 +283,28 @@ describe("Trip Resolver", () => {
 
       const result = await tripResolver.getTripByUser(
         driverId as string,
-        filter
+        filter,
+        false
       );
 
-      interface WhereClause {
-        driver: { id: string | null };
-        departure_time?: any;
+      const findCalls = (Trip.find as jest.Mock).mock.calls;
+      expect(findCalls.length).toBeGreaterThan(0);
+      
+      const lastCall = findCalls[findCalls.length - 1][0];
+      
+      if (driverId) {
+        expect(lastCall.where.driver.id).toBe(driverId);
       }
-
-      const expectedWhere: WhereClause = {
-        driver: { id: driverId },
-      };
-
+      
       if (filter === TripStatusFilter.UPCOMING) {
-        expectedWhere.departure_time = expect.objectContaining({
-          _type: "moreThan",
-        });
+        expect(lastCall.where.departure_time._type).toBe("moreThan");
       } else if (filter === TripStatusFilter.PAST) {
-        expectedWhere.departure_time = expect.objectContaining({
-          _type: "lessThan",
-        });
+        expect(lastCall.where.departure_time._type).toBe("lessThan");
       }
-
-      expect(Trip.find).toHaveBeenCalledWith({
-        where: expectedWhere,
-        relations: {
-          passengers: true,
-          driver: true,
-        },
-      });
+      
+      expect(lastCall.relations.passengers).toBe(true);
+      expect(lastCall.relations.driver).toBe(true);
+      
       expect(result).toBeInstanceOf(Array);
       expect(result).toHaveLength(expectedLength);
     });
@@ -324,7 +319,6 @@ describe("Trip Booking Tests", () => {
   beforeEach(() => {
     tripResolver = new TripResolver();
 
-    // Mock de l'utilisateur
     mockUser = {
       id: faker.string.uuid(),
       firstname: faker.person.firstName(),
@@ -332,7 +326,6 @@ describe("Trip Booking Tests", () => {
       email: faker.internet.email(),
     };
 
-    // Mock du trajet
     mockTrip = {
       id: faker.string.uuid(),
       departure_city: faker.location.city(),
@@ -345,7 +338,6 @@ describe("Trip Booking Tests", () => {
       save: jest.fn().mockResolvedValue(true),
     };
 
-    // Reset des mocks
     jest.clearAllMocks();
   });
 

@@ -65,6 +65,9 @@ export default function About({ user }: Props) {
           </div>
         </>
       )}
+        
+
     </section>
+    
   );
 }
