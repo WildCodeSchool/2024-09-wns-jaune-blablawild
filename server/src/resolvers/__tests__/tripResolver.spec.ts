@@ -281,7 +281,8 @@ describe("Trip Resolver", () => {
 
       const result = await tripResolver.getTripByUser(
         driverId as string,
-        filter
+        filter,
+        false
       );
 
       interface WhereClause {
