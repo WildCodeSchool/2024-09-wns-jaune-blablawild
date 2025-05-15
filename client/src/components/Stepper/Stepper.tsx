@@ -44,31 +44,31 @@ export function Stepper({
                   onClick={() => handleStepChange(index)}
                   className={cn(
                     // Style Global
-                    "relative flex h-10 w-10 items-center justify-center rounded-full border-2 transition-all mb-2",
-
+                    "relative flex h-6 w-6 items-center justify-center rounded-full border-2 transition-all mb-1",
+                    
                     // Style pour les étapes complétées
                     isCompleted
-                      ? "border-accent bg-accent text-white hover:cursor-pointer hover:bg-accent hover:text-white hover:ring-2 hover:ring-accent"
+                      ? "border-accent bg-accent text-white hover:cursor-pointer hover:bg-accent hover:text-white hover:ring-1 hover:ring-accent"
                       : // Style pour l'étape actuelle
                       isCurrent
-                      ? "border-accent bg-white text-accent hover:cursor-pointer hover:bg-accent hover:text-white hover:ring-2 hover:ring-accent"
+                      ? "border-accent bg-white text-accent hover:cursor-pointer hover:bg-accent hover:text-white hover:ring-1 hover:ring-accent"
                       : // Style pour les étapes non visitables
                         "border-muted bg-white text-muted-foreground",
-
+                    
                     // Style pour les étapes visitables et non actuelle
                     isVisitable && !isCurrent && !isCompleted
                       ? "hover:cursor-pointer hover:border-accent hover:text-accent"
                       : "",
-
+                    
                     // Style pour les étapes futures
                     isFuture &&
                       "opacity-60 cursor-not-allowed hover:cursor-not-allowed"
                   )}
                 >
                   {isCompleted ? (
-                    <Check className="h-5 w-5" />
+                    <Check className="h-3 w-3" />
                   ) : (
-                    <span>{index + 1}</span>
+                    <span className="text-xs">{index + 1}</span>
                   )}
                 </button>
                 <span
@@ -87,7 +87,7 @@ export function Stepper({
               {index < steps.length - 1 && (
                 <div
                   className={cn(
-                    "h-1 flex-auto mx-2 rounded-full transition-all duration-300 self-start mt-5",
+                    "h-0.5 flex-auto mx-1 rounded-full transition-all duration-300 self-start mt-3",
                     index < currentStep ? "bg-accent" : "bg-muted"
                   )}
                 />
