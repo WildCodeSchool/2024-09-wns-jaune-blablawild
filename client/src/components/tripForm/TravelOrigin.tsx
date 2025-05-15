@@ -1,7 +1,7 @@
 import { cn } from "@/lib/utils";
-import { Input } from "../ui/input";
-import { FormControl, FormItem } from "../ui/form";
 import { useFormContext } from "react-hook-form";
+import { FormControl, FormItem } from "../ui/form";
+import { Input } from "../ui/input";
 export default function TravelOrigin() {
   const { register } = useFormContext();
   return (
@@ -12,7 +12,9 @@ export default function TravelOrigin() {
       <FormItem>
         <FormControl>
           <Input
-            className={cn("w-xs rounded-3xl border-primary border-2 mt-10")}
+            className={cn(
+              "w-xs rounded-3xl border-primary border-2 mt-10 hover:border-accent"
+            )}
             {...register("departureCity")}
           />
         </FormControl>
