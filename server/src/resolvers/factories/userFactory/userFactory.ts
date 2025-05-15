@@ -23,8 +23,6 @@ export class UserFactory extends BaseFactory<User> {
     return this;
   }
 
-  
-
   async build(options: FactoryOptions<User> = {}): Promise<User> {
     const user = await super.build(options);
 
@@ -49,6 +47,11 @@ export class UserFactory extends BaseFactory<User> {
 
     return mockedUser;
   }
+
+  async create(options: FactoryOptions<User> = {}): Promise<User> {
+    const entity = await this.build(options);
+    return this.persist(entity);
+  }
 }
 
-export const userFactory = new UserFactory()
+export const userFactory = new UserFactory();

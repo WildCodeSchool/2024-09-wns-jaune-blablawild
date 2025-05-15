@@ -11,6 +11,9 @@ export class ReviewInput {
     @Field()
     date!: string;
     
+    @Field({ nullable: true })
+    reviewRequested?: boolean;
+
     @Field()
     receiver!: string;
     

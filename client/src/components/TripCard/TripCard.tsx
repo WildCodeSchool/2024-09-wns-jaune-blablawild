@@ -11,13 +11,14 @@ import {
   getImageUrl,
 } from "./_utils/utils";
 import { useNavigate } from "react-router-dom";
+import clsx from "clsx";
 
 export default function TripCard({
   trips,
   mode = "search",
 }: Readonly<TripCardProps>) {
   const navigate = useNavigate();
-
+  
   return (
     <section className="w-full px-2 py-4 md:p-8">
       <div className="space-y-4">
@@ -28,18 +29,17 @@ export default function TripCard({
             <article
               key={trip.id}
               onClick={() => navigate(`/trip/${trip.id}`)}
-              className="relative flex md:h-[232px] bg-white rounded-xl border-solid border-[#E5E5E5] border-1 overflow-hidden hover:shadow-lg transition-shadow duration-150 hover:cursor-pointer hover:ring-2 hover:ring-primary xl:max-w-[1000px]"
+              className="relative flex md:h-[232px] bg-background rounded-xl border-solid border-[#E5E5E5] border-1 overflow-hidden hover:shadow-lg transition-shadow duration-150 hover:cursor-pointer hover:ring-1 hover:ring-primary xl:max-w-[1000px]"
             >
               {trip.capacity === 0 && (
                 <div className="absolute inset-0  z-10 bg-background/65" />
               )}
+
               <div className="flex-1 p-4 flex flex-col justify-between ">
-                {mode === "published" && (
-                  <span className="text-lg text-primary">
-                    {formatDate(trip.departure_time, "fr")}
-                  </span>
-                )}
-                <div className="flex gap-2 items-center mb-4 lg:max-w-[500px]">
+                <p className="text-base text-accent mb-2">
+                  {formatDate(trip.departure_time, "fr")}
+                </p>
+                <div className=" flex gap-2 items-center mb-4 lg:max-w-[500px]">
                   <div className="flex-1">
                     <div className="text-lg font-medium text-gray-900">
                       {formatHourFromTime(trip.departure_time)}
@@ -98,7 +98,10 @@ export default function TripCard({
                 <img
                   src={getImageUrl(trip.arrival_city)}
                   alt={trip.arrival_city}
-                  className="absolute inset-0 w-full h-full object-cover"
+                  className={clsx(
+                    "absolute inset-0 w-full h-full object-cover transition-all duration-300",
+                    new Date(trip.departure_time) < new Date() && "grayscale"
+                  )}
                 />
                 <PriceOverlay price={trip.price} capacity={trip.capacity} />
               </div>
