@@ -12,8 +12,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const { isAuthenticated } = useUserStore();
   const location = useLocation();
 
-  const publicRoutes = ["/", "/signin", "/signup", "/search-result", "/404"];
-
+  //TODO: delete tripform to public routes
+  const publicRoutes = [
+    "/",
+    "/signin",
+    "/signup",
+    "/search-result",
+    "/404",
+    "/tripform",
+  ];
   const isPublicRoute = publicRoutes.some(
     (route) =>
       location.pathname === route || location.pathname.startsWith(`${route}?`)
