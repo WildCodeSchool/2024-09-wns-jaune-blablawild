@@ -63,9 +63,10 @@ export class ReviewResolver {
     // Laisser la review
     const review = new Review()
     Object.assign(review, data)
-    console.log(new Date())
+    review.reviewRequested = false;
     await review.save()
     return ("Votre retour d'expérience a bien été créé")
   }
+
 
 }

@@ -55,7 +55,6 @@ export default function UserProfilePage() {
               Modifier mon profil
             </Button>}
           </div>
-
           <menu className="flex w-full justify-between mt-6">
             <div
               onClick={() => setCurrentPage("profile")}

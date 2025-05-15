@@ -1,0 +1,3 @@
+mutation LeaveReview($data: ReviewInput!) {
+  leaveReview(data: $data)
+}

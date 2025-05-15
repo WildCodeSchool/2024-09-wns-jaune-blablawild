@@ -82,9 +82,31 @@ export class TripResolver {
   @Query(() => [Trip])
   async getTripByUser(
     @Arg("userId") userId: string,
-    @Arg("filter", { nullable: true }) filter: TripStatusFilter
+    @Arg("filter", { nullable: true }) filter: TripStatusFilter,
+    @Arg("asPassenger", { nullable: true, defaultValue: false })
+    asPassenger: boolean
   ) {
     const today = new Date();
+
+    if (asPassenger) {
+      const trips = await Trip.find({
+        where: {
+          passengers: {
+            id: userId,
+          },
+        },
+        relations: {
+          passengers: true,
+          driver: true,
+          reviews: {
+            sender: true,
+            receiver: true,
+          },
+        },
+      });
+
+      return trips;
+    }
 
     let whereClause: any = { driver: { id: userId } };
 
@@ -97,7 +119,24 @@ export class TripResolver {
 
     const trips = await Trip.find({
       where: whereClause,
-      relations: { passengers: true, driver: true },
+      relations: {
+        passengers: true,
+        driver: true,
+        reviews: {
+          sender: true,
+          receiver: true,
+        },
+      },
+    });
+
+    trips.forEach((trip, index) => {
+      if (trip.reviews && trip.reviews.length > 0) {
+        trip.reviews.forEach((review, rIndex) => {
+          console.log(`    Review #${rIndex + 1}:`);
+          console.log(`      Has sender: ${review.sender ? "Yes" : "NO"}`);
+          console.log(`      Has receiver: ${review.receiver ? "Yes" : "NO"}`);
+        });
+      }
     });
 
     if (!trips) {
