@@ -7,8 +7,8 @@ import {
 } from "../../../type/tripType";
 import { TripResolver } from "../../tripResolver";
 
-jest.mock("../../entities/trip");
-jest.mock("../../entities/user");
+jest.mock("../../../entities/trip");
+jest.mock("../../../entities/user");
 
 describe("Filters trip tests", () => {
   let tripResolver: TripResolver;
