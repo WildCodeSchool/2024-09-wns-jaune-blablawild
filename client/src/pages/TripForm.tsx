@@ -37,30 +37,52 @@ export default function TripForm() {
   const [maxVisitedStep, setMaxVisitedStep] = useState(0);
 
   const steps = [
-    { id: "destination", label: "Destination" },
-    { id: "origin", label: "Départ" },
-    { id: "date", label: "Date" },
-    { id: "hour", label: "Heure" },
-    { id: "passengers", label: "Passagers" },
-    { id: "price", label: "Prix" },
-    { id: "summary", label: "Résumé" },
+    {
+      id: "destination",
+      label: "Destination",
+      component: <Destination />,
+    },
+    {
+      id: "origin",
+      label: "Départ",
+      component: <TravelOrigin />,
+    },
+    {
+      id: "date",
+      label: "Date",
+      component: <TripDateSelection />,
+    },
+    {
+      id: "hour",
+      label: "Heure",
+      component: (
+        <DepartureHour
+          departureHour={departureHour}
+          setDepartureHour={setDepartureHour}
+          departureMinutes={departureMinutes}
+          setDepartureMinutes={setDepartureMinutes}
+        />
+      ),
+    },
+    {
+      id: "passengers",
+      label: "Passagers",
+      component: <NumberPassengers />,
+    },
+    {
+      id: "price",
+      label: "Prix",
+      component: <PriceSelection />,
+    },
+    {
+      id: "summary",
+      label: "Résumé",
+      component: <TripSummary />,
+    },
   ];
 
   const { step, back, next, currentStepIndex, isLastStep, goTo } =
-    useMultiStepsForm([
-      <Destination />,
-      <TravelOrigin />,
-      <TripDateSelection />,
-      <DepartureHour
-        departureHour={departureHour}
-        setDepartureHour={setDepartureHour}
-        departureMinutes={departureMinutes}
-        setDepartureMinutes={setDepartureMinutes}
-      />,
-      <NumberPassengers />,
-      <PriceSelection />,
-      <TripSummary />,
-    ]);
+    useMultiStepsForm(steps);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -160,7 +182,11 @@ export default function TripForm() {
         </div>
       </div>
       <div className="flex-1 md:block hidden">
-        <img src={VanImage} alt="car image" className="object-cover h-full" />
+        <img
+          src={VanImage}
+          alt="car image"
+          className="object-cover h-full object-[65%_center]"
+        />
       </div>
     </section>
   );

@@ -9,4 +9,5 @@ export interface StepperProps {
 export interface Step {
   id: string | number;
   label: string;
+  component: React.ReactElement;
 }
