@@ -61,4 +61,4 @@ export class CreateTripInputFactory extends BaseFactory<CreateTripInput> {
 
 }
 
-export const createTripInputFactory = new CreateTripInput()
+export const createTripInputFactory = new CreateTripInputFactory()

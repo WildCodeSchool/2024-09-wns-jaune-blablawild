@@ -15,11 +15,23 @@ export class TripFactory extends BaseFactory<Trip> {
       price: this.faker.number.int({ min: 5, max: 100 }),
       capacity: this.faker.number.int({ min: 1, max: 5 }),
       status: TripStatus.OPEN,
+      driver: { id: this.faker.string.uuid() } as User,
       passengers: [] as User[],
-    } as Trip;
+      save: jest.fn().mockImplementation(function(this: any) {
+      return Promise.resolve(this);
+    }),
+    } as unknown as Trip;
   }
 
-  withDriver(driver: any): this {
+ withDriver(driver: User | string): this {
+    // Si c'est un string, convertir en objet User avec id
+    if (typeof driver === 'string') {
+      return this.withOverride({
+        driver: { id: driver } as User
+      });
+    }
+    
+    // Si c'est déjà un objet User, l'utiliser tel quel
     return this.withOverride({ driver });
   }
 
@@ -69,7 +81,6 @@ export class TripFactory extends BaseFactory<Trip> {
   protected async persist(entity: Trip): Promise<any | Trip> {
     const mockedTrip = {
       ...entity,
-      save: jest.fn().mockResolvedValue(undefined),
     };
 
     (Trip as unknown as jest.Mock).mockImplementationOnce(function () {
@@ -80,4 +91,4 @@ export class TripFactory extends BaseFactory<Trip> {
   }
 }
 
-export const tripFactory = new TripFactory
+export const tripFactory = new TripFactory();

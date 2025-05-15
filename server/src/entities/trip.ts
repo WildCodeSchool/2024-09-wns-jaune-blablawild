@@ -52,7 +52,7 @@ export class Trip extends BaseEntity {
 
   @Field(() => User, {nullable: true})
   @ManyToOne(() => User, (user) => user.driver_trips)
-  driver?: User;
+  driver!: User;
 
   @Field(() => [Review], { nullable: true })
   @OneToMany(() => Review, (review) => review.trip)
