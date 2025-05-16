@@ -53,7 +53,8 @@ describe("get trips by user", () => {
 
       const result = await tripResolver.getTripByUser(
         driverId as string,
-        filter
+        filter,
+        false
       );
 
       interface WhereClause {
@@ -80,6 +81,10 @@ describe("get trips by user", () => {
         relations: {
           passengers: true,
           driver: true,
+          reviews: {
+            receiver: true,
+            sender: true,
+          },
         },
       });
       expect(result).toBeInstanceOf(Array);

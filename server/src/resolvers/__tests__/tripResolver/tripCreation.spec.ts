@@ -23,11 +23,15 @@ describe("Trip Resolver", () => {
   });
 
   it("should create a trip", async () => {
+
+    (User.findOneBy as jest.Mock).mockResolvedValueOnce(exisitngUser);
+
     (Trip.save as jest.Mock).mockResolvedValueOnce(newTrip);
 
     const result = await tripResolver.createTrip(newTrip);
 
     expect(result).toBe("Le trajet a bien été créé");
+    expect(User.findOneBy).toHaveBeenCalledWith({ id: exisitngUser.id });
   });
 
   // rajouter tests en cas derreur
