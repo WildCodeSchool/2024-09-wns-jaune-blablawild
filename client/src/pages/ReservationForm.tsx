@@ -13,6 +13,13 @@ import { useBookTripMutation } from "@/graphql/hooks";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useUserStore } from "@/store/useUserStore";
+import { Step } from "@/components/Stepper/types";
+
+interface UserState {
+  user: {
+    id: string | number;
+  } | null;
+}
 
 const buildFormSchema = (capacity: number) =>
   z.object({
@@ -26,7 +33,7 @@ export default function ReservationForm() {
   const { id } = useParams();
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [bookTrip] = useBookTripMutation();
-  const currentUser = useUserStore((state) => state.user);
+  const currentUser = useUserStore((state: UserState) => state.user);
 
   const { data, loading, error } = useGetTripByIdQuery({
     variables: { tripId: id || "" },
@@ -34,7 +41,6 @@ export default function ReservationForm() {
   });
 
   const trip = data?.getTripById;
-
   const tripCapacity = trip?.capacity || 1;
 
   const form = useForm({
@@ -44,19 +50,34 @@ export default function ReservationForm() {
     },
   });
 
-  const { step, back, next, currentStepIndex, isLastStep } = useMultiStepsForm([
-    <SeatSelection
-      departureTime={trip?.departure_time || ""}
-      departureCity={trip?.departure_city || ""}
-      arrivalCity={trip?.arrival_city || ""}
-      availableSeats={trip?.capacity || 0}
-    />,
-    <ReservationSummary
-      departureTime={trip?.departure_time || ""}
-      departureCity={trip?.departure_city || ""}
-      arrivalCity={trip?.arrival_city || ""}
-    />,
-  ]);
+  const formSteps: Step[] = [
+    {
+      id: "seat-selection",
+      label: "Sélection des sièges",
+      component: (
+        <SeatSelection
+          departureTime={trip?.departure_time || ""}
+          departureCity={trip?.departure_city || ""}
+          arrivalCity={trip?.arrival_city || ""}
+          availableSeats={trip?.capacity || 0}
+        />
+      ),
+    },
+    {
+      id: "reservation-summary",
+      label: "Récapitulatif",
+      component: (
+        <ReservationSummary
+          departureTime={trip?.departure_time || ""}
+          departureCity={trip?.departure_city || ""}
+          arrivalCity={trip?.arrival_city || ""}
+        />
+      ),
+    },
+  ];
+
+  const { step, back, next, currentStepIndex, isLastStep } =
+    useMultiStepsForm(formSteps);
 
   if (loading) return <div>Chargement en cours...</div>;
   if (error) return <div>Erreur: {error.message}</div>;
