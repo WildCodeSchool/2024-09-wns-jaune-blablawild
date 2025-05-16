@@ -16,7 +16,6 @@ import {
 import { Input } from "../ui/input";
 import UserCreationForm from "../UserCreationForm/UserCreationForm";
 import { LoginFormData, formSchema, handleLogin } from "./utils";
-import { useState } from "react";
 
 type UserLoginFormProps = {
   closeModal?: () => void;
@@ -30,7 +29,6 @@ export default function UserLoginForm({
   const [login] = useLoginMutation();
   const setUser = useUserStore((state) => state.setUser);
   const navigate = useNavigate();
-  const [openCreationForm, setOpenCreationForm] = useState(false)
   const { success, error } = useToast();
 
   const form = useForm<LoginFormData>({
@@ -41,7 +39,6 @@ export default function UserLoginForm({
     },
   });
 
-  const handleCloseCreationForm = () => setOpenCreationForm(false)
 
   const onSubmit = async (data: LoginFormData) => {
     await handleLogin({
@@ -58,7 +55,7 @@ export default function UserLoginForm({
 
   return (
     <>
-      <Form {...form} >
+      <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
           <div className="grid gap-4 py-2">
             <FormField
@@ -68,6 +65,7 @@ export default function UserLoginForm({
                 <FormItem className="grid grid-cols-4 items-center gap-4">
                   <FormControl>
                     <Input
+                      data-testid="email-input"
                       variant="underline"
                       placeholder="*Mail"
                       className="col-span-5"
@@ -86,6 +84,7 @@ export default function UserLoginForm({
                 <FormItem className="grid grid-cols-4 items-center gap-4">
                   <FormControl>
                     <Input
+                      data-testid="password-input"
                       variant="underline"
                       type="password"
                       placeholder="*Mot de passe"
@@ -99,10 +98,16 @@ export default function UserLoginForm({
             />
           </div>
           <div className="flex justify-end text-foreground">
-            <p className="text-border-grey text-xs font-regular underline underline-offset-4 mt-1 hover:opacity-80 cursor-pointer">Mot de passe oublié ?</p>
+            <p className="text-border-grey text-xs font-regular underline underline-offset-4 mt-1 hover:opacity-80 cursor-pointer">
+              Mot de passe oublié ?
+            </p>
           </div>
           <div className="flex flex-col justify-center items-center gap-4 mt-8">
-            <Button type="submit" className="w-full h-11 bg-accent rounded-3xl p-5">
+            <Button
+              data-testid="connected-button"
+              type="submit"
+              className="w-full h-11 bg-accent rounded-3xl p-5"
+            >
               Se connecter
             </Button>
             <Modal
@@ -111,7 +116,6 @@ export default function UserLoginForm({
                   variant="outline"
                   className="w-full h-11 rounded-3xl p-5"
                   type="button"
-                  
                 >
                   S'inscrire
                 </Button>

@@ -44,11 +44,11 @@ export default function NavBar() {
     closeNavbar();
   };
 
-  let stringUserId = null; 
+  let stringUserId = null;
   if (user && user.id) {
     stringUserId = String(user.id);
   }
-  
+
   const { data } = useGetProfileQuery({
     skip: !isAuthenticated || !stringUserId,
     variables: {
@@ -65,20 +65,28 @@ export default function NavBar() {
     <>
       {!isAuthenticated ? (
         <Modal
-        trigger={
-          <Button className="rounded-full px-6 bg-transparent" variant="outline">
-            Se connecter
-          </Button>
-        }
-        content={<UserLoginForm closeNavbar={closeNavbar} />}
-        moduleTitle="Se connecter"
-        dialogStyle="w-[350px]"
+          trigger={
+            <Button
+              data-testid="connection-button"
+              className="rounded-full px-6 bg-transparent"
+              variant="outline"
+            >
+              Se connecter
+            </Button>
+          }
+          content={<UserLoginForm closeNavbar={closeNavbar} />}
+          moduleTitle="Se connecter"
+          dialogStyle="w-[350px]"
         />
       ) : (
         <Popover open={open} onOpenChange={setOpen}>
           <PopoverTrigger asChild>
             {profileImage ? (
-              <img src={profileImage} className="w-8 h-8 rounded-full cursor-pointer" alt="Profile" />
+              <img
+                src={profileImage}
+                className="w-8 h-8 rounded-full cursor-pointer"
+                alt="Profile"
+              />
             ) : (
               <CircleUserRound
                 className="cursor-pointer"

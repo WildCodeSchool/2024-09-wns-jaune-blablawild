@@ -3,7 +3,7 @@ import { FormControl, FormItem } from "../ui/form";
 import { Input } from "../ui/input";
 import { cn } from "@/lib/utils";
 export default function PriceSelection() {
-const { register } = useFormContext()
+  const { register } = useFormContext();
   return (
     <section className="flex flex-col items-center">
       <h1 className="text-secondary text-xl font-semibold">
@@ -12,9 +12,10 @@ const { register } = useFormContext()
       <FormItem>
         <FormControl>
           <Input
+            data-testid="price-input"
             className={cn("w-s rounded-3xl border-primary border-2 mt-10")}
             {...register("price", {
-              setValueAs: (value) => (value ? Number(value) : undefined),
+              setValueAs: (value) => (value ? Number(value) : 0),
             })}
             type="number"
           />

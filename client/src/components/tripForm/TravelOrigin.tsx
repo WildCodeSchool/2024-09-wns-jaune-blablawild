@@ -12,6 +12,7 @@ export default function TravelOrigin() {
       <FormItem>
         <FormControl>
           <Input
+            data-testid="departure-input"
             className={cn("w-xs rounded-3xl border-primary border-2 mt-10")}
             {...register("departureCity")}
           />
