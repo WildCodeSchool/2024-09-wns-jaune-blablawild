@@ -1,4 +1,4 @@
-import { Arg, Mutation, Query, Resolver } from "type-graphql";
+import { Arg, Ctx, Mutation, Query, Resolver } from "type-graphql";
 import { Between, FindOptionsWhere, ILike, LessThan, MoreThan } from "typeorm";
 import { Trip } from "../entities/trip";
 import { User } from "../entities/user";
@@ -163,15 +163,15 @@ export class TripResolver {
   @Mutation(() => String)
   async createTrip(@Arg("data", () => CreateTripInput) data: CreateTripInput) {
     const driver = await User.findOneBy({ id: data.driverId });
-    
-     if (!driver) {
-    throw new Error("Conducteur non trouvé");
-  }
+
+    if (!driver) {
+      throw new Error("Conducteur non trouvé");
+    }
 
     const trip = new Trip();
 
     Object.assign(trip, data);
-    trip.driver = driver; 
+    trip.driver = driver;
 
     await trip.save();
     return "Le trajet a bien été créé";
@@ -181,16 +181,13 @@ export class TripResolver {
     try {
       const trip = await Trip.findOne({
         where: { id: data.tripId },
-        relations: { passengers: true },
+        relations: { passengers: true, driver: true },
       });
 
-      if (!trip) {
-        throw new Error("Le trajet n'existe pas");
-      }
+      if (!trip) throw new Error("Le trajet n'existe pas");
 
-      if (trip.status === TripStatus.FULL) {
+      if (trip.status === TripStatus.FULL)
         throw new Error("Ce trajet est déjà complet");
-      }
 
       if (trip.status === TripStatus.CLOSE) {
         throw new Error("Ce trajet n'est plus disponible");
@@ -200,6 +197,11 @@ export class TripResolver {
       if (!user) {
         throw new Error("L'utilisateur n'existe pas");
       }
+
+      if (data.userId.toString() === trip.driver.id.toString())
+        throw new Error(
+          "Vous ne pouvez pas réserver un trajet pour lequel vous êtes conducteur"
+        );
 
       if (!trip.passengers) {
         trip.passengers = [];

@@ -14,6 +14,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useUserStore } from "@/store/useUserStore";
 import { Step } from "@/components/Stepper/types";
+import { useToast } from "@/contexts/ToasterContext";
 
 interface UserState {
   user: {
@@ -31,6 +32,7 @@ const buildFormSchema = (capacity: number) =>
 
 export default function ReservationForm() {
   const { id } = useParams();
+  const toast = useToast();
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [bookTrip] = useBookTripMutation();
   const currentUser = useUserStore((state: UserState) => state.user);
@@ -85,18 +87,25 @@ export default function ReservationForm() {
 
   type FormData = z.infer<ReturnType<typeof buildFormSchema>>;
 
-  const onSubmit = (values: FormData) => {
-    bookTrip({
-      variables: {
-        data: {
-          tripId: id!,
-          userId: currentUser?.id.toString() as string,
-          seatsCount: values.seatsCount,
+  console.log(isSubmitted);
+
+  const onSubmit = async (values: FormData) => {
+    try {
+      await bookTrip({
+        variables: {
+          data: {
+            tripId: id!,
+            userId: currentUser?.id.toString() as string,
+            seatsCount: values.seatsCount,
+          },
         },
-      },
-    }).then(() => {
+      });
       setIsSubmitted(true);
-    });
+    } catch (error) {
+      if (error instanceof Error) {
+        toast.error(error.message);
+      }
+    }
   };
 
   return (
