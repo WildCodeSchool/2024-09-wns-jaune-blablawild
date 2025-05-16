@@ -11,6 +11,7 @@ export default function Destination() {
       <FormItem>
         <FormControl>
           <Input
+            data-testid="destination-input"
             className={cn(
               "rounded-3xl border-primary border-2 mt-10 w-xs hover:border-accent"
             )}

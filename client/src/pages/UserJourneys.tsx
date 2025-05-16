@@ -8,11 +8,11 @@ import { useUserStore } from "@/store/useUserStore";
 export default function UserJourneys() {
   const [activeTab, setActiveTab] = useState("À VENIR");
   const [showReviewModal, setShowReviewModal] = useState(false);
-  const [tripsToReview, setTripsToReview] = useState<Trip[]>([]);
-  const previousTripsRef = useRef<any[]>([]);
+  const [tripsToReview, setTripsToReview] = useState<Trip[] | null>(null);
+  const previousTripsRef = useRef<Trip[] | null>(null);
   const { user } = useUserStore();
 
-  const stringifyId = String(user.id);
+  const stringifyId = String(user?.id);
 
   const filter =
     activeTab === "À VENIR"
@@ -39,8 +39,8 @@ export default function UserJourneys() {
       (trip) => new Date(trip.departure_time) < now
     );
     if (!pastTrips) return;
-    previousTripsRef.current = pastTrips;
-    
+    previousTripsRef.current = pastTrips as Trip[];
+
     const tripsWithoutReviews = pastTrips.filter((trip) => {
       const userReview = trip?.reviews?.find(
         (review) =>
@@ -83,7 +83,8 @@ export default function UserJourneys() {
     sortedTrips = trips.filter((trip) => new Date(trip.departure_time) <= now);
   }
 
-  const currentTripToReview = tripsToReview.length > 0 ? tripsToReview[0] : null;
+  const currentTripToReview =
+    tripsToReview && tripsToReview.length > 0 ? tripsToReview[0] : null;
 
   return (
     <section className="flex min-h-screen">

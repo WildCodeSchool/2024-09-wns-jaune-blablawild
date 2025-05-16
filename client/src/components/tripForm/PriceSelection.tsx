@@ -12,11 +12,12 @@ export default function PriceSelection() {
       <FormItem>
         <FormControl>
           <Input
+            data-testid="price-input"
             className={cn(
               "rounded-3xl border-primary border-2 mt-10 hover:border-accent"
             )}
             {...register("price", {
-              setValueAs: (value) => (value ? Number(value) : undefined),
+              setValueAs: (value) => (value ? Number(value) : 0),
             })}
             type="number"
           />

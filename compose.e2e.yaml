@@ -1,0 +1,80 @@
+networks:
+  test:
+    name: test-network
+
+services:
+  driveup-test-server:
+    container_name: driveup-test-server
+    build: 
+      context: ./server
+      dockerfile: Dockerfile.dev
+    environment:
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_SCHEMA: ${DB_SCHEMA}
+      DB_USER: ${DB_USER}
+      DB_HOST: ${DB_HOST}
+      APP_SECRET: ${APP_SECRET}
+      JWT_SECRET: ${JWT_SECRET}
+    depends_on:
+      driveup-test-database:
+        condition: service_healthy
+    networks:
+      - test
+
+  driveup-test-client:
+    container_name: driveup-test-client
+    build: 
+      context: ./client
+      dockerfile: Dockerfile.dev 
+    environment:
+      VITE_GATEWAY_PORT: ${GATEWAY_PORT}
+      VITE_SERVER_HOST: ${SERVER_HOST}
+      VITE_CLIENT_HOST: ${CLIENT_HOST}
+    depends_on:
+      - driveup-test-server
+    networks:
+      - test
+
+  driveup-test-database:
+    container_name: driveup-test-database
+    image: postgres
+    environment:
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_SCHEMA}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_HOST: ${DB_HOST}
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER}"]
+      interval: 5s
+      retries: 5
+    networks:
+      - test
+
+  driveup-test-gateway: 
+    container_name: driveup-test-gateway
+    image: nginx
+    restart: always
+    ports: 
+      - ${GATEWAY_PORT}:80
+    volumes:
+      - ./nginx.test.conf:/etc/nginx/nginx.conf
+    networks:
+      - test
+
+  driveup-test-e2e:
+    container_name: driveup-test-e2e
+    build:
+      context: ./e2e
+      dockerfile: Dockerfile
+    networks:
+      - test
+    environment:
+      BASE_URL: http://driveup-test-gateway
+      CI: "true"
+      USER_EMAIL: ${USER_EMAIL}
+      USER_PASSWORD: ${USER_PASSWORD}
+    depends_on:
+      driveup-test-database:
+        condition: service_healthy
+
+

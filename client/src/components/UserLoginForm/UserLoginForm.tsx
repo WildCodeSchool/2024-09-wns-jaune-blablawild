@@ -67,6 +67,7 @@ export default function UserLoginForm({
                 <FormItem className="grid grid-cols-4 items-center gap-4">
                   <FormControl>
                     <Input
+                      data-testid="email-input"
                       variant="underline"
                       placeholder="*Mail"
                       className="col-span-5"
@@ -85,6 +86,7 @@ export default function UserLoginForm({
                 <FormItem className="grid grid-cols-4 items-center gap-4">
                   <FormControl>
                     <Input
+                      data-testid="password-input"
                       variant="underline"
                       type="password"
                       placeholder="*Mot de passe"
@@ -104,6 +106,7 @@ export default function UserLoginForm({
           </div>
           <div className="flex flex-col justify-center items-center gap-4 mt-8">
             <Button
+              data-testid="connected-button"
               type="submit"
               className="w-full h-11 bg-accent rounded-3xl p-5"
             >

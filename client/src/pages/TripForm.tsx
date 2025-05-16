@@ -1,5 +1,4 @@
 import VanImage from "@/assets/van-image-trip-form.png";
-import { Stepper } from "@/components/Stepper/Stepper";
 import Confirmation from "@/components/tripForm/Confirmation";
 import DepartureHour from "@/components/tripForm/DepartureHour";
 import Destination from "@/components/tripForm/Destination";
@@ -18,19 +17,31 @@ import { z } from "zod";
 import { Form } from "../components/ui/form";
 import { useMultiStepsForm } from "../hooks/useMultiStepsForm";
 import { useUserStore } from "@/store/useUserStore";
+import { useToast } from "@/contexts/ToasterContext";
+import { Stepper } from "@/components/Stepper/Stepper";
 
-const formSchema = z.object({
-  departureCity: z.string(),
-  arrivalCity: z.string({
-    required_error: "Name is required",
-    invalid_type_error: "Name must be a string",
-  }),
-  departureDate: z.date(),
-  price: z.number(),
-  passengers: z.number(),
-});
+const formSchema = z
+  .object({
+    departureCity: z.string().min(1, "La ville de départ est requise"),
+    arrivalCity: z
+      .string({
+        required_error: "La ville d'arrivée est requise",
+        invalid_type_error: "La ville doit être une chaîne de caractères",
+      })
+      .min(1, "La ville d'arrivée est requise"),
+    departureDate: z.date(),
+    price: z.number().min(1, "Le prix doit être supérieur à 0"),
+    passengers: z
+      .number()
+      .min(1, "Le nombre de passagers doit être au moins 1"),
+  })
+  .refine((data) => data.departureCity !== data.arrivalCity, {
+    message: "La ville de départ et d'arrivée ne peuvent pas être identiques",
+    path: ["arrivalCity"],
+  });
 
 export default function TripForm() {
+  const toast = useToast();
   const [createTrip] = useCreateTripMutation();
   const [departureHour, setDepartureHour] = useState(10);
   const [departureMinutes, setDepartureMinutes] = useState(20);
@@ -118,12 +129,48 @@ export default function TripForm() {
           departure_time: data.departureDate,
           price: data.price,
           capacity: data.passengers,
-          driverId: String(user.id)
+          driverId: String(user?.id),
         },
       },
     }).then(() => {
       setIsSubmitted(true);
     });
+  };
+
+  const handleNextStep = () => {
+    switch (currentStepIndex) {
+      case 0:
+        if (!form.getValues().arrivalCity) {
+          toast.error("Veuillez sélectionner une ville d'arrivée");
+          return;
+        }
+        break;
+      case 1:
+        if (!form.getValues().departureCity) {
+          toast.error("Veuillez sélectionner une ville de départ");
+          return;
+        }
+        if (form.getValues().departureCity === form.getValues().arrivalCity) {
+          toast.error(
+            "La ville de départ et d'arrivée ne peuvent pas être identiques"
+          );
+          return;
+        }
+        break;
+      case 4:
+        if (form.getValues().passengers <= 0) {
+          toast.error("Le nombre de passagers doit être au moins 1");
+          return;
+        }
+        break;
+      case 5:
+        if (form.getValues().price <= 0) {
+          toast.error("Le prix doit être supérieur à 0");
+          return;
+        }
+        break;
+    }
+    next();
   };
 
   return (
@@ -162,6 +209,7 @@ export default function TripForm() {
                   className="space-y-6"
                 >
                   <Button
+                    data-testid="publish-button"
                     type="submit"
                     className={`w-30 bg-accent rounded-3xl p-5 ${
                       isSubmitted ? "hidden" : ""
@@ -172,8 +220,9 @@ export default function TripForm() {
                 </form>
               ) : (
                 <Button
+                  data-testid="continue-button"
                   type="button"
-                  onClick={next}
+                  onClick={handleNextStep}
                   className="w-30 bg-accent rounded-3xl p-5"
                 >
                   Continuer

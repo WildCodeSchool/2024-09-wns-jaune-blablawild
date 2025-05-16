@@ -33,6 +33,7 @@ export default function NumberPassengers() {
             {numberPassengers}
           </p>
           <Plus
+            data-testid="plus-button"
             color="#4e598c"
             onClick={() => setNumberPassengers((prev: number) => prev + 1)}
             className="cursor-pointer"
