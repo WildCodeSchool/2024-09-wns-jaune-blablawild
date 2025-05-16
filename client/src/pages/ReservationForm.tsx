@@ -87,8 +87,6 @@ export default function ReservationForm() {
 
   type FormData = z.infer<ReturnType<typeof buildFormSchema>>;
 
-  console.log(isSubmitted);
-
   const onSubmit = async (values: FormData) => {
     try {
       await bookTrip({
