@@ -46,7 +46,6 @@ export const checkToken = async ({ req, res }: { req: Request, res: Response }) 
         }
       } catch (error: any) {
         if (error.name === "TokenExpiredError") {
-          console.log("token expiré")
           res.clearCookie("token");
           throw new GraphQLError("Le token d'authentification a expiré", {
             extensions: {
@@ -55,7 +54,6 @@ export const checkToken = async ({ req, res }: { req: Request, res: Response }) 
             }
           })
         } else if (error.name === "JsonWebTokenError") {
-          console.log("token invalide")
           res.clearCookie("token");
           throw new GraphQLError("Token invalide. L'authentification a échoué.", {
             extensions: {

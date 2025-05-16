@@ -15,7 +15,6 @@ const errorLink = onError(({ graphQLErrors, networkError }) => {
       err.message === "Non autorisé" || 
       err.extensions?.code === "UNAUTHENTICATED"))
     ) {
-      console.log("Logout appelé, nettoyage du store");
       useUserStore.getState().logout();
       window.location.href = "/";
     }
