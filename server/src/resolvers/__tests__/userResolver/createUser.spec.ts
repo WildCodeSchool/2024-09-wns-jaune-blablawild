@@ -136,5 +136,5 @@ describe("User resolver tests", () => {
 
     expect(JSON.parse(result)).toEqual(expectedResponse);
     expect(jwt.sign).toHaveBeenCalled();
-  });
+  }); 
 });
