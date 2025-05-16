@@ -44,7 +44,7 @@ export default function UserProfilePage() {
       <section className="w-full bg-white flex flex-col items-center md:w-3/5 md:bg-white md:px-10 lg:px-24 h-full">
         <div className="sticky top-0 bg-white w-full z-10">
           <div className="hidden md:flex flex-row justify-between items-center md:w-full md:mt-10">
-            <h1 className="text-[#595959] md:text-3xl lg:text-[36px] text-left font-medium px-6 md:px-0">
+            <h1 className="text-[#595959] capitalize md:text-3xl lg:text-[36px] text-left font-medium px-6 md:px-0">
               {id === stringUserId ? "Mon profil" : `${userData.data.getUserById.firstname} ${userData.data.getUserById.lastname} `}
             </h1>
            {!editMode && id === stringUserId  &&  <Button
@@ -55,7 +55,6 @@ export default function UserProfilePage() {
               Modifier mon profil
             </Button>}
           </div>
-
           <menu className="flex w-full justify-between mt-6">
             <div
               onClick={() => setCurrentPage("profile")}

@@ -1,8 +1,8 @@
-import { useFormContext } from "react-hook-form";
-import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
 import { Circle } from "lucide-react";
+import { useFormContext } from "react-hook-form";
+import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { FormItem } from "../ui/form";
 
 export default function TripSummary() {
@@ -19,7 +19,7 @@ export default function TripSummary() {
     <section>
       <FormItem>
         <Card className="bg-background shadow-none border-none">
-          <CardHeader className="flex justify-center bg-red">
+          <CardHeader className="flex justify-center">
             <CardTitle className="text-accent text-center text-2xl mb-2 ">
               Votre trajet
             </CardTitle>
@@ -31,29 +31,30 @@ export default function TripSummary() {
                 : "Not set"}
             </p>
             <div className="space-y-3">
-
-            <div className="flex items-center gap-1 text-foreground mb-0">
-              <p className="text-xl mr-1">{format(departureDate, " hh:mm ", { locale: fr })}</p>
-              <Circle size={10} />
-              <div className="border-t border-foreground w-50"></div>
-              <Circle size={10} />
-            </div>
-            <div className="text-foreground flex justify-between">
-              <p>{departureCity}</p>
-              <p>{arrivalCity}</p>
-            </div>
-            <div className="flex gap-8">
-              <p className="text-secondary">Places disponibles</p>
-              <p className="text-xl text-foreground">{passengers}</p>
-            </div>
-            <div className="flex gap-15">
-              <p className="text-secondary">Tarif par place</p>
-              <p className="text-xl text-foreground">{price} €</p>
-            </div>
-            <div className="flex gap-31">
-              <p className="text-secondary">Total</p>
-              <p className="text-xl text-foreground">{totalPrice} €</p>
-            </div>
+              <div className="flex items-center gap-1 text-foreground mb-0">
+                <p className="text-xl mr-1">
+                  {format(departureDate, " hh:mm ", { locale: fr })}
+                </p>
+                <Circle size={10} />
+                <div className="border-t border-foreground w-50"></div>
+                <Circle size={10} />
+              </div>
+              <div className="text-foreground flex justify-between">
+                <p>{departureCity}</p>
+                <p>{arrivalCity}</p>
+              </div>
+              <div className="flex gap-8">
+                <p className="text-secondary">Places disponibles</p>
+                <p className="text-xl text-foreground">{passengers}</p>
+              </div>
+              <div className="flex gap-15">
+                <p className="text-secondary">Tarif par place</p>
+                <p className="text-xl text-foreground">{price} €</p>
+              </div>
+              <div className="flex gap-31">
+                <p className="text-secondary">Total</p>
+                <p className="text-xl text-foreground">{totalPrice} €</p>
+              </div>
             </div>
           </CardContent>
         </Card>

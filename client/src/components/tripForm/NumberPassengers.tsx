@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 // import { Button } from "../ui/button";
-import { FormItem } from "../ui/form";
-import { useFormContext } from "react-hook-form";
-import { Input } from "../ui/input";
 import { Minus, Plus } from "lucide-react";
+import { useFormContext } from "react-hook-form";
+import { FormItem } from "../ui/form";
+import { Input } from "../ui/input";
 
 export default function NumberPassengers() {
   const { register, setValue, watch } = useFormContext();
@@ -27,6 +27,7 @@ export default function NumberPassengers() {
             onClick={() =>
               setNumberPassengers((prev: number) => Math.max(0, prev - 1))
             }
+            className="cursor-pointer"
           />
           <p className="font-bold text-2xl text-foreground m-10">
             {numberPassengers}
@@ -35,6 +36,7 @@ export default function NumberPassengers() {
             data-testid="plus-button"
             color="#4e598c"
             onClick={() => setNumberPassengers((prev: number) => prev + 1)}
+            className="cursor-pointer"
           />
         </div>
         <Input type="hidden" {...register("passengers")} />

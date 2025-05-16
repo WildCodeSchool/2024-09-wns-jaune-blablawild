@@ -13,14 +13,18 @@ export function DriverInfo({
     image: driver.profile?.image || "",
   };
 
-    const navigate = useNavigate();
-  
-    const handleNavigateProfile = (id: string) => {
-      navigate(`/user/${id}`)
-    }
+  const navigate = useNavigate();
+
+  const handleNavigateProfile = (e: React.MouseEvent, id: string) => {
+    e.stopPropagation();
+    navigate(`/user/${id}`);
+  };
 
   return (
-    <div onClick={() => handleNavigateProfile(driver.id)} className="flex items-center gap-3 hover:opacity-70">
+    <div
+      onClick={(e) => handleNavigateProfile(e, driver.id)}
+      className="flex items-center gap-3 hover:opacity-70"
+    >
       <div className="relative">
         <Avatar>
           <AvatarImage src={driverInfo.image} alt={driverInfo.firstname} />

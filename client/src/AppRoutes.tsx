@@ -3,17 +3,22 @@ import Layout from "./Layout";
 import HomePage from "./pages/HomePage";
 import Page404 from "./pages/Other/Page404";
 import SearchTrip from "./pages/SearchTrip/SearchTrip";
+import Settings from "./pages/Settings/Settings";
 import SignInPage from "./pages/SignInPage";
 import SignUpPage from "./pages/SignUpPage";
+import { TripDetailsPage } from "./pages/TripDetailsPage";
 import TripForm from "./pages/TripForm";
 import UserJourneys from "./pages/UserJourneys";
 import UserProfilePage from "./pages/UserProfile/UserProfilePage";
-import Settings from "./pages/Settings/Settings";
+import ReservationForm from "./pages/ReservationForm";
 
 export default function AppRoutes() {
   const location = useLocation();
-  const routesWithFooter = ["/"];
-  const showFooter = routesWithFooter.includes(location.pathname);
+  const routesWithFooter = ["/", "/trip"];
+  const showFooter = routesWithFooter.some(
+    (route) =>
+      location.pathname === route || location.pathname.startsWith(`${route}/`)
+  );
 
   return (
     <Layout showFooter={showFooter}>
@@ -25,8 +30,10 @@ export default function AppRoutes() {
         <Route path="user/:id" element={<UserProfilePage />} />
         <Route path="tripform" element={<TripForm />} />
         <Route path="userjourneys" element={<UserJourneys />} />
-        <Route path="404" element={<Page404 />} />
         <Route path="settings" element={<Settings />} />
+        <Route path="trip/:id" element={<TripDetailsPage />} />
+        <Route path="reservation/:id" element={<ReservationForm />} />
+        <Route path="404" element={<Page404 />} />
       </Routes>
     </Layout>
   );

@@ -13,6 +13,7 @@ import {
 } from "type-graphql";
 import { User } from "../entities/user";
 import { generateToken } from "../services/UserServices";
+import { Profile } from "../entities/profile";
 
 @InputType()
 export class NewUserInput {
@@ -43,6 +44,8 @@ export class UpdatePasswordInput {
   @Field()
   confirmPassword!: string;
 }
+
+const DEFAULT_PROFILE_IMAGE = "/placeholder-portrait.png";
 
 @Resolver(User)
 export class UserResolver {
@@ -77,6 +80,13 @@ export class UserResolver {
 
       const hashedPassword = await argon.hash(userData.password);
       user.password = hashedPassword;
+
+      const profile = new Profile();
+      profile.user = user;
+      profile.image = DEFAULT_PROFILE_IMAGE;
+      await profile.save();
+
+      user.profile = profile;
 
       await user.save();
 

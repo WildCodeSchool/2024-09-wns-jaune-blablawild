@@ -1,0 +1,25 @@
+query GetTripById($tripId: String!) {
+  getTripById(tripId: $tripId) {
+    id
+    departure_city
+    arrival_city
+    departure_time
+    price
+    capacity
+    status
+    passengers {
+      firstname
+      id
+      profile {
+        image
+      }
+    }
+    driver {
+      profile {
+        image
+      }
+      firstname
+      id
+    }
+  }
+}

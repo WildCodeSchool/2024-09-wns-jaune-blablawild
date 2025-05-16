@@ -2,7 +2,6 @@ import { cn } from "@/lib/utils";
 import { useFormContext } from "react-hook-form";
 import { FormControl, FormItem } from "../ui/form";
 import { Input } from "../ui/input";
-
 export default function Destination() {
   const { register } = useFormContext();
 
@@ -13,7 +12,9 @@ export default function Destination() {
         <FormControl>
           <Input
             data-testid="destination-input"
-            className={cn("rounded-3xl border-primary border-2 mt-10 w-xs")}
+            className={cn(
+              "rounded-3xl border-primary border-2 mt-10 w-xs hover:border-accent"
+            )}
             {...register("arrivalCity")}
           />
         </FormControl>
