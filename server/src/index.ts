@@ -1,43 +1,54 @@
 import "reflect-metadata";
+import express from "express";
 import { ApolloServer } from "@apollo/server";
-import { startStandaloneServer } from "@apollo/server/standalone";
 import { buildSchema } from "type-graphql";
 import { dataSource } from "./config/db";
-import * as jwt from "jsonwebtoken";
 import { TripResolver } from "./resolvers/tripResolver";
 import { UserResolver } from "./resolvers/userResolver";
 import { ReviewResolver } from "./resolvers/reviewsResolver";
 import { ProfileResolver } from "./resolvers/userProfileResolver";
+import { expressMiddleware } from "@apollo/server/express4";
+import { createServer } from "http";
+import { checkToken } from "./services/UserServices";
 
 async function StartGraphQLServer() {
   await dataSource.initialize();
+
   const schema = await buildSchema({
     resolvers: [TripResolver, UserResolver, ReviewResolver, ProfileResolver],
     authChecker: ({ context }) => {
-      if (context.user) return true;
-      return false;
+      if (!context.user) return false;
+      return true;
     },
   });
 
-  const server = new ApolloServer({ schema });
-  const { url } = await startStandaloneServer(server, {
-    listen: { port: 4100 },
-    context: async ({ req, res }) => {
-      if (!process.env.JWT_SECRET) return { res };
-      const token = req.headers.cookie?.split("token=")[1];
+  const app = express();
+  const httpServer = createServer(app)
 
-      if (!token) return { res };
+  const options = {
+    context: checkToken
+  }; 
 
-      const tokenContent = jwt.verify(token, process.env.JWT_SECRET);
+  const server = new ApolloServer({ 
+    schema
+   });
 
-      return {
-        res,
-        user: tokenContent,
-      };
-    },
-  });
+  await server.start()
 
-  console.log(`🚀  Server ready at: ${url}`);
+  app.use(
+    "/",
+    express.json(),
+    expressMiddleware(server, options)
+  )
+
+  // Démarrer le serveur HTTP
+  httpServer.listen(4100, () => {
+    console.log(`🚀 Server ready at http://localhost:4100/`);
+  })
 }
-
-StartGraphQLServer();
+          
+  StartGraphQLServer().catch(err => {
+    console.error('Error starting server:', err);
+    process.exit(1);
+  });
+          

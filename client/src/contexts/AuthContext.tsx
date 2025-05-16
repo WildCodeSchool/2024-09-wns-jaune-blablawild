@@ -16,7 +16,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const isPublicRoute = publicRoutes.some(
     (route) =>
-      location.pathname === route || location.pathname.startsWith(`${route}?`)
+      location.pathname === route || 
+      location.pathname.startsWith(`${route}?`)
   );
 
   if (!isAuthenticated && !isPublicRoute) {
