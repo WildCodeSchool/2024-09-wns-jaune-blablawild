@@ -18,7 +18,9 @@ export const useUserStore = create<UserState>()(
       isAuthenticated: false,
       setUser: (user, token = null) =>
         set({ user, token, isAuthenticated: !!user }),
-      logout: () => set({ user: null, token: null, isAuthenticated: false }),
+      logout: () => {
+        set({ user: null, token: null, isAuthenticated: false })    
+      },
     }),
     {
       name: "user-storage",
