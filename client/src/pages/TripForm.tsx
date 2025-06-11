@@ -239,7 +239,7 @@ export default function TripForm() {
       
       <div className="flex-1 md:block hidden">
         {shouldShowMap ? (
-          <DisplayMap height="100%" />
+          <DisplayMap />
         ) : (
           <img
             src={VanImage}
