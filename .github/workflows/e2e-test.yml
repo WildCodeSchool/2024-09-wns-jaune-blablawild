@@ -49,10 +49,11 @@ jobs:
 
       - name: Install Playwright Browsers
         run: |
-          npx playwright install --with-deps
+          npx playwright install
 
       - name: Run E2E tests
         run: |
+          cd e2e
           npm run test
 
       - name: Stop and clean up Docker containers
