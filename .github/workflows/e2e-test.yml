@@ -22,17 +22,17 @@ jobs:
 
       - name: Set environment variables
         run: |
-           echo "DB_PASSWORD=${{ secrets.DB_PASSWORD_TEST }}" >> $GITHUB_ENV
-           echo "DB_SCHEMA=${{ secrets.DB_SCHEMA_TEST }}" >> $GITHUB_ENV
-           echo "DB_USER=${{ secrets.DB_USER_TEST }}" >> $GITHUB_ENV
-           echo "DB_HOST=${{ secrets.DB_HOST_TEST }}" >> $GITHUB_ENV
-           echo "APP_SECRET=${{ secrets.APP_SECRET }}" >> $GITHUB_ENV
-           echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> $GITHUB_ENV
-           echo "GATEWAY_PORT=7100" >> $GITHUB_ENV
-           echo "SERVER_HOST=${{ secrets.SERVER_HOST }}" >> $GITHUB_ENV
-           echo "CLIENT_HOST=${{ secrets.CLIENT_HOST }}" >> $GITHUB_ENV
-           echo "USER_EMAIL=${{ secrets.USER_EMAIL }}" >> $GITHUB_ENV
-           echo "USER_PASSWORD=${{ secrets.USER_PASSWORD }}" >> $GITHUB_ENV
+          echo "DB_PASSWORD=${{ secrets.DB_PASSWORD_TEST }}" >> $GITHUB_ENV
+          echo "DB_SCHEMA=${{ secrets.DB_SCHEMA_TEST }}" >> $GITHUB_ENV
+          echo "DB_USER=${{ secrets.DB_USER_TEST }}" >> $GITHUB_ENV
+          echo "DB_HOST=${{ secrets.DB_HOST_TEST }}" >> $GITHUB_ENV
+          echo "APP_SECRET=${{ secrets.APP_SECRET }}" >> $GITHUB_ENV
+          echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> $GITHUB_ENV
+          echo "GATEWAY_PORT=7100" >> $GITHUB_ENV
+          echo "SERVER_HOST=${{ secrets.SERVER_HOST }}" >> $GITHUB_ENV
+          echo "CLIENT_HOST=${{ secrets.CLIENT_HOST }}" >> $GITHUB_ENV
+          echo "USER_EMAIL=${{ secrets.USER_EMAIL }}" >> $GITHUB_ENV
+          echo "USER_PASSWORD=${{ secrets.USER_PASSWORD }}" >> $GITHUB_ENV
 
       - name: Build and run Docker Compose
         run: |
@@ -42,16 +42,18 @@ jobs:
         run: |
           docker exec driveup-test-server npm run seed:test
 
-      - name: Run E2E tests
+      - name: Install Node dependencies
         run: |
           cd e2e
           npm install
-          npm run test
-      
+
       - name: Install Playwright Browsers
         run: |
-          cd e2e
           npx playwright install --with-deps
+
+      - name: Run E2E tests
+        run: |
+          npm run test
 
       - name: Stop and clean up Docker containers
         if: always()
