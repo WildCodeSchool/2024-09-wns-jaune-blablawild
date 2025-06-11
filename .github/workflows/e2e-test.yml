@@ -42,16 +42,16 @@ jobs:
         run: |
           docker exec driveup-test-server npm run seed:test
 
-      - name: Install Playwright Browsers
-        run: |
-          cd e2e
-          npx playwright install
-
       - name: Run E2E tests
         run: |
           cd e2e
           npm install
           npm run test
+      
+      - name: Install Playwright Browsers
+        run: |
+          cd e2e
+          npx playwright install --with-deps
 
       - name: Stop and clean up Docker containers
         if: always()
