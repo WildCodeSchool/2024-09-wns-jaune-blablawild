@@ -42,6 +42,11 @@ jobs:
         run: |
           docker exec driveup-test-server npm run seed:test
 
+      - name: Install Node dependencies
+        run: |
+          cd e2e
+          npm install
+
       - name: Install Playwright Browsers
         run: |
           cd e2e
@@ -50,7 +55,6 @@ jobs:
       - name: Run E2E tests
         run: |
           cd e2e
-          npm install
           npm run test
 
       - name: Stop and clean up Docker containers
