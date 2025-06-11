@@ -32,6 +32,14 @@ export class Transaction extends BaseEntity {
   @Column()
   method!: string;
 
+  @Field({ nullable: true })
+  @Column({ nullable: true, unique: true })
+  stripe_session_id?: string;
+
+  @Field({ nullable: true })
+  @Column({ nullable: true })
+  stripe_payment_intent_id?: string;
+
   @Field(() => Trip)
   @ManyToOne(() => Trip, (trip) => trip.transactions)
   trip!: Trip;
@@ -43,4 +51,20 @@ export class Transaction extends BaseEntity {
   @Field(() => User)
   @ManyToOne(() => User, (user) => user.transaction_sent)
   sender!: User;
+
+  // Méthodes utilitaires
+  @Field()
+  get isCompleted(): boolean {
+    return this.status === "completed";
+  }
+
+  @Field()
+  get isPending(): boolean {
+    return this.status === "pending";
+  }
+
+  @Field()
+  get isFailed(): boolean {
+    return this.status === "failed";
+  }
 }
