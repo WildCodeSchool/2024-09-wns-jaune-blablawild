@@ -19,6 +19,7 @@ import { useMultiStepsForm } from "../hooks/useMultiStepsForm";
 import { useUserStore } from "@/store/useUserStore";
 import { useToast } from "@/contexts/ToasterContext";
 import { Stepper } from "@/components/Stepper/Stepper";
+import { DisplayMap } from "@/components/InteractiveMap";
 
 const formSchema = z
   .object({
@@ -48,6 +49,7 @@ export default function TripForm() {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [maxVisitedStep, setMaxVisitedStep] = useState(0);
   const { user } = useUserStore();
+  
   const steps = [
     {
       id: "destination",
@@ -173,6 +175,8 @@ export default function TripForm() {
     next();
   };
 
+  const shouldShowMap = currentStepIndex === 0 || currentStepIndex === 1;
+
   return (
     <section className="flex gap-2 justify-center h-full bg-pr">
       <div className="flex-1 flex flex-col p-6">
@@ -232,12 +236,17 @@ export default function TripForm() {
           </Form>
         </div>
       </div>
+      
       <div className="flex-1 md:block hidden">
-        <img
-          src={VanImage}
-          alt="car image"
-          className="object-cover h-full object-[65%_center]"
-        />
+        {shouldShowMap ? (
+          <DisplayMap height="100%" />
+        ) : (
+          <img
+            src={VanImage}
+            alt="car image"
+            className="object-cover h-full object-[65%_center]"
+          />
+        )}
       </div>
     </section>
   );
