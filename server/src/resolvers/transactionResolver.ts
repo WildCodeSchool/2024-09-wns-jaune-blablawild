@@ -83,8 +83,6 @@ export class TransactionResolver {
                 )
             }
             
-
-
             const transaction = new Transaction();
             transaction.status = "pending";
             transaction.createdAt = new Date();
