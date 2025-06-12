@@ -107,6 +107,9 @@ export default function SearchTrip() {
   }, [location.search]);
 
   const allTrips = dataTrip?.getTrip || [];
+
+  console.log("all", allTrips);
+  
     
   const displayNoTrips = () => {
     return (
@@ -119,7 +122,7 @@ export default function SearchTrip() {
   };
 
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex flex-col min-h-screen bg-white ">
       <section className="relative w-full h-[55vh] flex justify-center items-center">
         <img
           src="/searchTripImg.png"
