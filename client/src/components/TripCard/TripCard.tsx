@@ -12,13 +12,20 @@ import {
 } from "./_utils/utils";
 import { useNavigate } from "react-router-dom";
 import clsx from "clsx";
+import { Trip } from "@/graphql/hooks";
 
 export default function TripCard({
   trips,
   mode = "search",
 }: Readonly<TripCardProps>) {
   const navigate = useNavigate();
-  
+
+  const handleNavigateTrip = (trip: Trip) => {
+    if (trip.capacity > 0) {
+      navigate(`/trip/${trip.id}`);
+    }
+  };
+
   return (
     <section className="w-full px-2 py-4 md:p-8">
       <div className="space-y-4">
@@ -28,8 +35,8 @@ export default function TripCard({
           return (
             <article
               key={trip.id}
-              onClick={() => navigate(`/trip/${trip.id}`)}
-              className="relative flex md:h-[232px] bg-background rounded-xl border-solid border-[#E5E5E5] border-1 overflow-hidden hover:shadow-lg transition-shadow duration-150 hover:cursor-pointer hover:ring-1 hover:ring-primary xl:max-w-[1000px]"
+              onClick={() => handleNavigateTrip(trip)}
+              className={`${trip.capacity > 0 ? "hover:shadow-base hover:cursor-pointer hover:ring-1 hover:ring-primary" : ""} relative flex md:h-[232px] bg-background rounded-xl border-solid border-[#E5E5E5] border-1 overflow-hidden  transition-shadow duration-150  xl:max-w-[1000px]`}
             >
               {trip.capacity === 0 && (
                 <div className="absolute inset-0  z-10 bg-background/65" />
