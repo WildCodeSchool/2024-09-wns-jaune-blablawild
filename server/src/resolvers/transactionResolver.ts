@@ -29,7 +29,10 @@ export class TransactionResolver {
                 metadata = {}
             } = input;
 
-            const trip = await Trip.findOne({ where: { id: tripId }});
+            const trip = await Trip.findOne({ 
+                where: { id: tripId },
+                relations: { passengers: true, driver: true }
+            });
             if (!trip) {
                 throw new GraphQLError("Trajet non trouvé", {
                     extensions: {
@@ -38,6 +41,7 @@ export class TransactionResolver {
                     }
                 });
             }
+            console.log(trip?.passengers)
 
             const receiver = await User.findOne({ where: {id: receiverId}})
             if (!receiver) {
@@ -58,6 +62,28 @@ export class TransactionResolver {
                     }
                 });
             }
+
+            if (!(trip.passengers?.some(passenger => passenger.id === senderId))) {
+                throw new GraphQLError("L'expéditeur n'a pas participé au trajet",
+                    {extensions: {
+                        code: "SENDER_NOT_PARTICIPANT",
+                        field: "senderId",
+                        tripId: tripId
+                    }}
+                )
+            }
+
+            if (trip.driver.id !== receiverId) {
+                throw new GraphQLError("Le destinataire n'est pas le conducteur du trajet",
+                    {extensions: {
+                        code: "RECEIVER_NOT_DRIVER",
+                        field: "receiverId",
+                        tripId: tripId
+                    }}
+                )
+            }
+            
+
 
             const transaction = new Transaction();
             transaction.status = "pending";
