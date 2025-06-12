@@ -61,20 +61,4 @@ services:
     networks:
       - test
 
-  driveup-test-e2e:
-    container_name: driveup-test-e2e
-    build:
-      context: ./e2e
-      dockerfile: Dockerfile
-    networks:
-      - test
-    environment:
-      BASE_URL: http://driveup-test-gateway
-      CI: "true"
-      USER_EMAIL: ${USER_EMAIL}
-      USER_PASSWORD: ${USER_PASSWORD}
-    depends_on:
-      driveup-test-database:
-        condition: service_healthy
-
 

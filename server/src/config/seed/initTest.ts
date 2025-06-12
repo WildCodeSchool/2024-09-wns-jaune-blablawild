@@ -9,9 +9,6 @@ const seedDatabase = async () => {
   setDataSource(dataSource);
 
   try {
-    // clear existing data
-    await dataSource.getRepository(User).delete({});
-
     // create users
     const user = new User();
     const hashedPassword = await argon.hash("UserTest2025!");
