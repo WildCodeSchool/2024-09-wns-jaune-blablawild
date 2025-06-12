@@ -3,6 +3,7 @@ import {
   BaseEntity,
   Column,
   Entity,
+  Index,
   ManyToOne,
   PrimaryGeneratedColumn,
 } from "typeorm";
@@ -11,6 +12,7 @@ import { User } from "./user";
 
 @ObjectType()
 @Entity()
+@Index(["stripe_session_id"], { unique: true })
 export class Transaction extends BaseEntity {
   @Field(() => ID)
   @PrimaryGeneratedColumn()
@@ -22,7 +24,7 @@ export class Transaction extends BaseEntity {
 
   @Field()
   @Column()
-  created_at!: Date;
+  createdAt!: Date;
 
   @Field()
   @Column()
