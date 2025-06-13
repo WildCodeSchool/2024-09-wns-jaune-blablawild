@@ -35,6 +35,18 @@ const formSchema = z
     passengers: z
       .number()
       .min(1, "Le nombre de passagers doit être au moins 1"),
+    departureCoordinates: z
+      .object({
+        lat: z.number(),
+        lng: z.number(),
+      })
+      .optional(),
+    arrivalCoordinates: z
+      .object({
+        lat: z.number(),
+        lng: z.number(),
+      })
+      .optional(),
   })
   .refine((data) => data.departureCity !== data.arrivalCity, {
     message: "La ville de départ et d'arrivée ne peuvent pas être identiques",
@@ -49,7 +61,7 @@ export default function TripForm() {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [maxVisitedStep, setMaxVisitedStep] = useState(0);
   const { user } = useUserStore();
-  
+
   const steps = [
     {
       id: "destination",
@@ -199,9 +211,8 @@ export default function TripForm() {
                 <Button
                   type="button"
                   onClick={back}
-                  className={`w-30 text-accent bg-transparent rounded-3xl p-5 ${
-                    isSubmitted ? "hidden" : ""
-                  }`}
+                  className={`w-30 text-accent bg-transparent rounded-3xl p-5 ${isSubmitted ? "hidden" : ""
+                    }`}
                   variant="outline"
                 >
                   Précédent
@@ -215,9 +226,8 @@ export default function TripForm() {
                   <Button
                     data-testid="publish-button"
                     type="submit"
-                    className={`w-30 bg-accent rounded-3xl p-5 ${
-                      isSubmitted ? "hidden" : ""
-                    }`}
+                    className={`w-30 bg-accent rounded-3xl p-5 ${isSubmitted ? "hidden" : ""
+                      }`}
                   >
                     Publier
                   </Button>
@@ -236,10 +246,13 @@ export default function TripForm() {
           </Form>
         </div>
       </div>
-      
+
       <div className="flex-1 md:block hidden">
         {shouldShowMap ? (
-          <DisplayMap/>
+          <DisplayMap
+            departureCoordinates={form.watch("departureCoordinates")}
+            arrivalCoordinates={form.watch("arrivalCoordinates")}
+          />
         ) : (
           <img
             src={VanImage}
