@@ -7,8 +7,17 @@ import { GraphQLError } from 'graphql';
 import { Transaction } from '../entities/transaction';
 import Stripe from 'stripe';
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!)
 const port = process.env.GATEWAY_PORT
+
+const getStripe = () => {
+  const apiKey = process.env.STRIPE_SECRET_KEY;
+  
+  if (!apiKey) {
+    throw new Error('STRIPE_SECRET_KEY manquante dans les variables d\'environnement');
+  }
+  
+  return new Stripe(apiKey);
+};
 
 @Resolver()
 export class TransactionResolver {
@@ -18,6 +27,8 @@ export class TransactionResolver {
         @Ctx() context: any 
     ): Promise<CheckoutSession> {
         try {
+            const stripe = getStripe()
+
             const {
                 price,
                 currency,
@@ -28,6 +39,10 @@ export class TransactionResolver {
                 customerEmail,
                 metadata = {}
             } = input;
+
+            if (!process.env.STRIPE_SECRET_KEY) throw new GraphQLError("Pas de clé Stripe spécifiée", {
+                    extensions: { code: "STRIPE_KEY_NOT_FOUND"  }
+                });
 
             const trip = await Trip.findOne({ 
                 where: { id: tripId },
@@ -41,7 +56,6 @@ export class TransactionResolver {
                     }
                 });
             }
-            console.log(trip?.passengers)
 
             const receiver = await User.findOne({ where: {id: receiverId}})
             if (!receiver) {
