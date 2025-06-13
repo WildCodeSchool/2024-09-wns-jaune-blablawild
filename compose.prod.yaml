@@ -18,6 +18,8 @@ services:
       DB_HOST: ${DB_HOST}
       APP_SECRET: ${APP_SECRET}
       JWT_SECRET: ${JWT_SECRET}
+      STRIPE_SECRET_KEY: ${STRIPE_SECRET_KEY}
+      GATEWAY_PORT: ${GATEWAY_PORT}
     depends_on:
       driveup-prod-database :
         condition: service_healthy
