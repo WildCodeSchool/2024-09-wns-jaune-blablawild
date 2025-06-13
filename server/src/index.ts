@@ -10,12 +10,13 @@ import { ProfileResolver } from "./resolvers/userProfileResolver";
 import { expressMiddleware } from "@apollo/server/express4";
 import { createServer } from "http";
 import { checkToken } from "./services/UserServices";
+import { TransactionResolver } from "./resolvers/transactionResolver";
 
 async function StartGraphQLServer() {
   await dataSource.initialize();
 
   const schema = await buildSchema({
-    resolvers: [TripResolver, UserResolver, ReviewResolver, ProfileResolver],
+    resolvers: [TripResolver, UserResolver, ReviewResolver, ProfileResolver, TransactionResolver],
     authChecker: ({ context }) => {
       if (!context.user) return false;
       return true;

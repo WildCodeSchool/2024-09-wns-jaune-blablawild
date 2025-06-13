@@ -3,6 +3,7 @@ import {
   BaseEntity,
   Column,
   Entity,
+  Index,
   ManyToOne,
   PrimaryGeneratedColumn,
 } from "typeorm";
@@ -11,6 +12,7 @@ import { User } from "./user";
 
 @ObjectType()
 @Entity()
+@Index(["stripe_session_id"], { unique: true })
 export class Transaction extends BaseEntity {
   @Field(() => ID)
   @PrimaryGeneratedColumn()
@@ -22,7 +24,7 @@ export class Transaction extends BaseEntity {
 
   @Field()
   @Column()
-  created_at!: Date;
+  createdAt!: Date;
 
   @Field()
   @Column()
@@ -31,6 +33,14 @@ export class Transaction extends BaseEntity {
   @Field()
   @Column()
   method!: string;
+
+  @Field({ nullable: true })
+  @Column({ nullable: true, unique: true })
+  stripe_session_id?: string;
+
+  @Field({ nullable: true })
+  @Column({ nullable: true })
+  stripe_payment_intent_id?: string;
 
   @Field(() => Trip)
   @ManyToOne(() => Trip, (trip) => trip.transactions)
@@ -43,4 +53,20 @@ export class Transaction extends BaseEntity {
   @Field(() => User)
   @ManyToOne(() => User, (user) => user.transaction_sent)
   sender!: User;
+
+  // Méthodes utilitaires
+  @Field()
+  get isCompleted(): boolean {
+    return this.status === "completed";
+  }
+
+  @Field()
+  get isPending(): boolean {
+    return this.status === "pending";
+  }
+
+  @Field()
+  get isFailed(): boolean {
+    return this.status === "failed";
+  }
 }

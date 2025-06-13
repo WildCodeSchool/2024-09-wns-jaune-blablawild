@@ -33,6 +33,7 @@ jobs:
           echo "CLIENT_HOST=${{ secrets.CLIENT_HOST }}" >> $GITHUB_ENV
           echo "USER_EMAIL=${{ secrets.USER_EMAIL }}" >> $GITHUB_ENV
           echo "USER_PASSWORD=${{ secrets.USER_PASSWORD }}" >> $GITHUB_ENV
+          echo "STRIPE_SECRET_KEY=${{ secrets.STRIPE_SECRET_KEY }}" >> $GITHUB_ENV
 
       - name: Build and run Docker Compose
         run: |
