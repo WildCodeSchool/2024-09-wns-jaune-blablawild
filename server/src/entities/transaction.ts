@@ -2,6 +2,7 @@ import { Field, ID, ObjectType } from "type-graphql";
 import {
   BaseEntity,
   Column,
+  CreateDateColumn,
   Entity,
   Index,
   ManyToOne,
@@ -22,9 +23,9 @@ export class Transaction extends BaseEntity {
   @Column()
   status!: string;
 
-  @Field()
-  @Column()
-  createdAt!: Date;
+@Field()
+@CreateDateColumn({ nullable: true })
+createdAt!: Date;
 
   @Field()
   @Column()

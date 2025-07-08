@@ -17,33 +17,37 @@ import { FilterSideBarWrapper } from "@/components/FilterSideBar/FilterSideBarWr
 export default function SearchTrip() {
   const location = useLocation();
   const params = getUrlParams();
-  
+
   const [searchParams, setSearchParams] = useState(params);
-  
+
   const startDate = startOfDay(new Date(searchParams.date));
   const endDate = endOfDay(new Date(searchParams.date));
   const [currentSort, setCurrentSort] = useState<string | null>("earliest");
   const [currentTimeRange, setCurrentTimeRange] = useState<TimeOption[]>([]);
   const [filterData, setFilterData] = useState<FilterTripInput>({
-    arrival: searchParams.arrival.trim(),
-    departure: searchParams.departure.trim(),
+    arrival: (searchParams.arrival || "").trim(),
+    departure: (searchParams.departure || "").trim(),
     passengers: Number(searchParams.passengers),
     startDate,
     endDate,
     sortBy: SortOption.Time,
   });
 
-  const { data: dataTrip, loading: loadingTrip, refetch } = useGetTripQuery({
+  const {
+    data: dataTrip,
+    loading: loadingTrip,
+    refetch,
+  } = useGetTripQuery({
     variables: { data: filterData },
   });
 
   const handleSortChange = (sort: string | null): void => {
     setCurrentSort(sort);
-    
+
     const newData = {
-      ...filterData
+      ...filterData,
     };
-    
+
     if (sort === "cheapest") {
       newData.sortBy = SortOption.Price;
     } else if (sort === "earliest") {
@@ -51,66 +55,63 @@ export default function SearchTrip() {
     } else {
       newData.sortBy = undefined;
     }
-    
+
     setFilterData(newData);
   };
-  
+
   const handleTimeRangeChange = (timeRange: TimeOption[]): void => {
     setCurrentTimeRange(timeRange);
-    
+
     const newData = {
-      ...filterData
+      ...filterData,
     };
-    
+
     if (timeRange === null) {
       newData.timeOptions = undefined;
     } else {
       newData.timeOptions = timeRange;
     }
-    
+
     setFilterData(newData);
   };
-  
+
   const handleReinstateFilter = () => {
     setCurrentSort(null);
     setCurrentTimeRange([]);
     const newData = {
       ...filterData,
       sortBy: undefined,
-      timeOption: undefined
+      timeOption: undefined,
     };
-    
+
     setFilterData(newData);
-    
+
     refetch({
-      data: newData
+      data: newData,
     });
-  }
+  };
 
   useEffect(() => {
     const newParams = getUrlParams();
     setSearchParams(newParams);
-    
+
     const newStartDate = startOfDay(new Date(newParams.date));
     const newEndDate = endOfDay(new Date(newParams.date));
-    
+
     const newData = {
       ...filterData,
-      arrival: newParams.arrival.trim(),
-      departure: newParams.departure.trim(),
+     arrival: (newParams.arrival || "").trim(),
+      departure: (newParams.departure || "").trim(),
       passengers: Number(newParams.passengers),
       startDate: newStartDate,
       endDate: newEndDate,
     };
-    
+
     setFilterData(newData);
   }, [location.search]);
 
   const allTrips = dataTrip?.getTrip || [];
 
-  console.log("all", allTrips);
-  
-    
   const displayNoTrips = () => {
     return (
       <section className="p-10 min-h-[500px] flex items-center justify-center">

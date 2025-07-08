@@ -5,7 +5,7 @@ networks:
 services:
   driveup-dev-server:
     container_name: driveup-dev-server
-    build: 
+    build:
       context: ./server
       dockerfile: Dockerfile.dev
     volumes:
@@ -20,16 +20,16 @@ services:
       STRIPE_SECRET_KEY: ${STRIPE_SECRET_KEY}
       GATEWAY_PORT: ${GATEWAY_PORT}
     depends_on:
-      driveup-dev-database :
+      driveup-dev-database:
         condition: service_healthy
     networks:
       - development
 
   driveup-dev-client:
     container_name: driveup-dev-client
-    build: 
+    build:
       context: ./client
-      dockerfile: Dockerfile.dev 
+      dockerfile: Dockerfile.dev
     volumes:
       - ./client/src/:/app/src/
     environment:
@@ -37,6 +37,7 @@ services:
       VITE_SERVER_HOST: ${SERVER_HOST}
       VITE_CLIENT_HOST: ${CLIENT_HOST}
       VITE_STADIA_MAP_API_KEY: ${STADIA_MAP_API_KEY}
+      VITE_UNSPLASH_ACCESS_KEY: ${VITE_UNSPLASH_ACCESS_KEY}
     depends_on:
       - driveup-dev-server
     networks:
@@ -65,11 +66,11 @@ services:
     networks:
       - development
 
-  driveup-dev-gateway: 
+  driveup-dev-gateway:
     container_name: driveup-dev-gateway
     image: nginx
     restart: always
-    ports: 
+    ports:
       - ${GATEWAY_PORT}:80
     volumes:
       - ./nginx.dev.conf:/etc/nginx/nginx.conf

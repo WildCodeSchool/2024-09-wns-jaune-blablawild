@@ -32,6 +32,8 @@ export default function UserJourneys() {
   const tabs = ["À VENIR", "PASSÉS", "PUBLIÉS"];
 
   useEffect(() => {
+
+    if ( activeTab === "PUBLIÉS") return setShowReviewModal(false);
     if (!data?.getTripByUser) return;
     const trips = data.getTripByUser;
     const now = new Date();

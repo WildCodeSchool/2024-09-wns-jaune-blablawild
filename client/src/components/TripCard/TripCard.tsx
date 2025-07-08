@@ -8,17 +8,34 @@ import {
   calculateArrivalTime,
   calculateTripDuration,
   formatHourFromTime,
-  getImageUrl,
 } from "./_utils/utils";
 import { useNavigate } from "react-router-dom";
 import clsx from "clsx";
 import { Trip } from "@/graphql/hooks";
+import { useState, useEffect } from "react";
+import { getUnsplashImage } from "@/utils/UnsplashService";
 
 export default function TripCard({
   trips,
   mode = "search",
 }: Readonly<TripCardProps>) {
   const navigate = useNavigate();
+  const [cityImages, setCityImages] = useState<Record<string, string>>({});
+  
+  useEffect(() => {
+    const loadImages = async () => {
+      const images = await Promise.all(
+        trips.map(async trip => [
+          trip.arrival_city,
+          await getUnsplashImage(trip.arrival_city)
+        ])
+      );
+      
+      setCityImages(Object.fromEntries(images));
+    };
+
+    loadImages();
+  }, [trips]);
 
   const handleNavigateTrip = (trip: Trip) => {
     if (trip.capacity > 0) {
@@ -36,7 +53,11 @@ export default function TripCard({
             <article
               key={trip.id}
               onClick={() => handleNavigateTrip(trip)}
-              className={`${trip.capacity > 0 ? "hover:shadow-base hover:cursor-pointer hover:ring-1 hover:ring-primary" : ""} relative flex md:h-[232px] bg-background rounded-xl border-solid border-[#E5E5E5] border-1 overflow-hidden  transition-shadow duration-150  xl:max-w-[1000px]`}
+              className={`${
+                trip.capacity > 0
+                  ? "hover:shadow-base hover:cursor-pointer hover:ring-1 hover:ring-primary"
+                  : ""
+              } relative flex md:h-[232px] bg-background rounded-xl border-solid border-[#E5E5E5] border-1 overflow-hidden  transition-shadow duration-150  xl:max-w-[1000px]`}
             >
               {trip.capacity === 0 && (
                 <div className="absolute inset-0  z-10 bg-background/65" />
@@ -103,7 +124,7 @@ export default function TripCard({
               </div>
               <div className="w-1/3 relative flex items-center justify-center">
                 <img
-                  src={getImageUrl(trip.arrival_city)}
+                  src={cityImages[trip.arrival_city] || "/images/cities/default.jpg"}
                   alt={trip.arrival_city}
                   className={clsx(
                     "absolute inset-0 w-full h-full object-cover transition-all duration-300",
