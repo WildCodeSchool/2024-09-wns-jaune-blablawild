@@ -128,7 +128,7 @@ export const ReviewDialog = ({
 
   return (
     <Dialog open={open}>
-      <DialogContent className="bg-white w-[496px] h-[374px] p-6 max-w-md mx-auto rounded-lg">
+      <DialogContent className="bg-white w-[496px] min-h-[374px] p-6 max-w-md mx-auto rounded-lg">
         <div className="flex justify-between items-start">
           <h2 className="text-2xl font-medium text-black">
             Laissez un avis à {trip?.driver?.firstname} !

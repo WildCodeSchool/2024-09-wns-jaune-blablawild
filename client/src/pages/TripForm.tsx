@@ -51,13 +51,32 @@ const formSchema = z
   .refine((data) => data.departureCity !== data.arrivalCity, {
     message: "La ville de départ et d'arrivée ne peuvent pas être identiques",
     path: ["arrivalCity"],
+  })
+  .refine((data) => {
+    const now = new Date();
+    return data.departureDate > now;
+  }, {
+    message: "La date et l'heure de départ doivent être dans le futur",
+    path: ["departureDate"],
   });
-
+  
 export default function TripForm() {
   const toast = useToast();
   const [createTrip] = useCreateTripMutation();
-  const [departureHour, setDepartureHour] = useState(10);
-  const [departureMinutes, setDepartureMinutes] = useState(20);
+  
+  const [departureHour, setDepartureHour] = useState(() => {
+    const now = new Date();
+    const futureTime = new Date(now.getTime() + 30 * 60000);
+    return futureTime.getHours();
+  });
+  
+  const [departureMinutes, setDepartureMinutes] = useState(() => {
+    const now = new Date();
+    const futureTime = new Date(now.getTime() + 30 * 60000);
+    const minutes = futureTime.getMinutes();
+    return Math.ceil(minutes / 5) * 5;
+  });
+  
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [maxVisitedStep, setMaxVisitedStep] = useState(0);
   const { user } = useUserStore();
@@ -168,6 +187,17 @@ export default function TripForm() {
           toast.error(
             "La ville de départ et d'arrivée ne peuvent pas être identiques"
           );
+          return;
+        }
+        break;
+      case 3:
+        const selectedDate = new Date(form.getValues().departureDate);
+        const now = new Date();
+        const selectedDateTime = new Date(selectedDate);
+        selectedDateTime.setHours(departureHour, departureMinutes, 0, 0);
+        
+        if (selectedDateTime <= now) {
+          toast.error("L'heure de départ doit être dans le futur");
           return;
         }
         break;
