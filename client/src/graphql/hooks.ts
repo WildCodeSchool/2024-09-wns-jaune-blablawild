@@ -56,8 +56,10 @@ export type CreateCheckoutSessionInput = {
 };
 
 export type CreateTripInput = {
+  arrival_address: Scalars['String']['input'];
   arrival_city: Scalars['String']['input'];
   capacity: Scalars['Float']['input'];
+  departure_address: Scalars['String']['input'];
   departure_city: Scalars['String']['input'];
   departure_time: Scalars['DateTimeISO']['input'];
   driverId?: InputMaybe<Scalars['String']['input']>;
@@ -279,8 +281,10 @@ export type Transaction = {
 
 export type Trip = {
   __typename?: 'Trip';
+  arrival_address?: Maybe<Scalars['String']['output']>;
   arrival_city: Scalars['String']['output'];
   capacity: Scalars['Float']['output'];
+  departure_address?: Maybe<Scalars['String']['output']>;
   departure_city: Scalars['String']['output'];
   departure_time: Scalars['DateTimeISO']['output'];
   driver?: Maybe<User>;

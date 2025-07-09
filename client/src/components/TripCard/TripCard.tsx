@@ -1,5 +1,5 @@
 import { formatDate } from "@/utils/FormatDate";
-import { ArrowBigRight, CarIcon } from "lucide-react";
+import { Circle, CarIcon } from "lucide-react";
 import { DriverInfo } from "./_components/DriverInfo";
 import { PassengersList } from "./_components/PassengersList";
 import { PriceOverlay } from "./_components/PriceOverlay";
@@ -72,33 +72,37 @@ export default function TripCard({
                     <div className="text-lg font-medium text-gray-900">
                       {formatHourFromTime(trip.departure_time)}
                     </div>
-                    <div className="text-lg font-medium text-gray-900 max-w-[100px] truncate md:max-w-none block md:hidden">
+                    <div className="text-lg  capitalize font-medium text-gray-900 max-w-[100px] truncate md:max-w-none block md:hidden">
                       {trip.departure_city.length > 5
                         ? `${trip.departure_city.slice(0, 5)}…`
                         : trip.departure_city}
                     </div>
-                    <div className="text-base text-gray-600 hidden md:block">
+                    <div className="text-base  capitalize text-gray-600 hidden md:block">
                       {trip.departure_city}
                     </div>
                   </div>
 
-                  <div className="flex items-center flex-col px-2">
+                  <div className="flex items-center flex-col flex-1 px-2">
                     <div className="text-sm text-gray-500 mb-1">
                       {calculateTripDuration(trip.departure_time, arrivalTime)}
                     </div>
-                    <ArrowBigRight className="w-6 h-6 text-gray-500" />
+                    <div className="flex items-center w-full">
+                      <Circle size={10} className="text-gray-500 flex-shrink-0" />
+                      <div className="border-t border-gray-500 flex-1 mx-1"></div>
+                      <Circle size={10} className="text-gray-500 flex-shrink-0" />
+                    </div>
                   </div>
 
                   <div className="flex-1 text-right">
                     <div className="text-lg font-medium text-gray-900">
                       {formatHourFromTime(arrivalTime)}
                     </div>
-                    <div className="text-lg font-medium text-gray-900 max-w-[100px] truncate md:max-w-none block md:hidden">
+                    <div className="text-lg font-medium capitalize text-gray-900 max-w-[100px] truncate md:max-w-none block md:hidden">
                       {trip.arrival_city.length > 5
                         ? `${trip.arrival_city.slice(0, 5)}…`
                         : trip.arrival_city}
                     </div>
-                    <div className="text-base text-gray-600 hidden md:block">
+                    <div className="text-base text-gray-600 capitalize hidden md:block">
                       {trip.arrival_city}
                     </div>
                   </div>

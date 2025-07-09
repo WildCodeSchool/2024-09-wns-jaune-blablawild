@@ -6,10 +6,12 @@ import { TripDetailsDriver } from "@/components/TripDetailsDriver";
 import { TripDetailsPassenger } from "@/components/TripDetailsPassenger";
 import TripDetailsSummary from "@/components/TripDetailsSummary";
 import { Button } from "@/components/ui/button";
+import { useUserStore } from "@/store/useUserStore";
 
 export const TripDetailsPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { user } = useUserStore();
 
   const { data, loading, error } = useGetTripByIdQuery({
     variables: { tripId: id || "" },
@@ -24,6 +26,10 @@ export const TripDetailsPage = () => {
   const handleClick = () => {
     navigate(`/reservation/${id}`);
   };
+
+  console.log(trip?.driver?.id);
+  
+  console.log(user?.id);
 
   return (
     <div className="pt-6 md:pt-10 pb-6 md:pb-10 bg-white px-4 md:px-30 flex flex-col items-center">
@@ -85,12 +91,12 @@ export const TripDetailsPage = () => {
               driverImage={trip?.driver?.profile?.image || undefined}
               driverId={trip?.driver?.id || ""}
             />
-            <Button
+           {trip?.driver?.id !== user?.id.toString() && <Button
               className="mt-4 bg-accent h-[50px] rounded-full"
               onClick={handleClick}
             >
               Réserver
-            </Button>
+            </Button>}
           </div>
         </section>
       </div>
