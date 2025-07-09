@@ -132,9 +132,9 @@ export class TripResolver {
     trips.forEach((trip, index) => {
       if (trip.reviews && trip.reviews.length > 0) {
         trip.reviews.forEach((review, rIndex) => {
-          console.log(`    Review #${rIndex + 1}:`);
-          console.log(`      Has sender: ${review.sender ? "Yes" : "NO"}`);
-          console.log(`      Has receiver: ${review.receiver ? "Yes" : "NO"}`);
+          console.log(`Review #${rIndex + 1}:`);
+          console.log(`Has sender: ${review.sender ? "Yes" : "NO"}`);
+          console.log(`Has receiver: ${review.receiver ? "Yes" : "NO"}`);
         });
       }
     });
