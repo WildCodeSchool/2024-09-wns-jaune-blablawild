@@ -5,7 +5,9 @@ export class CreateTripInputFactory extends BaseFactory<CreateTripInput> {
   protected defineEntity(): CreateTripInput {
     return {
       departure_city: this.faker.location.city(),
+      departure_address: this.faker.location.streetAddress(),
       arrival_city: this.faker.location.city(),
+      arrival_address: this.faker.location.streetAddress(),
       departure_time: this.faker.date.future(),
       price: this.faker.number.int({ min: 5, max: 100 }),
       capacity: this.faker.number.int({ min: 1, max: 5 }),

@@ -16,6 +16,7 @@ export type Scalars = {
   Int: { input: number; output: number; }
   Float: { input: number; output: number; }
   DateTimeISO: { input: any; output: any; }
+  JSON: { input: any; output: any; }
   Upload: { input: any; output: any; }
 };
 
@@ -30,9 +31,35 @@ export type CancelTripBookingInput = {
   userId: Scalars['String']['input'];
 };
 
+export type CheckoutSession = {
+  __typename?: 'CheckoutSession';
+  expiresAt: Scalars['Float']['output'];
+  message?: Maybe<Scalars['String']['output']>;
+  sessionId: Scalars['ID']['output'];
+  success: Scalars['Boolean']['output'];
+  transactionId?: Maybe<Scalars['ID']['output']>;
+  url: Scalars['String']['output'];
+};
+
+export type CreateCheckoutSessionInput = {
+  allowPromotionCodes?: Scalars['Boolean']['input'];
+  cancelUrl?: InputMaybe<Scalars['String']['input']>;
+  currency?: Scalars['String']['input'];
+  customerEmail?: InputMaybe<Scalars['String']['input']>;
+  metadata?: InputMaybe<Scalars['JSON']['input']>;
+  method?: Scalars['String']['input'];
+  price: Scalars['Float']['input'];
+  receiverId: Scalars['ID']['input'];
+  senderId: Scalars['ID']['input'];
+  successUrl?: InputMaybe<Scalars['String']['input']>;
+  tripId: Scalars['ID']['input'];
+};
+
 export type CreateTripInput = {
+  arrival_address: Scalars['String']['input'];
   arrival_city: Scalars['String']['input'];
   capacity: Scalars['Float']['input'];
+  departure_address: Scalars['String']['input'];
   departure_city: Scalars['String']['input'];
   departure_time: Scalars['DateTimeISO']['input'];
   driverId?: InputMaybe<Scalars['String']['input']>;
@@ -58,6 +85,7 @@ export type Mutation = {
   __typename?: 'Mutation';
   bookTrip: Scalars['String']['output'];
   cancelTripBooking: Scalars['String']['output'];
+  createCheckoutSession: CheckoutSession;
   createTrip: Scalars['String']['output'];
   leaveReview: Scalars['String']['output'];
   login: Scalars['String']['output'];
@@ -75,6 +103,11 @@ export type MutationBookTripArgs = {
 
 export type MutationCancelTripBookingArgs = {
   data: CancelTripBookingInput;
+};
+
+
+export type MutationCreateCheckoutSessionArgs = {
+  input: CreateCheckoutSessionInput;
 };
 
 
@@ -141,6 +174,7 @@ export type Query = {
   getPopularTrip: Array<Trip>;
   getProfile: Profile;
   getReviewsByUser: Array<Review>;
+  getTransactionBySessionId?: Maybe<Transaction>;
   getTrip: Array<Trip>;
   getTripById: Trip;
   getTripByUser: Array<Trip>;
@@ -156,6 +190,11 @@ export type QueryGetProfileArgs = {
 
 export type QueryGetReviewsByUserArgs = {
   userId: Scalars['String']['input'];
+};
+
+
+export type QueryGetTransactionBySessionIdArgs = {
+  sessionId: Scalars['String']['input'];
 };
 
 
@@ -218,20 +257,27 @@ export enum TimeOption {
 
 export type Transaction = {
   __typename?: 'Transaction';
-  created_at: Scalars['DateTimeISO']['output'];
+  createdAt: Scalars['DateTimeISO']['output'];
   id: Scalars['ID']['output'];
+  isCompleted: Scalars['Boolean']['output'];
+  isFailed: Scalars['Boolean']['output'];
+  isPending: Scalars['Boolean']['output'];
   method: Scalars['String']['output'];
   price: Scalars['Float']['output'];
   receiver: User;
   sender: User;
   status: Scalars['String']['output'];
+  stripe_payment_intent_id?: Maybe<Scalars['String']['output']>;
+  stripe_session_id?: Maybe<Scalars['String']['output']>;
   trip: Trip;
 };
 
 export type Trip = {
   __typename?: 'Trip';
+  arrival_address?: Maybe<Scalars['String']['output']>;
   arrival_city: Scalars['String']['output'];
   capacity: Scalars['Float']['output'];
+  departure_address?: Maybe<Scalars['String']['output']>;
   departure_city: Scalars['String']['output'];
   departure_time: Scalars['DateTimeISO']['output'];
   driver?: Maybe<User>;

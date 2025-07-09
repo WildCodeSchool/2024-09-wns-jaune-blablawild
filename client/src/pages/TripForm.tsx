@@ -20,6 +20,7 @@ import { useUserStore } from "@/store/useUserStore";
 import { useToast } from "@/contexts/ToasterContext";
 import { Stepper } from "@/components/Stepper/Stepper";
 import { DisplayMap } from "@/components/InteractiveMap";
+import { extractCityFromAddress } from "@/utils/ExtractCity";
 
 const formSchema = z
   .object({
@@ -30,6 +31,8 @@ const formSchema = z
         invalid_type_error: "La ville doit être une chaîne de caractères",
       })
       .min(1, "La ville d'arrivée est requise"),
+    departureAddress: z.string().optional(),
+    arrivalAddress: z.string().optional(),
     departureDate: z.date(),
     price: z.number().min(1, "Le prix doit être supérieur à 0"),
     passengers: z
@@ -59,24 +62,24 @@ const formSchema = z
     message: "La date et l'heure de départ doivent être dans le futur",
     path: ["departureDate"],
   });
-  
+
 export default function TripForm() {
   const toast = useToast();
   const [createTrip] = useCreateTripMutation();
-  
+
   const [departureHour, setDepartureHour] = useState(() => {
     const now = new Date();
     const futureTime = new Date(now.getTime() + 30 * 60000);
     return futureTime.getHours();
   });
-  
+
   const [departureMinutes, setDepartureMinutes] = useState(() => {
     const now = new Date();
     const futureTime = new Date(now.getTime() + 30 * 60000);
     const minutes = futureTime.getMinutes();
     return Math.ceil(minutes / 5) * 5;
   });
-  
+
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [maxVisitedStep, setMaxVisitedStep] = useState(0);
   const { user } = useUserStore();
@@ -134,6 +137,8 @@ export default function TripForm() {
     defaultValues: {
       departureCity: "",
       arrivalCity: "",
+      departureAddress: "",
+      arrivalAddress: "",
       departureDate: new Date(),
       price: 0,
       passengers: 0,
@@ -154,11 +159,19 @@ export default function TripForm() {
   }, [currentStepIndex, maxVisitedStep]);
 
   const onSubmit = (data: z.infer<typeof formSchema>) => {
+    const departureAddress = data.departureCity;
+    const arrivalAddress = data.arrivalCity;
+
+    const departureCity = extractCityFromAddress(departureAddress)
+    const arrivalCity = extractCityFromAddress(arrivalAddress)
+
     createTrip({
       variables: {
         data: {
-          departure_city: data.departureCity,
-          arrival_city: data.arrivalCity,
+          departure_city: departureCity,
+          departure_address: departureAddress,
+          arrival_city: arrivalCity,
+          arrival_address: arrivalAddress,
           departure_time: data.departureDate,
           price: data.price,
           capacity: data.passengers,
@@ -195,7 +208,7 @@ export default function TripForm() {
         const now = new Date();
         const selectedDateTime = new Date(selectedDate);
         selectedDateTime.setHours(departureHour, departureMinutes, 0, 0);
-        
+
         if (selectedDateTime <= now) {
           toast.error("L'heure de départ doit être dans le futur");
           return;

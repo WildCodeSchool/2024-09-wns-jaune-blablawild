@@ -50,7 +50,13 @@ export class CreateTripInput {
   departure_city!: string;
 
   @Field()
+  departure_address!: string;
+
+  @Field()
   arrival_city!: string;
+
+  @Field()
+  arrival_address!: string;
 
   @Field()
   departure_time!: Date;

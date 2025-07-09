@@ -25,9 +25,17 @@ export class Trip extends BaseEntity {
   @Column()
   departure_city!: string;
 
+  @Field({ nullable: true })
+  @Column({ nullable: true })
+  departure_address!: string; 
+
   @Field()
   @Column()
   arrival_city!: string;
+
+  @Field({ nullable: true })
+  @Column({ nullable: true })
+  arrival_address!: string; 
 
   @Field()
   @Column()
