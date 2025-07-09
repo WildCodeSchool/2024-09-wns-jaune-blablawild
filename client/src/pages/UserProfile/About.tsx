@@ -53,7 +53,7 @@ export default function About({ user }: Props) {
       <Separator className="bg-[#949393]" />
 
       <div className="flex flex-col items-center gap-6 md:gap-8 w-full md:items-start text-black lg:w-10/12">
-        <p>Taux d'annulation : {cancelationRate?.getCancelationRate}</p>
+        {cancelationRate && <p>Taux d'annulation : {cancelationRate?.getCancelationRate}</p>}
         <p>Délai de réponse rapide</p>
         <p>Excellents avis</p>
       </div>
