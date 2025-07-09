@@ -4,6 +4,8 @@ import { User } from "../entities/user";
 import path from "path";
 import { createReadStream, createWriteStream, existsSync, mkdirSync } from "fs";
 import { GraphQLUpload } from "graphql-upload-ts";
+import { Trip } from "../entities/trip";
+import { TripStatus } from "../type/tripType";
 
 interface FileUpload {
   filename: string;
@@ -118,12 +120,13 @@ export class ProfileResolver {
     return user.profile;
   }
 
-  @Mutation(() => CancelationRate)
+  @Query(() => String)
   async getCancelationRate(
     @Arg("userId") userId: string,
-  ): Promise<CancelationRate> {
+  ): Promise<String> {
     const user = await User.findOne({
-      where: { id: userId }
+      where: { id: userId },
+      relations: ['profile']
     });
 
     if (!user) {
@@ -134,8 +137,31 @@ export class ProfileResolver {
       throw new Error("Profil utilisateur non trouvé");
     }
 
+    //récupérer le total des trajets dont l'utilisateur proposés par l'utilisateur & qui sont passés
+    const passedTrips = await Trip.createQueryBuilder('trip')
+      .where('trip.driver = :userId', {userId})
+      .andWhere('trip.status = :status', { status: TripStatus.CLOSE})
+      .getCount()
 
-    await user.profile.save();
-    return user.profile;
+    const passedTripsAsPassenger = await Trip.createQueryBuilder('trip')
+      .innerJoin('trip.passengers', 'passenger')
+      .where('passenger.id = :userId', { userId })
+      .andWhere('trip.status = :status', { status: TripStatus.CLOSE})
+      .getCount()
+
+    const totalTrips = passedTrips + passedTripsAsPassenger
+
+    //renvoyer une string en fonction du total ou du calcul du pourcentage
+    if (totalTrips === 0) 
+      return "Cet utilisateur n'a pas encore effectué de trajet"
+
+    if (!user.profile.cancelledTrips || user.profile.cancelledTrips === 0)
+      return "Aucune annulation !"
+
+    const cancellationRate = (user.profile.cancelledTrips / totalTrips) * 100;
+
+    if (cancellationRate <= 25) return "Taux faible";
+    if (cancellationRate <= 50) return "Taux moyen";
+    return "Taux élevé";
   }
 }

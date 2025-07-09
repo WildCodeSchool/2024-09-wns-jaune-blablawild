@@ -31,10 +31,6 @@ export class Profile extends BaseEntity {
 
   @Field({nullable: true})
   @Column({nullable: true, default: 0})
-  totalTrips?: number;
-
-  @Field({nullable: true})
-  @Column({nullable: true, default: 0})
   cancelledTrips?: number;
 
   @Field(() => User, { nullable: true })
