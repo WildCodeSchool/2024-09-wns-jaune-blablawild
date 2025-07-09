@@ -26,8 +26,19 @@ export default function CarrouselTrip() {
 
   const images = displayPictureCity();
 
+  const extractCityName = (address: string) => {
+    const cityMatch = address.match(/\d{5}\s+(.+)$/);
+    if (cityMatch) {
+      return cityMatch[1].trim();
+    }
+    return address;
+  };
+
   if (loading) return <p>Loading ...</p>;
   if (error) return <p>Error: {error.message}</p>;
+
+  console.log("data", data);
+  
 
   const handleClick = (trip: TripPopular) => {
     const params = new URLSearchParams(location.search);
@@ -67,8 +78,8 @@ export default function CarrouselTrip() {
               className={getCarouselItemClass(data.getPopularTrip.length)}
             >
               <div className="p-1">
-                <Card className="w-full relative">
-                  <CardContent className="relative flex flex-col md:h-[33rem] h-[25rem] items-center justify-end p-6 gap-8 overflow-hidden rounded-[15px]">
+                <Card className="w-full relative aspect-[3/4]">
+                  <CardContent className="relative flex flex-col h-full items-center justify-end p-6 gap-8 overflow-hidden rounded-[15px]">
                     <img
                       src={images[index % images.length]}
                       alt="cities-pictures"
@@ -76,7 +87,7 @@ export default function CarrouselTrip() {
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
                     <p className="relative z-10 flex justify-start md:text-3xl text-2xl font-semibold text-white w-full">
-                      {`${trip.departure_city} → ${trip.arrival_city}`}
+                      {`${extractCityName(trip.departure_city)} → ${extractCityName(trip.arrival_city)}`}
                     </p>
 
                     <div className="relative z-10 flex justify-between w-full">

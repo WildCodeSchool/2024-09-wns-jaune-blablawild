@@ -89,12 +89,12 @@ export default function UserJourneys() {
     tripsToReview && tripsToReview.length > 0 ? tripsToReview[0] : null;
 
   return (
-    <section className="flex min-h-screen">
-      <div className="w-[15%] hidden lg:block">
+    <section className="flex h-[calc(100vh-3rem)]">
+      <div className="w-[15%] hidden lg:block fixed left-0 h-[calc(100vh-3rem)]">
         <img src={van_image} alt="van" className="h-full w-full object-cover" />
       </div>
 
-      <div className="w-full lg:w-[70%] bg-white md:p-8 overflow-y-auto">
+      <div className="w-full lg:w-[70%] lg:ml-[15%] lg:mr-[15%] bg-white md:p-8 overflow-y-auto">
         <ReviewDialog
           isOpen={showReviewModal}
           onClose={handleCloseReviewModal}
@@ -129,7 +129,8 @@ export default function UserJourneys() {
           </div>
         )}
       </div>
-      <div className="w-[15%] hidden lg:block">
+      
+      <div className="w-[15%] hidden lg:block fixed right-0 h-[calc(100vh-3rem)]">
         <img
           src={van_image}
           alt="van"
