@@ -83,27 +83,4 @@ describe("cancelTrip",  () => {
     expect(fullTrip.status).toBe(TripStatus.OPEN);
     expect(fullTrip.save).toHaveBeenCalled();
   });
-
-  it("devrait incrémenter le total des annulations de l'utilisateur de 1", async () => {
-    const fullTrip = {
-      ...mockTrip,
-      status: TripStatus.FULL,
-      capacity: 1,
-      passengers: [mockUser],
-      save: jest.fn().mockResolvedValue(true),
-    };
-
-    (Trip.findOne as jest.Mock).mockResolvedValue(fullTrip);
-    (User.findOneBy as jest.Mock).mockResolvedValue(mockUser);
-
-    const cancelData: CancelTripBookingInput = {
-      tripId: fullTrip.id!,
-      userId: mockUser.id!,
-    };
-
-    await tripResolver.cancelTripBooking(cancelData);
-
-    expect(fullTrip.status).toBe(TripStatus.OPEN);
-    expect(fullTrip.save).toHaveBeenCalled();
-  });
 });
