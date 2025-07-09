@@ -1,0 +1,3 @@
+query GetCancelationRate($userId: String!) {
+  getCancelationRate(userId: $userId)
+}

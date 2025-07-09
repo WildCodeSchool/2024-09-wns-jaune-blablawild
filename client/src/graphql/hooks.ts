@@ -16,6 +16,7 @@ export type Scalars = {
   Int: { input: number; output: number; }
   Float: { input: number; output: number; }
   DateTimeISO: { input: any; output: any; }
+  JSON: { input: any; output: any; }
   Upload: { input: any; output: any; }
 };
 
@@ -28,6 +29,30 @@ export type BookTripInput = {
 export type CancelTripBookingInput = {
   tripId: Scalars['String']['input'];
   userId: Scalars['String']['input'];
+};
+
+export type CheckoutSession = {
+  __typename?: 'CheckoutSession';
+  expiresAt: Scalars['Float']['output'];
+  message?: Maybe<Scalars['String']['output']>;
+  sessionId: Scalars['ID']['output'];
+  success: Scalars['Boolean']['output'];
+  transactionId?: Maybe<Scalars['ID']['output']>;
+  url: Scalars['String']['output'];
+};
+
+export type CreateCheckoutSessionInput = {
+  allowPromotionCodes?: Scalars['Boolean']['input'];
+  cancelUrl?: InputMaybe<Scalars['String']['input']>;
+  currency?: Scalars['String']['input'];
+  customerEmail?: InputMaybe<Scalars['String']['input']>;
+  metadata?: InputMaybe<Scalars['JSON']['input']>;
+  method?: Scalars['String']['input'];
+  price: Scalars['Float']['input'];
+  receiverId: Scalars['ID']['input'];
+  senderId: Scalars['ID']['input'];
+  successUrl?: InputMaybe<Scalars['String']['input']>;
+  tripId: Scalars['ID']['input'];
 };
 
 export type CreateTripInput = {
@@ -58,6 +83,7 @@ export type Mutation = {
   __typename?: 'Mutation';
   bookTrip: Scalars['String']['output'];
   cancelTripBooking: Scalars['String']['output'];
+  createCheckoutSession: CheckoutSession;
   createTrip: Scalars['String']['output'];
   leaveReview: Scalars['String']['output'];
   login: Scalars['String']['output'];
@@ -75,6 +101,11 @@ export type MutationBookTripArgs = {
 
 export type MutationCancelTripBookingArgs = {
   data: CancelTripBookingInput;
+};
+
+
+export type MutationCreateCheckoutSessionArgs = {
+  input: CreateCheckoutSessionInput;
 };
 
 
@@ -123,6 +154,7 @@ export type NewUserInput = {
 
 export type Profile = {
   __typename?: 'Profile';
+  cancelledTrips?: Maybe<Scalars['Float']['output']>;
   description?: Maybe<Scalars['String']['output']>;
   id: Scalars['ID']['output'];
   image?: Maybe<Scalars['String']['output']>;
@@ -138,14 +170,21 @@ export type ProfileInput = {
 
 export type Query = {
   __typename?: 'Query';
+  getCancelationRate: Scalars['String']['output'];
   getPopularTrip: Array<Trip>;
   getProfile: Profile;
   getReviewsByUser: Array<Review>;
+  getTransactionBySessionId?: Maybe<Transaction>;
   getTrip: Array<Trip>;
   getTripById: Trip;
   getTripByUser: Array<Trip>;
   getUserById: User;
   getUsers: Array<User>;
+};
+
+
+export type QueryGetCancelationRateArgs = {
+  userId: Scalars['String']['input'];
 };
 
 
@@ -156,6 +195,11 @@ export type QueryGetProfileArgs = {
 
 export type QueryGetReviewsByUserArgs = {
   userId: Scalars['String']['input'];
+};
+
+
+export type QueryGetTransactionBySessionIdArgs = {
+  sessionId: Scalars['String']['input'];
 };
 
 
@@ -218,13 +262,18 @@ export enum TimeOption {
 
 export type Transaction = {
   __typename?: 'Transaction';
-  created_at: Scalars['DateTimeISO']['output'];
+  createdAt: Scalars['DateTimeISO']['output'];
   id: Scalars['ID']['output'];
+  isCompleted: Scalars['Boolean']['output'];
+  isFailed: Scalars['Boolean']['output'];
+  isPending: Scalars['Boolean']['output'];
   method: Scalars['String']['output'];
   price: Scalars['Float']['output'];
   receiver: User;
   sender: User;
   status: Scalars['String']['output'];
+  stripe_payment_intent_id?: Maybe<Scalars['String']['output']>;
+  stripe_session_id?: Maybe<Scalars['String']['output']>;
   trip: Trip;
 };
 
@@ -371,6 +420,13 @@ export type GetUserByIdQueryVariables = Exact<{
 
 
 export type GetUserByIdQuery = { __typename?: 'Query', getUserById: { __typename?: 'User', email: string, firstname: string, id: string, lastname: string, profile?: { __typename?: 'Profile', image?: string | null } | null } };
+
+export type GetCancelationRateQueryVariables = Exact<{
+  userId: Scalars['String']['input'];
+}>;
+
+
+export type GetCancelationRateQuery = { __typename?: 'Query', getCancelationRate: string };
 
 
 export const CreateTripDocument = gql`
@@ -970,3 +1026,41 @@ export type GetUserByIdQueryHookResult = ReturnType<typeof useGetUserByIdQuery>;
 export type GetUserByIdLazyQueryHookResult = ReturnType<typeof useGetUserByIdLazyQuery>;
 export type GetUserByIdSuspenseQueryHookResult = ReturnType<typeof useGetUserByIdSuspenseQuery>;
 export type GetUserByIdQueryResult = Apollo.QueryResult<GetUserByIdQuery, GetUserByIdQueryVariables>;
+export const GetCancelationRateDocument = gql`
+    query GetCancelationRate($userId: String!) {
+  getCancelationRate(userId: $userId)
+}
+    `;
+
+/**
+ * __useGetCancelationRateQuery__
+ *
+ * To run a query within a React component, call `useGetCancelationRateQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetCancelationRateQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetCancelationRateQuery({
+ *   variables: {
+ *      userId: // value for 'userId'
+ *   },
+ * });
+ */
+export function useGetCancelationRateQuery(baseOptions: Apollo.QueryHookOptions<GetCancelationRateQuery, GetCancelationRateQueryVariables> & ({ variables: GetCancelationRateQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetCancelationRateQuery, GetCancelationRateQueryVariables>(GetCancelationRateDocument, options);
+      }
+export function useGetCancelationRateLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetCancelationRateQuery, GetCancelationRateQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetCancelationRateQuery, GetCancelationRateQueryVariables>(GetCancelationRateDocument, options);
+        }
+export function useGetCancelationRateSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetCancelationRateQuery, GetCancelationRateQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetCancelationRateQuery, GetCancelationRateQueryVariables>(GetCancelationRateDocument, options);
+        }
+export type GetCancelationRateQueryHookResult = ReturnType<typeof useGetCancelationRateQuery>;
+export type GetCancelationRateLazyQueryHookResult = ReturnType<typeof useGetCancelationRateLazyQuery>;
+export type GetCancelationRateSuspenseQueryHookResult = ReturnType<typeof useGetCancelationRateSuspenseQuery>;
+export type GetCancelationRateQueryResult = Apollo.QueryResult<GetCancelationRateQuery, GetCancelationRateQueryVariables>;
