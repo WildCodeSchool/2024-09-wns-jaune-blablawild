@@ -117,4 +117,25 @@ export class ProfileResolver {
     await user.profile.save();
     return user.profile;
   }
+
+  @Mutation(() => CancelationRate)
+  async getCancelationRate(
+    @Arg("userId") userId: string,
+  ): Promise<CancelationRate> {
+    const user = await User.findOne({
+      where: { id: userId }
+    });
+
+    if (!user) {
+      throw new Error("Utilisateur non trouvé");
+    }
+
+    if (!user.profile) {
+      throw new Error("Profil utilisateur non trouvé");
+    }
+
+
+    await user.profile.save();
+    return user.profile;
+  }
 }

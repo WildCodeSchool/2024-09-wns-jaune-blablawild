@@ -260,9 +260,16 @@ export class TripResolver {
         throw new Error("Ce trajet n'a pas de passagers");
       }
 
-      const user = await User.findOneBy({ id: data.userId });
+      const user = await User.findOne({
+        where: { id: data.userId },
+        relations: ["profile"],
+      });
       if (!user) {
         throw new Error("L'utilisateur n'existe pas");
+      }
+
+      if (!user.profile) {
+        throw new Error("L'utilisateur n'a pas de profil");
       }
 
       const isPassenger = trip.passengers.some(
@@ -281,6 +288,9 @@ export class TripResolver {
       }
 
       await trip.save();
+
+      user.profile.cancelledTrips = user.profile.cancelledTrips ? user.profile.cancelledTrips += 1 : 1
+      await user.save()
 
       return "Votre réservation a bien été annulée";
     } catch (error) {
