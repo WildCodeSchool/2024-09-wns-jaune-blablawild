@@ -5,13 +5,17 @@ import { TripLine } from "../ui/tripLine";
 interface TripDetailsSummaryProps {
   departureTime: string;
   departureCity: string;
+  departureAddress: string;
   arrivalCity: string;
+  arrivalAddress: string;
 }
 
 export default function ReservationSummary({
   departureTime,
   departureCity,
+  departureAddress,
   arrivalCity,
+  arrivalAddress,
 }: TripDetailsSummaryProps) {
   return (
     <section className="flex flex-col items-center gap-6 my-6">
@@ -22,11 +26,9 @@ export default function ReservationSummary({
         <TripLine
           departureTime={departureTime || ""}
           departureCity={departureCity || ""}
-          departureAddress="91 rue de charenton"
-          arrivalTime={"2023-05-14T19:20:00Z"}
+          departureAddress={departureAddress || ""}
           arrivalCity={arrivalCity || ""}
-          arrivalAddress="10 rue du bon"
-          tripDuration="7h20"
+          arrivalAddress={arrivalAddress || ""}
         />
       </div>
       <FormItem>

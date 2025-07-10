@@ -3,18 +3,17 @@ import { formatDate } from "@/utils/FormatDate";
 import { Car, ChevronRight } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { TripLine } from "./ui/tripLine";
+import { useGetReviewsByUserQuery } from "@/graphql/hooks";
+import { calculateAverageRating } from "@/utils/AverageRating";
 
 interface TripDetailsSummaryProps {
   date: string;
   departureTime: string;
   departureCity: string;
   departureAddress: string;
-  arrivalTime: string;
   arrivalCity: string;
   arrivalAddress: string;
-  tripDuration: string;
   driverName: string;
-  driverRating: number;
   driverImage?: string;
   driverId: string;
 }
@@ -24,16 +23,21 @@ export const TripDetailsSummary: React.FC<TripDetailsSummaryProps> = ({
   departureTime,
   departureCity,
   departureAddress,
-  arrivalTime,
   arrivalCity,
   arrivalAddress,
   driverId,
-  tripDuration,
   driverName,
-  driverRating,
   driverImage,
 }) => {
   const navigate = useNavigate();
+
+  const { data: reviewsData } = useGetReviewsByUserQuery({
+    variables: { userId: driverId },
+    skip: !driverId
+  });
+
+  const reviews = reviewsData?.getReviewsByUser || [];
+  const averageRating = calculateAverageRating(reviews);
 
   const handleNavigateProfile = (id: string) => {
     navigate(`/user/${id}`);
@@ -52,10 +56,8 @@ export const TripDetailsSummary: React.FC<TripDetailsSummaryProps> = ({
           departureTime={departureTime}
           departureCity={departureCity}
           departureAddress={departureAddress}
-          arrivalTime={arrivalTime}
           arrivalCity={arrivalCity}
           arrivalAddress={arrivalAddress}
-          tripDuration={tripDuration}
         />
       </div>
 
@@ -70,14 +72,21 @@ export const TripDetailsSummary: React.FC<TripDetailsSummaryProps> = ({
             alt={`${driverName}`}
             className="w-6 h-6 md:w-8 md:h-8 mr-1 self-center rounded-full"
           />
-
+          
           <div>
             <span className="capitalize text-black text-sm md:text-base font-medium">
               {driverName}
             </span>
             <div className="flex items-center">
-              <span className="text-secondary text-xs mr-1">★</span>
-              <span className="text-xs text-gray-600">{driverRating}</span>
+              {averageRating !== null && (
+                <>
+                  <span className="text-secondary text-xs mr-1">★</span>
+                  <span className="text-xs text-gray-600">{averageRating.toFixed(1)}</span>
+                </>
+              )}
+              {averageRating === null && (
+                <span className="text-xs text-gray-600">Pas d'avis</span>
+              )}
             </div>
           </div>
         </div>

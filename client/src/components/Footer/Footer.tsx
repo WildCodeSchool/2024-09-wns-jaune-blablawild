@@ -21,6 +21,12 @@ const Footer = () => {
 
   const currentYear = new Date().getFullYear();
 
+  const generateSearchUrl = (departure:string, arrival: string) => {
+    const today = new Date();
+    const formattedDate = today.toISOString();
+    return `/search-result?departure=${encodeURIComponent(departure)}&arrival=${encodeURIComponent(arrival)}&date=${encodeURIComponent(formattedDate)}`;
+  };
+
   return (
     <footer className="flex flex-col md:flex-row md:flex-wrap justify-between gap-8 bg-secondary text-white p-12">
       <section className="flex flex-col gap-4 md:w-[45%]">
@@ -46,7 +52,7 @@ const Footer = () => {
                 {routes.map((route) => (
                   <li key={`${route.from}-${route.to}`}>
                     <Link
-                      to="/"
+                      to={generateSearchUrl(route.from, route.to)}
                       className="hover:underline flex items-center gap-1"
                     >
                       <span>{route.from}</span>

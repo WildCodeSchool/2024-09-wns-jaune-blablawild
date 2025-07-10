@@ -51,7 +51,7 @@ export default function ReservationForm() {
       seatsCount: 1,
     },
   });
-
+  
   const formSteps: Step[] = [
     {
       id: "seat-selection",
@@ -73,6 +73,8 @@ export default function ReservationForm() {
           departureTime={trip?.departure_time || ""}
           departureCity={trip?.departure_city || ""}
           arrivalCity={trip?.arrival_city || ""}
+          arrivalAddress={trip?.arrival_address || ""}
+          departureAddress={trip?.departure_address || ""}
         />
       ),
     },

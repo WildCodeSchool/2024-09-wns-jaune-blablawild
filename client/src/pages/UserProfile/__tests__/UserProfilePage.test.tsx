@@ -46,6 +46,14 @@ vi.mock('@/graphql/hooks', () => ({
     },
     loading: false,
     error: null,
+  }),
+  // Ajoutez cette ligne pour le hook manquant
+  useGetReviewsByUserQuery: () => ({
+    data: {
+      getReviewsByUser: []
+    },
+    loading: false,
+    error: null,
   })
 }));
 

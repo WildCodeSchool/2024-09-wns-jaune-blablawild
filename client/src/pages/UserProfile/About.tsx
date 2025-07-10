@@ -1,7 +1,8 @@
 import { Separator } from "@/components/ui/separator";
-import { Profile, useGetCancelationRateQuery, useGetProfileQuery } from "@/graphql/hooks";
+import { Profile, useGetCancelationRateQuery, useGetProfileQuery, useGetReviewsByUserQuery } from "@/graphql/hooks";
 import { useParams } from "react-router-dom";
 import { Check, Mail, Phone } from "lucide-react";
+import { calculateAverageRating } from "@/utils/AverageRating";
 
 type Props = {
   user: {
@@ -21,7 +22,19 @@ export default function About({ user }: Props) {
     variables: { userId: id || "" },
   });
 
-    const { data: cancelationRate } = useGetCancelationRateQuery({ variables: { userId: id || ""}})
+  const { data: cancelationRate } = useGetCancelationRateQuery({ 
+    variables: { userId: id || "" }
+  });
+
+  const { data: reviewsData } = useGetReviewsByUserQuery({
+    variables: { userId: user.id! },
+    skip: !user.id
+  });
+
+  // Calculer le nombre d'avis et la moyenne
+  const reviews = reviewsData?.getReviewsByUser || [];
+  const reviewsCount = reviews.length;
+  const averageRating = calculateAverageRating(reviews);
 
   return (
     <section className="flex flex-col justify-center items-center gap-8 mt-6 pb-12 w-full">
@@ -44,8 +57,8 @@ export default function About({ user }: Props) {
             <p data-testid="user-email">{user.email}</p>
           </div>
           <div className="flex items-center">
-          <Check size={16} className="mr-2" />
-          <p>Profil verifié</p>
+            <Check size={16} className="mr-2" />
+            <p>Profil verifié</p>
           </div>
         </div>
       </div>
@@ -55,7 +68,13 @@ export default function About({ user }: Props) {
       <div className="flex flex-col items-center gap-6 md:gap-8 w-full md:items-start text-black lg:w-10/12">
         {cancelationRate && <p>Taux d'annulation : {cancelationRate?.getCancelationRate}</p>}
         <p>Délai de réponse rapide</p>
-        <p>Excellents avis</p>
+        <p>
+          {reviewsCount === 0 ? 'Aucun avis' : 
+           <span className="flex items-center">
+             <span className="text-yellow-400 mr-1">★</span>
+             {`${averageRating}/5  (${reviewsCount} avis)`}
+           </span>}
+        </p>
       </div>
 
       {data?.getProfile?.description && (
@@ -67,9 +86,6 @@ export default function About({ user }: Props) {
           </div>
         </>
       )}
-        
-
     </section>
-    
   );
 }
