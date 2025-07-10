@@ -381,7 +381,7 @@ export type GetTripByIdQueryVariables = Exact<{
 }>;
 
 
-export type GetTripByIdQuery = { __typename?: 'Query', getTripById: { __typename?: 'Trip', id: string, departure_city: string, arrival_city: string, departure_time: any, price: number, capacity: number, status: TripStatus, passengers?: Array<{ __typename?: 'User', firstname: string, id: string, profile?: { __typename?: 'Profile', image?: string | null } | null }> | null, driver?: { __typename?: 'User', firstname: string, id: string, profile?: { __typename?: 'Profile', image?: string | null } | null } | null } };
+export type GetTripByIdQuery = { __typename?: 'Query', getTripById: { __typename?: 'Trip', id: string, departure_city: string, arrival_city: string, departure_time: any, departure_address?: string | null, price: number, arrival_address?: string | null, capacity: number, status: TripStatus, passengers?: Array<{ __typename?: 'User', firstname: string, id: string, profile?: { __typename?: 'Profile', image?: string | null } | null }> | null, driver?: { __typename?: 'User', firstname: string, id: string, profile?: { __typename?: 'Profile', image?: string | null } | null } | null } };
 
 export type GetPopularTripQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -402,7 +402,14 @@ export type GetTripByUserQueryVariables = Exact<{
 }>;
 
 
-export type GetTripByUserQuery = { __typename?: 'Query', getTripByUser: Array<{ __typename?: 'Trip', id: string, departure_city: string, arrival_city: string, price: number, capacity: number, departure_time: any, status: TripStatus, passengers?: Array<{ __typename?: 'User', firstname: string, id: string }> | null, driver?: { __typename?: 'User', id: string, firstname: string } | null, reviews?: Array<{ __typename?: 'Review', comment: string, reviewRequested: boolean, id: string, notation: number, date: any, sender: { __typename?: 'User', firstname: string, id: string }, receiver: { __typename?: 'User', firstname: string, id: string } }> | null }> };
+export type GetTripByUserQuery = { __typename?: 'Query', getTripByUser: Array<{ __typename?: 'Trip', id: string, departure_city: string, arrival_city: string, departure_address?: string | null, arrival_address?: string | null, price: number, capacity: number, departure_time: any, status: TripStatus, passengers?: Array<{ __typename?: 'User', firstname: string, id: string }> | null, driver?: { __typename?: 'User', id: string, firstname: string } | null, reviews?: Array<{ __typename?: 'Review', comment: string, reviewRequested: boolean, id: string, notation: number, date: any, sender: { __typename?: 'User', firstname: string, id: string }, receiver: { __typename?: 'User', firstname: string, id: string } }> | null }> };
+
+export type GetCancelationRateQueryVariables = Exact<{
+  userId: Scalars['String']['input'];
+}>;
+
+
+export type GetCancelationRateQuery = { __typename?: 'Query', getCancelationRate: string };
 
 export type GetProfileQueryVariables = Exact<{
   userId: Scalars['String']['input'];
@@ -424,13 +431,6 @@ export type GetUserByIdQueryVariables = Exact<{
 
 
 export type GetUserByIdQuery = { __typename?: 'Query', getUserById: { __typename?: 'User', email: string, firstname: string, id: string, lastname: string, profile?: { __typename?: 'Profile', image?: string | null } | null } };
-
-export type GetCancelationRateQueryVariables = Exact<{
-  userId: Scalars['String']['input'];
-}>;
-
-
-export type GetCancelationRateQuery = { __typename?: 'Query', getCancelationRate: string };
 
 
 export const CreateTripDocument = gql`
@@ -662,7 +662,9 @@ export const GetTripByIdDocument = gql`
     departure_city
     arrival_city
     departure_time
+    departure_address
     price
+    arrival_address
     capacity
     status
     passengers {
@@ -818,6 +820,8 @@ export const GetTripByUserDocument = gql`
     id
     departure_city
     arrival_city
+    departure_address
+    arrival_address
     price
     passengers {
       firstname
@@ -883,6 +887,44 @@ export type GetTripByUserQueryHookResult = ReturnType<typeof useGetTripByUserQue
 export type GetTripByUserLazyQueryHookResult = ReturnType<typeof useGetTripByUserLazyQuery>;
 export type GetTripByUserSuspenseQueryHookResult = ReturnType<typeof useGetTripByUserSuspenseQuery>;
 export type GetTripByUserQueryResult = Apollo.QueryResult<GetTripByUserQuery, GetTripByUserQueryVariables>;
+export const GetCancelationRateDocument = gql`
+    query GetCancelationRate($userId: String!) {
+  getCancelationRate(userId: $userId)
+}
+    `;
+
+/**
+ * __useGetCancelationRateQuery__
+ *
+ * To run a query within a React component, call `useGetCancelationRateQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetCancelationRateQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetCancelationRateQuery({
+ *   variables: {
+ *      userId: // value for 'userId'
+ *   },
+ * });
+ */
+export function useGetCancelationRateQuery(baseOptions: Apollo.QueryHookOptions<GetCancelationRateQuery, GetCancelationRateQueryVariables> & ({ variables: GetCancelationRateQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetCancelationRateQuery, GetCancelationRateQueryVariables>(GetCancelationRateDocument, options);
+      }
+export function useGetCancelationRateLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetCancelationRateQuery, GetCancelationRateQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetCancelationRateQuery, GetCancelationRateQueryVariables>(GetCancelationRateDocument, options);
+        }
+export function useGetCancelationRateSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetCancelationRateQuery, GetCancelationRateQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetCancelationRateQuery, GetCancelationRateQueryVariables>(GetCancelationRateDocument, options);
+        }
+export type GetCancelationRateQueryHookResult = ReturnType<typeof useGetCancelationRateQuery>;
+export type GetCancelationRateLazyQueryHookResult = ReturnType<typeof useGetCancelationRateLazyQuery>;
+export type GetCancelationRateSuspenseQueryHookResult = ReturnType<typeof useGetCancelationRateSuspenseQuery>;
+export type GetCancelationRateQueryResult = Apollo.QueryResult<GetCancelationRateQuery, GetCancelationRateQueryVariables>;
 export const GetProfileDocument = gql`
     query GetProfile($userId: String!) {
   getProfile(userId: $userId) {
@@ -1030,41 +1072,3 @@ export type GetUserByIdQueryHookResult = ReturnType<typeof useGetUserByIdQuery>;
 export type GetUserByIdLazyQueryHookResult = ReturnType<typeof useGetUserByIdLazyQuery>;
 export type GetUserByIdSuspenseQueryHookResult = ReturnType<typeof useGetUserByIdSuspenseQuery>;
 export type GetUserByIdQueryResult = Apollo.QueryResult<GetUserByIdQuery, GetUserByIdQueryVariables>;
-export const GetCancelationRateDocument = gql`
-    query GetCancelationRate($userId: String!) {
-  getCancelationRate(userId: $userId)
-}
-    `;
-
-/**
- * __useGetCancelationRateQuery__
- *
- * To run a query within a React component, call `useGetCancelationRateQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetCancelationRateQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetCancelationRateQuery({
- *   variables: {
- *      userId: // value for 'userId'
- *   },
- * });
- */
-export function useGetCancelationRateQuery(baseOptions: Apollo.QueryHookOptions<GetCancelationRateQuery, GetCancelationRateQueryVariables> & ({ variables: GetCancelationRateQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<GetCancelationRateQuery, GetCancelationRateQueryVariables>(GetCancelationRateDocument, options);
-      }
-export function useGetCancelationRateLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetCancelationRateQuery, GetCancelationRateQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<GetCancelationRateQuery, GetCancelationRateQueryVariables>(GetCancelationRateDocument, options);
-        }
-export function useGetCancelationRateSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetCancelationRateQuery, GetCancelationRateQueryVariables>) {
-          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
-          return Apollo.useSuspenseQuery<GetCancelationRateQuery, GetCancelationRateQueryVariables>(GetCancelationRateDocument, options);
-        }
-export type GetCancelationRateQueryHookResult = ReturnType<typeof useGetCancelationRateQuery>;
-export type GetCancelationRateLazyQueryHookResult = ReturnType<typeof useGetCancelationRateLazyQuery>;
-export type GetCancelationRateSuspenseQueryHookResult = ReturnType<typeof useGetCancelationRateSuspenseQuery>;
-export type GetCancelationRateQueryResult = Apollo.QueryResult<GetCancelationRateQuery, GetCancelationRateQueryVariables>;

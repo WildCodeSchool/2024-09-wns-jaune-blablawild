@@ -35,7 +35,7 @@ export default function TripCard({
     };
 
     loadImages();
-  }, [trips]);
+  }, [trips]);  
 
   const handleNavigateTrip = (trip: Trip) => {
     if (trip.capacity > 0) {
@@ -80,6 +80,9 @@ export default function TripCard({
                     <div className="text-base  capitalize text-gray-600 hidden md:block">
                       {trip.departure_city}
                     </div>
+                    <div className="text-sm text-gray-500 hidden md:block">
+                      {trip.departure_address}
+                    </div>
                   </div>
 
                   <div className="flex items-center flex-col flex-1 px-2">
@@ -104,6 +107,9 @@ export default function TripCard({
                     </div>
                     <div className="text-base text-gray-600 capitalize hidden md:block">
                       {trip.arrival_city}
+                    </div>
+                    <div className="text-sm text-gray-500 hidden md:block">
+                      {trip.arrival_address}
                     </div>
                   </div>
                 </div>

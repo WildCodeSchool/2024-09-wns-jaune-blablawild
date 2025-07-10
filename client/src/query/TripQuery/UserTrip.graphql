@@ -3,6 +3,8 @@ query GetTripByUser($userId: String!, $filter: String, $asPassenger: Boolean!) {
     id
     departure_city
     arrival_city
+    departure_address
+    arrival_address
     price
     passengers {
       firstname

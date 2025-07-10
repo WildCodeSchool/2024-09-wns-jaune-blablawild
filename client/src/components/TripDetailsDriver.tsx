@@ -1,23 +1,32 @@
 import React from "react";
 import { BadgeCheck, ChevronRight } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { useGetReviewsByUserQuery } from "@/graphql/hooks";
+import { calculateAverageRating } from "@/utils/AverageRating";
+
 
 interface TripDetailsDriverProps {
   driverName: string;
-  driverRating: number;
-  driverReview: string;
   profileImage?: string;
   driverId: string;
 }
 
 export const TripDetailsDriver: React.FC<TripDetailsDriverProps> = ({
   driverName,
-  driverRating,
-  driverReview,
   profileImage,
   driverId,
 }) => {
   const navigate = useNavigate();
+
+  const { data: reviewsData } = useGetReviewsByUserQuery({
+    variables: { userId: driverId },
+    skip: !driverId
+  });
+
+  const reviews = reviewsData?.getReviewsByUser || [];
+  const averageRating = calculateAverageRating(reviews);
+  const reviewsCount = reviews.length;
+
   const handleNavigateProfile = (id: string) => {
     navigate(`/user/${id}`);
   };
@@ -43,11 +52,17 @@ export const TripDetailsDriver: React.FC<TripDetailsDriverProps> = ({
               </p>
             </div>
             <div className="flex items-center">
-              <div className="flex items-center mr-2">
-                <span className="text-secondary mr-1">★</span>
-                <p className="text-sm">{driverRating}</p>
-              </div>
-              <p className="text-forecast text-xs">• {driverReview}</p>
+              {averageRating !== null ? (
+                <>
+                  <div className="flex items-center mr-2">
+                    <span className="text-secondary mr-1">★</span>
+                    <p className="text-sm">{averageRating.toFixed(1)}</p>
+                  </div>
+                  <p className="text-forecast text-xs">• {reviewsCount} avis</p>
+                </>
+              ) : (
+                <p className="text-forecast text-xs">Pas d'avis</p>
+              )}
             </div>
           </div>
         </div>

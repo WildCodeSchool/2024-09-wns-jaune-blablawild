@@ -1,7 +1,10 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { User } from "@/graphql/hooks";
+import { User, useGetReviewsByUserQuery } from "@/graphql/hooks";
 import { DriverInfoProps } from "../_types/types";
 import { useNavigate } from "react-router-dom";
+import {
+  calculateAverageRating,
+} from "@/utils/AverageRating";
 
 export function DriverInfo({
   driver,
@@ -14,6 +17,14 @@ export function DriverInfo({
   };
 
   const navigate = useNavigate();
+
+  const { data: reviewsData } = useGetReviewsByUserQuery({
+    variables: { userId: driver.id },
+    skip: !driver.id,
+  });
+
+  const reviews = reviewsData?.getReviewsByUser || [];
+  const averageRating = calculateAverageRating(reviews);
 
   const handleNavigateProfile = (e: React.MouseEvent, id: string) => {
     e.stopPropagation();
@@ -36,8 +47,14 @@ export function DriverInfo({
           {driverInfo.firstname}
         </div>
         <div className="flex items-center">
-          <span className="text-sm text-gray-600">4,4</span>
-          <span className="ml-1 text-yellow-400">★</span>
+          <span className="text-sm text-gray-600">
+            {reviews.length > 0
+              ? averageRating.toFixed(1)
+              : "Pas d'avis"}
+          </span>
+          {reviews.length > 0 && (
+            <span className="ml-1 text-yellow-400">★</span>
+          )}
         </div>
       </div>
     </div>
