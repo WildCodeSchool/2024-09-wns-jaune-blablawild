@@ -5,6 +5,24 @@ import { useFormContext } from "react-hook-form";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { FormItem } from "../ui/form";
 
+function formatAddress(address: string) {
+  if (!address) return { street: "", cityLine: "" };
+  
+  const match = address.match(/^(.+?)\s+(\d{5}\s+.+)$/);
+  
+  if (match) {
+    return {
+      street: match[1].trim(),
+      cityLine: match[2].trim()
+    };
+  }
+  
+  return {
+    street: address,
+    cityLine: ""
+  };
+}
+
 export default function TripSummary() {
   const { watch } = useFormContext();
   const departureCity = watch("departureCity");
@@ -15,8 +33,11 @@ export default function TripSummary() {
 
   const totalPrice = passengers * price;
 
+  const formattedDeparture = formatAddress(departureCity);
+  const formattedArrival = formatAddress(arrivalCity);
+
   return (
-    <section>
+    <section className="lg:min-w-[400px]">
       <FormItem>
         <Card className="bg-background shadow-none border-none">
           <CardHeader className="flex justify-center">
@@ -40,8 +61,18 @@ export default function TripSummary() {
                 <Circle size={10} />
               </div>
               <div className="text-foreground flex justify-between">
-                <p>{departureCity}</p>
-                <p>{arrivalCity}</p>
+                <div className="flex-1">
+                  <p className="font-medium">{formattedDeparture.street}</p>
+                  {formattedDeparture.cityLine && (
+                    <p className="text-sm">{formattedDeparture.cityLine}</p>
+                  )}
+                </div>
+                <div className="flex-1 text-right">
+                  <p className="font-medium">{formattedArrival.street}</p>
+                  {formattedArrival.cityLine && (
+                    <p className="text-sm">{formattedArrival.cityLine}</p>
+                  )}
+                </div>
               </div>
               <div className="flex gap-8">
                 <p className="text-secondary">Places disponibles</p>
