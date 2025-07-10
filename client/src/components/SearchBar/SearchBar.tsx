@@ -1,6 +1,5 @@
 import { CalendarDays, MapPin, User } from "lucide-react";
 import { Button } from "../ui/button";
-import { Input } from "../ui/input";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import PopoverPassenger from "./PopoverPassenger";
 import { useEffect, useState } from "react";
@@ -17,6 +16,8 @@ import {
   DialogTrigger,
 } from "../ui/dialog";
 import { IoIosArrowRoundForward, IoIosArrowRoundBack } from "react-icons/io";
+import { AddressFeature, AddressResponse } from "../tripForm/Destination";
+import SuggestionInput from "../SuggestionInput";
 
 type SearchBarProps = {
   path?: string;
@@ -64,17 +65,38 @@ export default function SearchBar({ path }: SearchBarProps) {
     setArrivalCity(departureCity);
   };
 
+  // Fonction pour récupérer les suggestions
+  const fetchSuggestions = async (query: string): Promise<AddressFeature[]> => {
+    const response = await fetch(
+      `https://api-adresse.data.gouv.fr/search/?q=${encodeURIComponent(
+        query
+      )}&limit=5`
+    );
+    const data: AddressResponse = await response.json();
+    return data.features || [];
+  };
+
+  const handleSelectSuggestionDeparture = (suggestion: AddressFeature) => {
+    setDepartureCity(suggestion.properties.label);
+  };
+
+  const handleSelectSuggestionArrival = (suggestion: AddressFeature) => {
+    setArrivalCity(suggestion.properties.label);
+  };
+
   return (
-    <section className="w-full md:h-[55px] flex flex-col md:flex-row items-center overflow-hidden rounded-xl bg-background md:bg-white">
+    <section className="w-full md:h-[55px] flex flex-col md:flex-row items-center rounded-xl bg-background md:bg-white">
       <section className="w-full h-full md:flex-1 flex flex-col md:flex-row items-center md:gap-1 px-5 md:p-1">
-        <section className="w-full h-full md:flex-1 flex items-center justify-center gap-2 bg-background md:bg-white cursor-pointer hover:bg-[var(--hover)] focus-within:bg-gray-200 py-2 px-3 md:px-2 md:py-0 md:rounded-lg">
+        <section className="relative w-full h-full md:flex-1 flex items-center justify-center gap-2 bg-background md:bg-white cursor-pointer hover:bg-[var(--hover)] focus-within:bg-gray-200 py-2 px-3 md:px-2 md:py-0 md:rounded-lg">
           <MapPin className="size-5 " />
-          <Input
-            type="text"
-            placeholder="Départ"
-            className="flex-1 md:text-md m-0 p-0 shadow-none border-none placeholder:text-foreground placeholder:opacity-70 focus-visible:ring-0"
+          <SuggestionInput<AddressFeature>
             value={departureCity}
-            onChange={(e) => setDepartureCity(e.target.value)}
+            onChange={(val) => setDepartureCity(val)}
+            fetchSuggestions={fetchSuggestions}
+            onSelect={handleSelectSuggestionDeparture}
+            renderSuggestion={(s) => <>{s.properties.label}</>}
+            placeholder="Départ"
+            inputClassName="flex-1 md:text-md m-0 p-0 shadow-none border-none placeholder:text-foreground placeholder:opacity-70"
           />
           <div
             className="group hidden md:flex md:flex-col md:justify-center pr-1 cursor-pointer text-secondary hover:text-accent"
@@ -88,12 +110,14 @@ export default function SearchBar({ path }: SearchBarProps) {
         <Separator className="block md:hidden" orientation="horizontal" />
         <div className="w-full h-full md:flex-1 flex items-center gap-2 bg-background md:bg-white cursor-pointer hover:bg-[var(--hover)] focus-within:bg-gray-200 py-2 px-3 md:py-0 md:px-2 md:rounded-lg">
           <MapPin className="size-5" />
-          <Input
-            type="text"
-            placeholder="Arrivée"
-            className="flex-1 md:text-md  text-secondary m-0 p-0 shadow-none border-none placeholder:text-secondary placeholder:opacity-70 focus-visible:ring-0"
+          <SuggestionInput<AddressFeature>
             value={arrivalCity}
-            onChange={(e) => setArrivalCity(e.target.value)}
+            onChange={(val) => setArrivalCity(val)}
+            fetchSuggestions={fetchSuggestions}
+            onSelect={handleSelectSuggestionArrival}
+            renderSuggestion={(s) => <>{s.properties.label}</>}
+            placeholder="Arrivée"
+            inputClassName="flex-1 md:text-md text-secondary m-0 p-0 shadow-none border-none placeholder:text-secondary placeholder:opacity-70 focus-visible:ring-0"
           />
         </div>
         <Separator className="hidden md:block" orientation="vertical" />
