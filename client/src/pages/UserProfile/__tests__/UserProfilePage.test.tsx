@@ -39,6 +39,13 @@ vi.mock('@/graphql/hooks', () => ({
     },
     loading: false,
     error: null,
+  }),
+  useGetCancelationRateQuery: () => ({
+    data: {
+      getCancelationRate: "Taux moyen"
+    },
+    loading: false,
+    error: null,
   })
 }));
 
