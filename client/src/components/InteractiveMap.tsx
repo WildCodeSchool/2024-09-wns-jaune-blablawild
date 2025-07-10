@@ -40,6 +40,7 @@ export const DisplayMap = ({ departureCoordinates, arrivalCoordinates }: Display
  
   const defaultCenter: [number, number] = [48.8566, 2.3522];
   
+  console.log(import.meta.env.VITE_STADIA_MAP_API_KEY)
 
   let center: [number, number] = defaultCenter;
   let zoom = 13;
