@@ -29,6 +29,10 @@ export class Profile extends BaseEntity {
   @Column({nullable: true})
   description?: string;
 
+  @Field({nullable: true})
+  @Column({nullable: true, default: 0})
+  cancelledTrips?: number;
+
   @Field(() => User, { nullable: true })
   @OneToOne(()=> User, (user) => user.profile) 
   user?: User;

@@ -156,6 +156,7 @@ export type NewUserInput = {
 
 export type Profile = {
   __typename?: 'Profile';
+  cancelledTrips?: Maybe<Scalars['Float']['output']>;
   description?: Maybe<Scalars['String']['output']>;
   id: Scalars['ID']['output'];
   image?: Maybe<Scalars['String']['output']>;
@@ -171,6 +172,7 @@ export type ProfileInput = {
 
 export type Query = {
   __typename?: 'Query';
+  getCancelationRate: Scalars['String']['output'];
   getPopularTrip: Array<Trip>;
   getProfile: Profile;
   getReviewsByUser: Array<Review>;
@@ -180,6 +182,11 @@ export type Query = {
   getTripByUser: Array<Trip>;
   getUserById: User;
   getUsers: Array<User>;
+};
+
+
+export type QueryGetCancelationRateArgs = {
+  userId: Scalars['String']['input'];
 };
 
 
@@ -417,6 +424,13 @@ export type GetUserByIdQueryVariables = Exact<{
 
 
 export type GetUserByIdQuery = { __typename?: 'Query', getUserById: { __typename?: 'User', email: string, firstname: string, id: string, lastname: string, profile?: { __typename?: 'Profile', image?: string | null } | null } };
+
+export type GetCancelationRateQueryVariables = Exact<{
+  userId: Scalars['String']['input'];
+}>;
+
+
+export type GetCancelationRateQuery = { __typename?: 'Query', getCancelationRate: string };
 
 
 export const CreateTripDocument = gql`
@@ -1016,3 +1030,41 @@ export type GetUserByIdQueryHookResult = ReturnType<typeof useGetUserByIdQuery>;
 export type GetUserByIdLazyQueryHookResult = ReturnType<typeof useGetUserByIdLazyQuery>;
 export type GetUserByIdSuspenseQueryHookResult = ReturnType<typeof useGetUserByIdSuspenseQuery>;
 export type GetUserByIdQueryResult = Apollo.QueryResult<GetUserByIdQuery, GetUserByIdQueryVariables>;
+export const GetCancelationRateDocument = gql`
+    query GetCancelationRate($userId: String!) {
+  getCancelationRate(userId: $userId)
+}
+    `;
+
+/**
+ * __useGetCancelationRateQuery__
+ *
+ * To run a query within a React component, call `useGetCancelationRateQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetCancelationRateQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetCancelationRateQuery({
+ *   variables: {
+ *      userId: // value for 'userId'
+ *   },
+ * });
+ */
+export function useGetCancelationRateQuery(baseOptions: Apollo.QueryHookOptions<GetCancelationRateQuery, GetCancelationRateQueryVariables> & ({ variables: GetCancelationRateQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetCancelationRateQuery, GetCancelationRateQueryVariables>(GetCancelationRateDocument, options);
+      }
+export function useGetCancelationRateLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetCancelationRateQuery, GetCancelationRateQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetCancelationRateQuery, GetCancelationRateQueryVariables>(GetCancelationRateDocument, options);
+        }
+export function useGetCancelationRateSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetCancelationRateQuery, GetCancelationRateQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetCancelationRateQuery, GetCancelationRateQueryVariables>(GetCancelationRateDocument, options);
+        }
+export type GetCancelationRateQueryHookResult = ReturnType<typeof useGetCancelationRateQuery>;
+export type GetCancelationRateLazyQueryHookResult = ReturnType<typeof useGetCancelationRateLazyQuery>;
+export type GetCancelationRateSuspenseQueryHookResult = ReturnType<typeof useGetCancelationRateSuspenseQuery>;
+export type GetCancelationRateQueryResult = Apollo.QueryResult<GetCancelationRateQuery, GetCancelationRateQueryVariables>;

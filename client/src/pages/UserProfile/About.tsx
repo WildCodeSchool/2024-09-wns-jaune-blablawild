@@ -1,5 +1,5 @@
 import { Separator } from "@/components/ui/separator";
-import { Profile, useGetProfileQuery } from "@/graphql/hooks";
+import { Profile, useGetCancelationRateQuery, useGetProfileQuery } from "@/graphql/hooks";
 import { useParams } from "react-router-dom";
 import { Check, Mail, Phone } from "lucide-react";
 
@@ -20,6 +20,8 @@ export default function About({ user }: Props) {
     skip: !user.id,
     variables: { userId: id || "" },
   });
+
+    const { data: cancelationRate } = useGetCancelationRateQuery({ variables: { userId: id || ""}})
 
   return (
     <section className="flex flex-col justify-center items-center gap-8 mt-6 pb-12 w-full">
@@ -51,7 +53,7 @@ export default function About({ user }: Props) {
       <Separator className="bg-[#949393]" />
 
       <div className="flex flex-col items-center gap-6 md:gap-8 w-full md:items-start text-black lg:w-10/12">
-        <p>Faible taux d'annulation</p>
+        {cancelationRate && <p>Taux d'annulation : {cancelationRate?.getCancelationRate}</p>}
         <p>Délai de réponse rapide</p>
         <p>Excellents avis</p>
       </div>
