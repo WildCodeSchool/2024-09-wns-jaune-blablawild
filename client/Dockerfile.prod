@@ -1,7 +1,7 @@
 # container temporaire pour build l'appli
 FROM node:lts-alpine AS builder
 
-ENV STADIA_MAP_API_KEY=5b892298-0a04-4592-a895-66e37b23b9c7
+ENV VITE_STADIA_MAP_API_KEY=5b892298-0a04-4592-a895-66e37b23b9c7
 
 RUN npm install -g pnpm
 
