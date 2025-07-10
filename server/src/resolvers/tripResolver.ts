@@ -264,6 +264,9 @@ export class TripResolver {
         where: { id: data.userId },
         relations: ["profile"],
       });
+
+      console.log(user)
+      
       if (!user) {
         throw new Error("L'utilisateur n'existe pas");
       }

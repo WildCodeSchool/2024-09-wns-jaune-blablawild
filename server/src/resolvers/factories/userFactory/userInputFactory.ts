@@ -1,5 +1,6 @@
 import { BaseFactory, FactoryOptions } from "../baseFactory";
 import { NewUserInput } from "../../userResolver";
+import { Profile } from "../../../entities/profile";
 
 // La factory hérite de BaseFactory avec le type NewUserInput
 export class UserInputFactory extends BaseFactory<NewUserInput> {
