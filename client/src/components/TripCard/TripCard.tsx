@@ -86,9 +86,7 @@ export default function TripCard({
                   </div>
 
                   <div className="flex items-center flex-col flex-1 px-2">
-                    <div className="text-sm text-gray-500 mb-1">
-                      {calculateTripDuration(trip.departure_time, arrivalTime)}
-                    </div>
+             
                     <div className="flex items-center w-full">
                       <Circle size={10} className="text-gray-500 flex-shrink-0" />
                       <div className="border-t border-gray-500 flex-1 mx-1"></div>
@@ -97,9 +95,7 @@ export default function TripCard({
                   </div>
 
                   <div className="flex-1 text-right">
-                    <div className="text-lg font-medium text-gray-900">
-                      {formatHourFromTime(arrivalTime)}
-                    </div>
+                
                     <div className="text-lg font-medium capitalize text-gray-900 max-w-[100px] truncate md:max-w-none block md:hidden">
                       {trip.arrival_city.length > 5
                         ? `${trip.arrival_city.slice(0, 5)}…`
