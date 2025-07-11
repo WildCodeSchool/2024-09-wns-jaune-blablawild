@@ -1,5 +1,6 @@
 import React from "react";
-import { formatUTCTime } from "@/utils/FormatUTC";
+import { format } from "date-fns";
+import { fr } from "date-fns/locale";
 
 interface JourneyLineProps {
   departureTime: string;
@@ -21,7 +22,7 @@ export const TripLine: React.FC<JourneyLineProps> = ({
       <div className="flex flex-col justify-between mr-2">
         <div>
           <p className="text-forecast text-xl">
-            {formatUTCTime(departureTime)}
+            {format(new Date(departureTime), "HH'h'mm", { locale: fr })}
           </p>
         </div>
       </div>

@@ -54,7 +54,7 @@ export default function TripSummary() {
             <div className="space-y-3">
               <div className="flex items-center gap-1 text-foreground mb-0">
                 <p className="text-xl mr-1">
-                  {format(departureDate, " hh:mm ", { locale: fr })}
+                  {format(departureDate, " HH:mm ", { locale: fr })}
                 </p>
                 <Circle size={10} />
                 <div className="border-t border-foreground w-50"></div>

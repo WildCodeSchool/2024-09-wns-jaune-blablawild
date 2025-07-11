@@ -1,17 +1,16 @@
-import { formatDate } from "@/utils/FormatDate";
 import { Circle, CarIcon } from "lucide-react";
 import { DriverInfo } from "./_components/DriverInfo";
 import { PassengersList } from "./_components/PassengersList";
 import { PriceOverlay } from "./_components/PriceOverlay";
 import { TripCardProps } from "./_types/types";
-import {
-  formatHourFromTime,
-} from "./_utils/utils";
 import { useNavigate } from "react-router-dom";
 import clsx from "clsx";
 import { Trip } from "@/graphql/hooks";
 import { useState, useEffect } from "react";
 import { getUnsplashImage } from "@/utils/UnsplashService";
+import { format } from "date-fns";
+import { fr } from "date-fns/locale";
+
 
 export default function TripCard({
   trips,
@@ -61,12 +60,12 @@ export default function TripCard({
 
               <div className="flex-1 p-4 flex flex-col justify-between ">
                 <p className="text-base text-accent mb-2">
-                  {formatDate(trip.departure_time, "fr")}
+                  {format(new Date(trip.departure_time), "HH'h'mm", { locale: fr })}
                 </p>
                 <div className=" flex gap-2 items-center mb-4 lg:max-w-[500px]">
                   <div className="flex-1">
                     <div className="text-lg font-medium text-gray-900">
-                      {formatHourFromTime(trip.departure_time)}
+                      {format(new Date(trip.departure_time), "HH'h'mm", { locale: fr })}
                     </div>
                     <div className="text-lg  capitalize font-medium text-gray-900 max-w-[100px] truncate md:max-w-none block md:hidden">
                       {trip.departure_city.length > 5

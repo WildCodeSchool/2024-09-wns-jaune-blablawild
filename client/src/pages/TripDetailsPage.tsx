@@ -1,12 +1,13 @@
 import { useGetTripByIdQuery } from "@/graphql/hooks";
 import { useNavigate, useParams } from "react-router-dom";
-import { formatDate } from "@/utils/FormatDate";
 import { TripLine } from "@/components/ui/tripLine";
 import { TripDetailsDriver } from "@/components/TripDetailsDriver";
 import { TripDetailsPassenger } from "@/components/TripDetailsPassenger";
 import TripDetailsSummary from "@/components/TripDetailsSummary";
 import { Button } from "@/components/ui/button";
 import { useUserStore } from "@/store/useUserStore";
+import { format } from "date-fns";
+import { fr } from "date-fns/locale";
 
 export const TripDetailsPage = () => {
   const { id } = useParams();
@@ -31,7 +32,7 @@ export const TripDetailsPage = () => {
     <div className="pt-6 md:pt-10 pb-6 md:pb-10 bg-white px-4 md:px-30 flex flex-col items-center">
       <div className="w-11/12 md:max-w-[1100px] md:w-full">
         <h1 className="text-accent text-2xl md:text-3xl pb-4 md:pb-7">
-          {formatDate(trip?.departure_time, "fr")}
+          {format(new Date(trip?.departure_time), "HH'h'mm", { locale: fr })}
         </h1>
 
         <section className="flex flex-col lg:flex-row lg:justify-between">
