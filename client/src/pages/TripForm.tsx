@@ -10,7 +10,7 @@ import TripSummary from "@/components/tripForm/TripSummary";
 import { Button } from "@/components/ui/button";
 import { useCreateTripMutation } from "@/graphql/hooks";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { setHours, setMinutes } from "date-fns";
+import { addMinutes, getHours, getMinutes, setHours, setMinutes } from "date-fns";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -66,19 +66,10 @@ const formSchema = z
 export default function TripForm() {
   const toast = useToast();
   const [createTrip] = useCreateTripMutation();
+  const bookingHour = addMinutes(new Date, 30);
 
-  const [departureHour, setDepartureHour] = useState(() => {
-    const now = new Date();
-    const futureTime = new Date(now.getTime() + 30 * 60000);
-    return futureTime.getHours();
-  });
-
-  const [departureMinutes, setDepartureMinutes] = useState(() => {
-    const now = new Date();
-    const futureTime = new Date(now.getTime() + 30 * 60000);
-    const minutes = futureTime.getMinutes();
-    return Math.ceil(minutes / 5) * 5;
-  });
+  const [departureHour, setDepartureHour] = useState(getHours(bookingHour));
+  const [departureMinutes, setDepartureMinutes] = useState(getMinutes(bookingHour))
 
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [maxVisitedStep, setMaxVisitedStep] = useState(0);
