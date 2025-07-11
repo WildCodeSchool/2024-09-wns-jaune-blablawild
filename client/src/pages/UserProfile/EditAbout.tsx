@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { Profile, useGetCancelationRateQuery, useGetProfileQuery, useGetReviewsByUserQuery, usePatchProfileMutation } from "@/graphql/hooks";
+import { Profile, useGetProfileQuery, useGetReviewsByUserQuery, usePatchProfileMutation } from "@/graphql/hooks";
 import { calculateAverageRating } from "@/utils/AverageRating";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
