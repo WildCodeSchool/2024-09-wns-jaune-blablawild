@@ -188,85 +188,79 @@ export class TripResolver {
   }
 
   @Mutation(() => String)
-  async bookTrip(@Arg("data", () => BookTripInput) data: BookTripInput) {
-    try {
-      const trip = await Trip.findOne({
-        where: { id: data.tripId },
-        relations: { 
-          bookings: { 
-            passenger: true 
-          }, 
-          driver: true 
-        },
-      });
+async bookTrip(@Arg("data", () => BookTripInput) data: BookTripInput) {
+  try {
+    const trip = await Trip.findOne({
+      where: { id: data.tripId },
+      relations: { 
+        bookings: { 
+          passenger: true 
+        }, 
+        driver: true 
+      },
+    });
 
-      if (!trip) throw new Error("Le trajet n'existe pas");
+    if (!trip) throw new Error("Le trajet n'existe pas");
 
-      if (trip.status === TripStatus.FULL)
-        throw new Error("Ce trajet est déjà complet");
-
-      if (trip.status === TripStatus.CLOSE) {
-        throw new Error("Ce trajet n'est plus disponible");
-      }
-
-      const user = await User.findOneBy({ id: data.userId });
-      if (!user) {
-        throw new Error("L'utilisateur n'existe pas");
-      }
-
-      console.log('User found:', user.id, 'Type:', typeof user.id);
-      console.log('Trip driver:', trip.driver.id, 'Type:', typeof trip.driver.id);
-      console.log('Data userId:', data.userId, 'Type:', typeof data.userId);
-
-      if (data.userId.toString() === trip.driver.id.toString())
-        throw new Error(
-          "Vous ne pouvez pas réserver un trajet pour lequel vous êtes conducteur"
-        );
-
-      const existingBooking = trip.bookings?.find(
-        (booking) => booking.passenger.id === user.id
-      );
-      if (existingBooking) {
-        throw new Error("Vous avez déjà réservé ce trajet");
-      }
-
-      const seatsToBook = data.seatsCount || 1;
-      const totalBookedSeats = trip.bookings?.reduce((sum, booking) => sum + booking.seatsCount, 0) || 0;
-
-      if (totalBookedSeats + seatsToBook > trip.capacity) {
-        throw new Error(
-          `Il ne reste pas assez de places disponibles. Places disponibles: ${
-            trip.capacity - totalBookedSeats
-          }`
-        );
-      }
-
-      const booking = new Booking();
-      booking.passenger = user;
-      booking.trip = trip;
-      booking.seatsCount = seatsToBook;
-      booking.bookingDate = new Date();
-
-      await booking.save();
-      console.log('Booking créé:', booking);
-
-      // Mettre à jour le statut du trip si nécessaire
-      const newTotalBookedSeats = totalBookedSeats + seatsToBook;
-      console.log('Total sièges réservés:', newTotalBookedSeats, 'Capacité:', trip.capacity);
-      
-      if (newTotalBookedSeats === trip.capacity) {
-        trip.status = TripStatus.FULL;
-        await trip.save();
-      }
-
-      return "Votre réservation a bien été enregistrée";
-    } catch (error) {
-      if (error instanceof Error) {
-        throw new Error(error.message);
-      }
-      throw new Error("Une erreur est survenue lors de la réservation");
+    if (trip.status === TripStatus.CLOSE) {
+      throw new Error("Ce trajet n'est plus disponible");
     }
+
+    const user = await User.findOneBy({ id: data.userId });
+    if (!user) {
+      throw new Error("L'utilisateur n'existe pas");
+    }
+
+    if (data.userId.toString() === trip.driver.id.toString()) {
+      throw new Error(
+        "Vous ne pouvez pas réserver un trajet pour lequel vous êtes conducteur"
+      );
+    }
+
+    const existingBooking = trip.bookings?.find(
+      (booking) => booking.passenger.id === user.id
+    );
+    if (existingBooking) {
+      throw new Error("Vous avez déjà réservé ce trajet");
+    }
+
+    const seatsToBook = data.seatsCount || 1;
+    const totalBookedSeats = trip.bookings?.reduce((sum, booking) => sum + booking.seatsCount, 0) || 0;
+    const availableSeats = trip.capacity - totalBookedSeats;
+    
+    if (availableSeats < seatsToBook) {
+      throw new Error(
+        `Il ne reste pas assez de places disponibles. Places disponibles: ${availableSeats}`
+      );
+    }
+
+    const booking = new Booking();
+    booking.passenger = user;
+    booking.trip = trip;
+    booking.seatsCount = seatsToBook;
+    booking.bookingDate = new Date();
+
+    await booking.save();
+    console.log('Booking créé:', booking);
+
+    const newTotalBookedSeats = totalBookedSeats + seatsToBook;
+    console.log('New total booked seats:', newTotalBookedSeats);
+    
+    if (newTotalBookedSeats >= trip.capacity) {
+      trip.status = TripStatus.FULL;
+      await trip.save();
+      console.log('Trip status updated to FULL');
+    }
+
+    return "Votre réservation a bien été enregistrée";
+  } catch (error) {
+    console.error('Error in bookTrip:', error);
+    if (error instanceof Error) {
+      throw new Error(error.message);
+    }
+    throw new Error("Une erreur est survenue lors de la réservation");
   }
+}
 
   @Mutation(() => String)
   async cancelTripBooking(
