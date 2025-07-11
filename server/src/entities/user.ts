@@ -4,13 +4,13 @@ import {
   Column,
   Entity,
   JoinColumn,
-  ManyToMany,
   OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
 } from "typeorm";
 import { Trip } from "./trip";
 import { Review } from "./review";
+import { Booking } from "./booking";
 import { Transaction } from "./transaction";
 import { Profile } from "./profile";
 
@@ -37,18 +37,13 @@ export class User extends BaseEntity {
   @Column()
   password!: string;
 
-  // Role for user to define later if needed
-  // @Field()
-  // @Column()
-  // role!: string;
-
   @Field()
   @Column({ default: 0 })
   pot!: number;
 
-  @Field(() => [Trip], { nullable: true })
-  @ManyToMany(() => Trip, (trip) => trip.passengers)
-  passenger_trips?: Trip[];
+  @Field(() => [Booking], { nullable: true })
+  @OneToMany(() => Booking, (booking) => booking.passenger)
+  bookings?: Booking[];
 
   @Field(() => [Trip], { nullable: true })
   @OneToMany(() => Trip, (trip) => trip.driver)

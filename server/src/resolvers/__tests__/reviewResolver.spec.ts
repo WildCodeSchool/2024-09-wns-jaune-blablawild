@@ -1,9 +1,8 @@
-
-
 import { faker } from '@faker-js/faker/locale/fr';
 import { Review } from '../../entities/review';
 import { Trip } from '../../entities/trip';
 import { User } from '../../entities/user';
+import { Booking } from '../../entities/booking';
 import { isDriver, isPassenger } from '../../services/ReviewServices'
 import { ReviewInput } from '../../type/reviewType';
 import { TripStatus } from '../../type/tripType';
@@ -40,6 +39,7 @@ describe('leaveReview Mutation', () => {
         date: "2025-05-01T13:52:05.230Z"
     };
 
+    // Mock créé pour correspondre à la structure attendue par TypeORM
     const mockTrip = {
         id: "1",
         departure_city: "Paris",
@@ -48,22 +48,26 @@ describe('leaveReview Mutation', () => {
         price: 30,
         capacity: 4,
         status: TripStatus.CLOSE,
-        passengers: [
+        bookings: [
             {
-                id: "1",
-                firstname: faker.person.firstName(),
-                lastname: faker.person.lastName(),
-                email: faker.internet.email(),
-                password: faker.internet.password(),
+                id: "booking1",
+                seatsCount: 1,
+                passenger: {
+                    id: "1",
+                    firstname: faker.person.firstName(),
+                    lastname: faker.person.lastName(),
+                    email: faker.internet.email(),
+                    password: faker.internet.password(),
+                }
             }
         ],
         driver: {
-                id: "2",
-                firstname: faker.person.firstName(),
-                lastname: faker.person.lastName(),
-                email: faker.internet.email(),
-                password: faker.internet.password(),
-            }
+            id: "2",
+            firstname: faker.person.firstName(),
+            lastname: faker.person.lastName(),
+            email: faker.internet.email(),
+            password: faker.internet.password(),
+        }
     };
 
     const mockSender = {
@@ -96,30 +100,36 @@ describe('leaveReview Mutation', () => {
         // Configurer les fonctions de vérification
         (isDriver as jest.Mock).mockImplementation((user, trip) => user.id === trip.driver.id);
         (isPassenger as jest.Mock).mockImplementation((user, trip) => 
-        trip.passengers.some((p: any) => p.id === user.id)
+            trip.bookings && trip.bookings.some((booking: any) => booking.passenger.id === user.id)
         );
 
         // Appel de la mutation
         const result = await reviewResolver.leaveReview(mockReviewInput);
         
-        // Vérifications
+        // Vérifications - Mise à jour pour correspondre à l'appel réel
         expect(Trip.findOne).toHaveBeenCalledWith({
-        where: { id: "1" },
-        relations: { passengers: true, driver: true }
+            where: { id: "1" },
+            relations: {
+                bookings: {
+                    passenger: true
+                },
+                driver: true
+            }
         });
         expect(User.findOne).toHaveBeenCalledWith({ where: { id: "1" } });
         expect(User.findOne).toHaveBeenCalledWith({ where: { id: "2" } });
         expect(Review.findOne).toHaveBeenCalledWith({
-        where: {
-            sender: { id: "1" },
-            receiver: { id: "2" },
-            trip: { id: "1" }
-        }
+            where: {
+                sender: { id: "1" },
+                receiver: { id: "2" },
+                trip: { id: "1" }
+            }
         });
         expect(Review.prototype.save).toHaveBeenCalled();
         expect(result).toBe("Votre retour d'expérience a bien été créé");
     });
 
+    // Reste des tests identiques...
     test("should fail if trip doesn't exist", async () => {
         (Trip.findOne as jest.Mock).mockResolvedValue(null);
 
@@ -179,12 +189,16 @@ describe('leaveReview Mutation', () => {
     test("should fail if user was not on the trip", async () => {
         const tripWithoutUser = {
             ...mockTrip,
-            passengers: [{
-                id: "3",
-                firstname: faker.person.firstName(),
-                lastname: faker.person.lastName(),
-                email: faker.internet.email(),
-                password: faker.internet.password(),
+            bookings: [{
+                id: "booking1",
+                seatsCount: 1,
+                passenger: {
+                    id: "3",
+                    firstname: faker.person.firstName(),
+                    lastname: faker.person.lastName(),
+                    email: faker.internet.email(),
+                    password: faker.internet.password(),
+                }
             }] // Autre passager
         };
         
@@ -219,7 +233,7 @@ describe('leaveReview Mutation', () => {
             user.id === trip.driver.id
         );
         (isPassenger as jest.Mock).mockImplementation((user, trip) => 
-            trip.passengers.some((p: any) => p.id === user.id)
+            trip.bookings && trip.bookings.some((booking: any) => booking.passenger.id === user.id)
         );
         
         await expect(reviewResolver.leaveReview(mockReviewInput)).rejects.toThrow(
@@ -231,9 +245,17 @@ describe('leaveReview Mutation', () => {
     test("should fail if a passenger try to review another passenger", async () => {
         const tripWithTwoPassengers = {
             ...mockTrip,
-            passengers: [
-                { id: "1", username: "user1" }, 
-                { id: "2", username: "user2" }  // Le destinataire est aussi un passager
+            bookings: [
+                { 
+                    id: "booking1", 
+                    seatsCount: 1,
+                    passenger: { id: "1", username: "user1" }
+                }, 
+                { 
+                    id: "booking2", 
+                    seatsCount: 1,
+                    passenger: { id: "2", username: "user2" }
+                }
             ],
             driver: { id: "3", username: "user3" }  // Le conducteur est quelqu'un d'autre
         };
@@ -251,7 +273,7 @@ describe('leaveReview Mutation', () => {
             user.id === trip.driver.id
         );
         (isPassenger as jest.Mock).mockImplementation((user, trip) => 
-            trip.passengers.some((p: any) => p.id === user.id)
+            trip.bookings && trip.bookings.some((booking: any) => booking.passenger.id === user.id)
         );
         
         await expect(reviewResolver.leaveReview(mockReviewInput)).rejects.toThrow(
@@ -281,7 +303,5 @@ describe('leaveReview Mutation', () => {
             "Vous ne pouvez pas vous laisser d'évaluation, petit malin."
         );
         expect(Review.prototype.save).not.toHaveBeenCalled();
-  });
+    });
 })
-
-

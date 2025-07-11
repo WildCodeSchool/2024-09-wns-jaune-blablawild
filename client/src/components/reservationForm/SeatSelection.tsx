@@ -37,9 +37,8 @@ export default function SeatSelection({
         <TripLine
           departureTime={departureTime || ""}
           departureCity={departureCity || ""}
-          departureAddress="91 rue de charenton"
           arrivalCity={arrivalCity || ""}
-          arrivalAddress="10 rue du bon"
+
         />
       </div>
       <FormItem className="w-full sm:w-11/12 md:w-full lg:w-[480px] xl:w-[583px]">

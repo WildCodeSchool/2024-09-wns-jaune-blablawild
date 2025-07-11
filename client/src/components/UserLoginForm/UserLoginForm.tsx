@@ -29,7 +29,6 @@ export default function UserLoginForm({
   const [login] = useLoginMutation();
   const setUser = useUserStore((state) => state.setUser);
   const navigate = useNavigate();
-  // const [openCreationForm, setOpenCreationForm] = useState(false)
   const { success, error } = useToast();
 
   const form = useForm<LoginFormData>({
@@ -39,8 +38,6 @@ export default function UserLoginForm({
       password: "",
     },
   });
-
-  // const handleCloseCreationForm = () => setOpenCreationForm(false)
 
   const onSubmit = async (data: LoginFormData) => {
     await handleLogin({
