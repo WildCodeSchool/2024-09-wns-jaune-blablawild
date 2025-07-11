@@ -28,7 +28,7 @@ export function ToastProvider({ children }: ToasterProviderProps) {
       }}
     >
       {children}
-      <Toaster position="top-right" />
+      <Toaster position="top-right" closeButton/>
     </ToastContext.Provider>
   );
 }
