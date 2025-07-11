@@ -38,10 +38,8 @@ export default function SeatSelection({
           departureTime={departureTime || ""}
           departureCity={departureCity || ""}
           departureAddress="91 rue de charenton"
-          arrivalTime={"2023-05-14T19:20:00Z"}
           arrivalCity={arrivalCity || ""}
           arrivalAddress="10 rue du bon"
-          tripDuration="7h20"
         />
       </div>
       <FormItem className="w-full sm:w-11/12 md:w-full lg:w-[480px] xl:w-[583px]">
