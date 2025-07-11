@@ -365,7 +365,7 @@ export type GetTripQueryVariables = Exact<{
 }>;
 
 
-export type GetTripQuery = { __typename?: 'Query', getTrip: Array<{ __typename?: 'Trip', id: string, departure_time: any, departure_city: string, capacity: number, arrival_city: string, price: number, driver?: { __typename?: 'User', id: string, firstname: string, lastname: string } | null, bookings?: Array<{ __typename?: 'Booking', id: string, seatsCount: number, passenger: { __typename?: 'User', id: string, firstname: string, lastname: string } }> | null }> };
+export type GetTripQuery = { __typename?: 'Query', getTrip: Array<{ __typename?: 'Trip', id: string, departure_time: any, departure_city: string, capacity: number, arrival_city: string, price: number, driver?: { __typename?: 'User', id: string, firstname: string, lastname: string, profile?: { __typename?: 'Profile', image?: string | null } | null } | null, bookings?: Array<{ __typename?: 'Booking', id: string, seatsCount: number, passenger: { __typename?: 'User', id: string, firstname: string, lastname: string } }> | null }> };
 
 export type GetTripByUserQueryVariables = Exact<{
   userId: Scalars['String']['input'];
@@ -747,6 +747,9 @@ export const GetTripDocument = gql`
       id
       firstname
       lastname
+      profile {
+        image
+      }
     }
     price
     bookings {
