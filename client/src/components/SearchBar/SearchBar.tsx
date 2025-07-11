@@ -226,7 +226,7 @@ export default function SearchBar({ path }: SearchBarProps) {
       </section>
       <Button
         type="button"
-        className="w-full md:h-full h-[50px] text-md md:flex-[0.15] flex justify-center items-center bg-accent rounded-none hover:bg-secondary cursor-pointer"
+        className="w-full md:h-full h-[50px] text-md md:flex-[0.15] flex justify-center items-center bg-accent rounded-none rounded-b-lg md:rounded-none md:rounded-r-lg hover:bg-secondary cursor-pointer"
         onClick={handleClick}
       >
         Rechercher
