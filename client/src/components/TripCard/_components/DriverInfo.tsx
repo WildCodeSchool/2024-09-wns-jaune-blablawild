@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import {
   calculateAverageRating,
 } from "@/utils/AverageRating";
+import { CircleUserRound } from "lucide-react";
 
 export function DriverInfo({
   driver,
@@ -39,7 +40,7 @@ export function DriverInfo({
       <div className="relative">
         <Avatar>
           <AvatarImage src={driverInfo.image} alt={driverInfo.firstname} />
-          <AvatarFallback>{driverInfo.firstname?.charAt(0)}</AvatarFallback>
+          <AvatarFallback><CircleUserRound size={30} strokeWidth={1.5} /></AvatarFallback>
         </Avatar>
       </div>
       <div>
