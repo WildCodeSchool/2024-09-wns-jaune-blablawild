@@ -156,12 +156,16 @@ export class TripResolver {
   async getTripById(@Arg("tripId") tripId: string) {
     const trip = await Trip.findOne({
       where: { id: tripId },
-      relations: { 
-        bookings: { 
-          passenger: true 
-        }, 
-        driver: true 
+       relations: {
+      bookings: {
+        passenger: {
+          profile: true,
+        }
       },
+      driver: {
+        profile: true,
+      }
+    }
     });
 
     if (!trip) {
@@ -288,6 +292,8 @@ async bookTrip(@Arg("data", () => BookTripInput) data: BookTripInput) {
         where: { id: data.userId },
         relations: ["profile"],
       });
+
+      console.log(user);
 
       if (!user) {
         throw new Error("L'utilisateur n'existe pas");

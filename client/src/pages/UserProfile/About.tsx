@@ -22,7 +22,7 @@ export default function About({ user }: Props) {
     variables: { userId: id || "" },
   });
 
-  const { data: cancelationRate } = useGetCancelationRateQuery({ 
+  const { data: cancelationRate } = useGetCancelationRateQuery({
     variables: { userId: id || "" }
   });
 
@@ -39,11 +39,10 @@ export default function About({ user }: Props) {
     <section className="flex flex-col justify-center items-center gap-8 mt-6 pb-12 w-full">
       <div className="flex flex-col w-full items-center md:flex-row-reverse md:justify-between lg:w-10/12">
         <img
-          src={user.profile?.image || "/placeholder-portrait.png"}
+          src={!data?.getProfile.image ? "/placeholder-portrait.png" : data?.getProfile.image}
           alt={`${user.firstname} ${user.lastname}`}
           className="w-40 self-center rounded-full mb-8 md:mb-0"
         />
-
         <div className="flex flex-col items-center gap-6 md:gap-8 md:items-start text-black">
           {data?.getProfile?.phoneNumber && (
             <div className="flex items-center">
@@ -68,11 +67,11 @@ export default function About({ user }: Props) {
         {cancelationRate && <p>Taux d'annulation : {cancelationRate?.getCancelationRate}</p>}
         <p>Délai de réponse rapide</p>
         <p>
-          {reviewsCount === 0 ? 'Aucun avis' : 
-           <span className="flex items-center">
-             <span className="text-yellow-400 mr-1">★</span>
-             {`${averageRating.toFixed(1)}/5  (${reviewsCount} avis)`}
-           </span>}
+          {reviewsCount === 0 ? 'Aucun avis' :
+            <span className="flex items-center">
+              <span className="text-yellow-400 mr-1">★</span>
+              {`${averageRating.toFixed(1)}/5  (${reviewsCount} avis)`}
+            </span>}
         </p>
       </div>
 

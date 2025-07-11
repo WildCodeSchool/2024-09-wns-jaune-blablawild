@@ -19,6 +19,7 @@ export const TripDetailsPage = () => {
     skip: !id,
   });
 
+
   if (loading) return <div>Chargement en cours...</div>;
   if (error) return <div>Erreur: {error.message}</div>;
 

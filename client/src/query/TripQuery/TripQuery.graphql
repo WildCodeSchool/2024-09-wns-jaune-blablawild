@@ -9,6 +9,9 @@ query GetTrip($data: FilterTripInput!) {
       id
       firstname
       lastname
+      profile {
+        image
+      }
     }
     price
     bookings {
