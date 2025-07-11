@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { Profile, useGetProfileQuery, usePatchProfileMutation } from "@/graphql/hooks";
+import { Profile, useGetProfileQuery, useGetReviewsByUserQuery, usePatchProfileMutation } from "@/graphql/hooks";
+import { calculateAverageRating } from "@/utils/AverageRating";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 
@@ -27,7 +28,18 @@ export default function EditAbout({ user, onCancel }: Props) {
     variables: { userId: user.id || "13" }
   });
 
+    const { data: reviewsData } = useGetReviewsByUserQuery({
+      variables: { userId: user.id! },
+      skip: !user.id
+    });
+  
+
   const [updateProfile] = usePatchProfileMutation();
+
+    const reviews = reviewsData?.getReviewsByUser || [];
+    const reviewsCount = reviews.length;
+    const averageRating = calculateAverageRating(reviews);
+  
 
   const {
     register,
@@ -106,12 +118,16 @@ export default function EditAbout({ user, onCancel }: Props) {
 
       <Separator className="bg-[#949393]" />
 
-      <div className="flex flex-col items-center gap-6 md:gap-8 w-full md:items-start text-black lg:w-10/12">
-        <p>Faible taux d'annulation</p>
+    <div className="flex flex-col items-center gap-6 md:gap-8 w-full md:items-start text-black lg:w-10/12">
         <p>Délai de réponse rapide</p>
-        <p>Excellents avis</p>
+        <p>
+          {reviewsCount === 0 ? 'Aucun avis' : 
+           <span className="flex items-center">
+             <span className="text-yellow-400 mr-1">★</span>
+             {`${averageRating.toFixed(1)}/5  (${reviewsCount} avis)`}
+           </span>}
+        </p>
       </div>
-
       <Separator className="bg-[#949393]" />
       
       <div className="flex flex-col w-full items-center md:items-start text-black lg:w-10/12">

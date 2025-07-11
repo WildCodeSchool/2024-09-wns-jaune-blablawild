@@ -5,8 +5,6 @@ import { PassengersList } from "./_components/PassengersList";
 import { PriceOverlay } from "./_components/PriceOverlay";
 import { TripCardProps } from "./_types/types";
 import {
-  calculateArrivalTime,
-  calculateTripDuration,
   formatHourFromTime,
 } from "./_utils/utils";
 import { useNavigate } from "react-router-dom";
@@ -47,8 +45,6 @@ export default function TripCard({
     <section className="w-full px-2 py-4 md:p-8">
       <div className="space-y-4">
         {trips.map((trip) => {
-          const arrivalTime = calculateArrivalTime(trip.departure_time);
-
           return (
             <article
               key={trip.id}
