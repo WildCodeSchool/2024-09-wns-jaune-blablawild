@@ -56,7 +56,7 @@ export default function Destination() {
       <FormItem className="relative w-full max-w-xs">
         <FormControl>
           <SuggestionInput<AddressFeature>
-            testId="arrival-input"
+            testId="destination-input"
             value={arrivalCity}
             onChange={(val) =>
               setValue("arrivalCity", val, { shouldDirty: true })
