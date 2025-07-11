@@ -27,6 +27,15 @@ export const TripDetailsPage = () => {
     navigate(`/reservation/${id}`);
   };
 
+  const totalBookedSeats = trip?.bookings?.reduce((sum, booking) => sum + booking.seatsCount, 0) || 0;
+  const availableSeats = (trip?.capacity || 0) - totalBookedSeats;
+
+  const userHasBooking = trip?.bookings?.some(booking => booking.passenger.id === user?.id.toString());
+
+  console.log('bookings', trip?.bookings);
+  console.log('available seats', availableSeats);
+  console.log('user has booking', userHasBooking);
+
   return (
     <div className="pt-6 md:pt-10 pb-6 md:pb-10 bg-white px-4 md:px-30 flex flex-col items-center">
       <div className="w-11/12 md:max-w-[1100px] md:w-full">
@@ -58,14 +67,16 @@ export const TripDetailsPage = () => {
               driverId={trip?.driver?.id || ""}
             />
 
-            {trip?.passengers && trip?.passengers.length > 0 && (
+            {trip?.bookings && trip?.bookings.length > 0 && (
               <>
                 <h2 className="text-black text-lg font-semibold pb-3">
-                  Passagers
+                  Passagers ({totalBookedSeats}/{trip?.capacity} sièges)
                 </h2>
-                <TripDetailsPassenger passengers={trip.passengers} />
+                <TripDetailsPassenger trip={trip} />
               </>
             )}
+
+      
           </div>
 
           <div className="flex flex-col w-full sm:w-11/12 md:w-full lg:w-auto">
@@ -83,10 +94,20 @@ export const TripDetailsPage = () => {
 
             {trip?.driver?.id !== user?.id.toString() && (
               <Button
-                className="mt-4 bg-accent h-[50px] rounded-full"
+                className={`mt-4 h-[50px] rounded-full ${
+                  availableSeats === 0 || userHasBooking
+                    ? 'bg-gray-400 cursor-not-allowed'
+                    : 'bg-accent hover:bg-accent/90'
+                }`}
                 onClick={handleClick}
+                disabled={availableSeats === 0 || userHasBooking}
               >
-                Réserver
+                {userHasBooking 
+                  ? 'Déjà réservé' 
+                  : availableSeats === 0 
+                    ? 'Complet' 
+                    : 'Réserver'
+                }
               </Button>
             )}
           </div>

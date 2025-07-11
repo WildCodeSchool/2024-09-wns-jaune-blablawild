@@ -2,6 +2,7 @@ import { Arg, Ctx, Mutation, Query, Resolver } from "type-graphql";
 import { Between, FindOptionsWhere, ILike, LessThan, MoreThan } from "typeorm";
 import { Trip } from "../entities/trip";
 import { User } from "../entities/user";
+import { Booking } from "../entities/booking";
 import {
   BookTripInput,
   CancelTripBookingInput,
@@ -36,16 +37,20 @@ export class TripResolver {
         order: orderBy,
         relations: {
           driver: true,
-          passengers: true,
+          bookings: {
+            passenger: true,
+          },
         },
       });
 
-      let filteredTrips = trips.filter(
-        (trip) => trip.capacity >= data.passengers || trip.capacity === 0
-      );
+      let filteredTrips = trips.filter((trip) => {
+        const totalBookedSeats = trip.bookings?.reduce((sum, booking) => sum + booking.seatsCount, 0) || 0;
+        const availableSeats = trip.capacity - totalBookedSeats;
+        return availableSeats >= data.passengers;
+      });
 
       if (data.timeOptions && data.timeOptions.length > 0) {
-        filteredTrips = trips.filter((trip) => {
+        filteredTrips = filteredTrips.filter((trip) => {
           const departureHour = new Date(trip.departure_time).getUTCHours();
 
           return data.timeOptions?.some((option) => {
@@ -75,6 +80,12 @@ export class TripResolver {
   async getPopularTrip() {
     const popularTrip = await Trip.find({
       take: 5,
+      relations: {
+        driver: true,
+        bookings: {
+          passenger: true,
+        },
+      },
     });
     return popularTrip;
   }
@@ -91,12 +102,16 @@ export class TripResolver {
     if (asPassenger) {
       const trips = await Trip.find({
         where: {
-          passengers: {
-            id: userId,
+          bookings: {
+            passenger: {
+              id: userId,
+            },
           },
         },
         relations: {
-          passengers: true,
+          bookings: {
+            passenger: true,
+          },
           driver: true,
           reviews: {
             sender: true,
@@ -114,29 +129,20 @@ export class TripResolver {
       whereClause.departure_time = MoreThan(today);
     } else if (filter === TripStatusFilter.PAST) {
       whereClause.departure_time = LessThan(today);
-    } else if (filter === TripStatusFilter.PUBLISHED) {
     }
 
     const trips = await Trip.find({
       where: whereClause,
       relations: {
-        passengers: true,
+        bookings: {
+          passenger: true,
+        },
         driver: true,
         reviews: {
           sender: true,
           receiver: true,
         },
       },
-    });
-
-    trips.forEach((trip, index) => {
-      if (trip.reviews && trip.reviews.length > 0) {
-        trip.reviews.forEach((review, rIndex) => {
-          console.log(`Review #${rIndex + 1}:`);
-          console.log(`Has sender: ${review.sender ? "Yes" : "NO"}`);
-          console.log(`Has receiver: ${review.receiver ? "Yes" : "NO"}`);
-        });
-      }
     });
 
     if (!trips) {
@@ -150,7 +156,12 @@ export class TripResolver {
   async getTripById(@Arg("tripId") tripId: string) {
     const trip = await Trip.findOne({
       where: { id: tripId },
-      relations: { passengers: true, driver: true },
+      relations: { 
+        bookings: { 
+          passenger: true 
+        }, 
+        driver: true 
+      },
     });
 
     if (!trip) {
@@ -169,19 +180,24 @@ export class TripResolver {
     }
 
     const trip = new Trip();
-
     Object.assign(trip, data);
     trip.driver = driver;
 
     await trip.save();
     return "Le trajet a bien été créé";
   }
+
   @Mutation(() => String)
   async bookTrip(@Arg("data", () => BookTripInput) data: BookTripInput) {
     try {
       const trip = await Trip.findOne({
         where: { id: data.tripId },
-        relations: { passengers: true, driver: true },
+        relations: { 
+          bookings: { 
+            passenger: true 
+          }, 
+          driver: true 
+        },
       });
 
       if (!trip) throw new Error("Le trajet n'existe pas");
@@ -198,40 +214,50 @@ export class TripResolver {
         throw new Error("L'utilisateur n'existe pas");
       }
 
+      console.log('User found:', user.id, 'Type:', typeof user.id);
+      console.log('Trip driver:', trip.driver.id, 'Type:', typeof trip.driver.id);
+      console.log('Data userId:', data.userId, 'Type:', typeof data.userId);
+
       if (data.userId.toString() === trip.driver.id.toString())
         throw new Error(
           "Vous ne pouvez pas réserver un trajet pour lequel vous êtes conducteur"
         );
 
-      if (!trip.passengers) {
-        trip.passengers = [];
-      }
-
-      const isAlreadyPassenger = trip.passengers.some(
-        (passenger) => passenger.id === user.id
+      const existingBooking = trip.bookings?.find(
+        (booking) => booking.passenger.id === user.id
       );
-      if (isAlreadyPassenger) {
+      if (existingBooking) {
         throw new Error("Vous avez déjà réservé ce trajet");
       }
 
       const seatsToBook = data.seatsCount || 1;
-      const currentPassengersCount = trip.passengers.length;
+      const totalBookedSeats = trip.bookings?.reduce((sum, booking) => sum + booking.seatsCount, 0) || 0;
 
-      if (currentPassengersCount + seatsToBook > trip.capacity) {
+      if (totalBookedSeats + seatsToBook > trip.capacity) {
         throw new Error(
           `Il ne reste pas assez de places disponibles. Places disponibles: ${
-            trip.capacity - currentPassengersCount
+            trip.capacity - totalBookedSeats
           }`
         );
       }
 
-      trip.passengers.push(user);
+      const booking = new Booking();
+      booking.passenger = user;
+      booking.trip = trip;
+      booking.seatsCount = seatsToBook;
+      booking.bookingDate = new Date();
 
-      if (trip.passengers.length === trip.capacity) {
+      await booking.save();
+      console.log('Booking créé:', booking);
+
+      // Mettre à jour le statut du trip si nécessaire
+      const newTotalBookedSeats = totalBookedSeats + seatsToBook;
+      console.log('Total sièges réservés:', newTotalBookedSeats, 'Capacité:', trip.capacity);
+      
+      if (newTotalBookedSeats === trip.capacity) {
         trip.status = TripStatus.FULL;
+        await trip.save();
       }
-
-      await trip.save();
 
       return "Votre réservation a bien été enregistrée";
     } catch (error) {
@@ -249,15 +275,19 @@ export class TripResolver {
     try {
       const trip = await Trip.findOne({
         where: { id: data.tripId },
-        relations: { passengers: true },
+        relations: { 
+          bookings: { 
+            passenger: true 
+          } 
+        },
       });
 
       if (!trip) {
         throw new Error("Le trajet n'existe pas");
       }
 
-      if (!trip.passengers || trip.passengers.length === 0) {
-        throw new Error("Ce trajet n'a pas de passagers");
+      if (!trip.bookings || trip.bookings.length === 0) {
+        throw new Error("Ce trajet n'a pas de réservations");
       }
 
       const user = await User.findOne({
@@ -265,8 +295,6 @@ export class TripResolver {
         relations: ["profile"],
       });
 
-      console.log(user)
-      
       if (!user) {
         throw new Error("L'utilisateur n'existe pas");
       }
@@ -275,25 +303,23 @@ export class TripResolver {
         throw new Error("L'utilisateur n'a pas de profil");
       }
 
-      const isPassenger = trip.passengers.some(
-        (passenger) => passenger.id === user.id
+      const booking = trip.bookings.find(
+        (booking) => booking.passenger.id === user.id
       );
-      if (!isPassenger) {
+
+      if (!booking) {
         throw new Error("Vous n'avez pas réservé ce trajet");
       }
 
-      trip.passengers = trip.passengers.filter(
-        (passenger) => passenger.id !== user.id
-      );
+      await Booking.remove(booking);
 
       if (trip.status === TripStatus.FULL) {
         trip.status = TripStatus.OPEN;
+        await trip.save();
       }
 
-      await trip.save();
-
-      user.profile.cancelledTrips = user.profile.cancelledTrips ? user.profile.cancelledTrips += 1 : 1
-      await user.save()
+      user.profile.cancelledTrips = user.profile.cancelledTrips ? user.profile.cancelledTrips + 1 : 1;
+      await user.save();
 
       return "Votre réservation a bien été annulée";
     } catch (error) {

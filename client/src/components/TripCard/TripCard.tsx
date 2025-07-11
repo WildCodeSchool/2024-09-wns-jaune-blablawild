@@ -36,26 +36,36 @@ export default function TripCard({
   }, [trips]);  
 
   const handleNavigateTrip = (trip: Trip) => {
-    if (trip.capacity > 0) {
+    const availableSeats = getAvailableSeats(trip);
+    if (availableSeats > 0) {
       navigate(`/trip/${trip.id}`);
     }
+  };
+
+  // Fonction pour calculer les sièges disponibles
+  const getAvailableSeats = (trip: Trip) => {
+    const totalBookedSeats = trip.bookings?.reduce((sum, booking) => sum + booking.seatsCount, 0) || 0;
+    return trip.capacity - totalBookedSeats;
   };
 
   return (
     <section className="w-full px-2 py-4 md:p-8">
       <div className="space-y-4">
         {trips.map((trip) => {
+          const availableSeats = getAvailableSeats(trip);
+          const isFullyBooked = availableSeats === 0;
+
           return (
             <article
               key={trip.id}
               onClick={() => handleNavigateTrip(trip)}
               className={`${
-                trip.capacity > 0
+                !isFullyBooked
                   ? "hover:shadow-base hover:cursor-pointer hover:ring-1 hover:ring-primary"
                   : ""
               } relative flex md:h-[232px] bg-background rounded-xl border-solid border-[#E5E5E5] border-1 overflow-hidden  transition-shadow duration-150  xl:max-w-[1000px]`}
             >
-              {trip.capacity === 0 && (
+              {isFullyBooked && (
                 <div className="absolute inset-0  z-10 bg-background/65" />
               )}
 
@@ -82,7 +92,6 @@ export default function TripCard({
                   </div>
 
                   <div className="flex items-center flex-col flex-1 px-2">
-             
                     <div className="flex items-center w-full">
                       <Circle size={10} className="text-gray-500 flex-shrink-0" />
                       <div className="border-t border-gray-500 flex-1 mx-1"></div>
@@ -91,7 +100,6 @@ export default function TripCard({
                   </div>
 
                   <div className="flex-1 text-right">
-                
                     <div className="text-lg font-medium capitalize text-gray-900 max-w-[100px] truncate md:max-w-none block md:hidden">
                       {trip.arrival_city.length > 5
                         ? `${trip.arrival_city.slice(0, 5)}…`
@@ -112,16 +120,16 @@ export default function TripCard({
                     <div className=" flex  flex-col items-center md:flex-row  md:gap-2 md:mt-3">
                       <CarIcon className="w-6 h-6 text-gray-600" />
                       <span className="text-sm text-gray-600">
-                        {trip.capacity > 0
-                          ? `${trip.capacity} siège${
-                              trip.capacity > 1 ? "s" : ""
-                            } restant${trip.capacity > 1 ? "s" : ""}`
+                        {availableSeats > 0
+                          ? `${availableSeats} siège${
+                              availableSeats > 1 ? "s" : ""
+                            } restant${availableSeats > 1 ? "s" : ""}`
                           : "Complet"}{" "}
                       </span>
                     </div>
                   </div>
                 ) : (
-                  <PassengersList passengers={trip.passengers} />
+                  <PassengersList bookings={trip.bookings} />
                 )}
               </div>
               <div className="w-1/3 relative flex items-center justify-center">
@@ -133,7 +141,7 @@ export default function TripCard({
                     new Date(trip.departure_time) < new Date() && "grayscale"
                   )}
                 />
-                <PriceOverlay price={trip.price} capacity={trip.capacity} />
+                <PriceOverlay price={trip.price} capacity={availableSeats} />
               </div>
             </article>
           );

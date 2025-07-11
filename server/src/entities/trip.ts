@@ -3,13 +3,12 @@ import {
   BaseEntity,
   Column,
   Entity,
-  JoinTable,
-  ManyToMany,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
 } from "typeorm";
 import { User } from "./user";
+import { Booking } from "./booking";
 import { Review } from "./review";
 import { Transaction } from "./transaction";
 import { TripStatus } from "../type/tripType";
@@ -27,7 +26,7 @@ export class Trip extends BaseEntity {
 
   @Field({ nullable: true })
   @Column({ nullable: true })
-  departure_address!: string; 
+  departure_address!: string;
 
   @Field()
   @Column()
@@ -35,7 +34,7 @@ export class Trip extends BaseEntity {
 
   @Field({ nullable: true })
   @Column({ nullable: true })
-  arrival_address!: string; 
+  arrival_address!: string;
 
   @Field()
   @Column()
@@ -49,18 +48,20 @@ export class Trip extends BaseEntity {
   @Column()
   capacity!: number;
 
+  @Column({ default: 0 })
+  reservedSeats!: number;
+
   @Field(() => TripStatus)
   @Column({ default: TripStatus.OPEN })
   status!: TripStatus;
 
-  @Field(() => [User], { nullable: true })
-  @JoinTable()
-  @ManyToMany(() => User, (user) => user.passenger_trips)
-  passengers?: User[];
-
-  @Field(() => User, {nullable: true})
+  @Field(() => User, { nullable: true })
   @ManyToOne(() => User, (user) => user.driver_trips)
   driver!: User;
+
+  @Field(() => [Booking], { nullable: true })
+  @OneToMany(() => Booking, (booking) => booking.trip)
+  bookings?: Booking[];
 
   @Field(() => [Review], { nullable: true })
   @OneToMany(() => Review, (review) => review.trip)
