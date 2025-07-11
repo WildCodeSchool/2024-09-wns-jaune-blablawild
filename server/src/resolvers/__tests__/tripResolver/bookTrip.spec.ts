@@ -1,3 +1,4 @@
+// src/resolvers/__tests__/tripResolver/bookTrip.spec.ts
 import { TripResolver } from "../../tripResolver";
 import { Trip } from "../../../entities/trip";
 import { User } from "../../../entities/user";
@@ -198,7 +199,7 @@ describe("bookTrip", () => {
     };
 
     await expect(tripResolver.bookTrip(bookingInput)).rejects.toThrow(
-      "Ce trajet est déjà complet"
+      "Il ne reste pas assez de places disponibles"
     );
   });
 
