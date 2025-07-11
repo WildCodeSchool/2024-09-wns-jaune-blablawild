@@ -1,5 +1,5 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Users } from "lucide-react";
+import { CircleUserRound, Users } from "lucide-react";
 import { PassengersListProps } from "../_types/types";
 
 export function PassengersList({ passengers }: Readonly<PassengersListProps>) {
@@ -26,7 +26,7 @@ export function PassengersList({ passengers }: Readonly<PassengersListProps>) {
                 src={passenger.profile?.image || undefined}
                 alt={passenger.firstname}
               />
-              <AvatarFallback>{passenger.firstname.charAt(0)}</AvatarFallback>
+              <AvatarFallback><CircleUserRound size={30} strokeWidth={1.5} /></AvatarFallback>
             </Avatar>
             <span className="text-sm text-gray-600">
               {passenger.firstname} {passenger.lastname}
