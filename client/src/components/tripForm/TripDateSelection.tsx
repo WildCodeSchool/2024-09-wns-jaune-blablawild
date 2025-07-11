@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { FormControl, FormItem } from "../ui/form";
 import { useFormContext } from "react-hook-form";
 import { fr } from "date-fns/locale";
-import { startOfToday } from "date-fns";
+import { getHours, getMinutes, set, startOfToday } from "date-fns";
 
 export default function TripDateSelection() {
   const { setValue, watch } = useFormContext();
@@ -12,8 +12,19 @@ export default function TripDateSelection() {
   );
 
   useEffect(() => {
-    setValue("departureDate", date);
-  }, [date, setValue]);
+    if (date) {
+      const currentDateTime = watch("departureDate");
+
+      const newDateTime = set(date, {
+        hours: getHours(currentDateTime),
+        minutes: getMinutes(currentDateTime),
+        seconds: 0,
+        milliseconds: 0
+      })
+
+      setValue("departureDate", newDateTime);
+    }
+  }, [date, setValue, watch]);
 
   return (
     <div className="flex flex-col items-center gap-2 text-foreground shadow-none cursor-pointer hover:bg-[var(--hover)] md:px-2 md:py-2 px-3 py-4 md:rounded-lg">

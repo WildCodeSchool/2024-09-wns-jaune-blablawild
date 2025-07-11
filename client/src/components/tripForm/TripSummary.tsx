@@ -31,6 +31,8 @@ export default function TripSummary() {
   const price = watch("price");
   const passengers = watch("passengers");
 
+  console.log(departureDate)
+
   const totalPrice = passengers * price;
 
   const formattedDeparture = formatAddress(departureCity);
