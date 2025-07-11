@@ -1,68 +1,185 @@
 import { faker } from "@faker-js/faker/locale/fr";
 import { Trip } from "../../../entities/trip";
 import { User } from "../../../entities/user";
+import { Booking } from "../../../entities/booking";
 import { CancelTripBookingInput, TripStatus } from "../../../type/tripType";
 import { TripResolver } from "../../tripResolver";
-import { tripFactory, userFactory } from "../../factories";
+import { TripFactory, userFactory } from "../../factories";
 
-jest.mock("../../../entities/trip");
-jest.mock("../../../entities/user");
-
-describe("cancelTrip",  () => {
+describe("cancelTripBooking", () => {
   let tripResolver: TripResolver;
   let mockTrip: Trip;
   let mockUser: User;
+  let mockBooking: any;
 
   beforeEach(async () => {
     tripResolver = new TripResolver();
-    mockTrip = await tripFactory.build();
+    
+    const tripFactory = new TripFactory();
+    mockTrip = tripFactory.build();
     mockUser = await userFactory.withProfile().build();
+    
+    mockBooking = {
+      id: faker.string.uuid(),
+      passenger: mockUser,
+      trip: mockTrip,
+      seatsCount: 1,
+      bookingDate: new Date(),
+    };
+    
+    Trip.findOne = jest.fn();
+    User.findOne = jest.fn();
+    Booking.remove = jest.fn();
+    
     jest.clearAllMocks();
   });
 
+  afterEach(() => {
+    jest.restoreAllMocks();
+  });
+
   it("devrait annuler une réservation avec succès", async () => {
-    const tripWithUser = {
+    const tripWithBooking = {
       ...mockTrip,
-      passengers: [mockUser],
+      bookings: [mockBooking],
       save: jest.fn().mockResolvedValue(true),
     };
 
-    (Trip.findOne as jest.Mock).mockResolvedValue(tripWithUser);
-    (User.findOne as jest.Mock).mockResolvedValue(mockUser);
+    const userWithProfile = {
+      ...mockUser,
+      profile: {
+        ...mockUser.profile,
+        cancelledTrips: 0
+      },
+      save: jest.fn().mockResolvedValue(true),
+    };
+
+    (Trip.findOne as jest.Mock).mockResolvedValue(tripWithBooking);
+    (User.findOne as jest.Mock).mockResolvedValue(userWithProfile);
+    (Booking.remove as jest.Mock).mockResolvedValue(true);
 
     const cancelData: CancelTripBookingInput = {
-      tripId: tripWithUser.id!,
+      tripId: mockTrip.id!,
       userId: mockUser.id!,
     };
 
     const result = await tripResolver.cancelTripBooking(cancelData);
 
     expect(result).toBe("Votre réservation a bien été annulée");
-    expect(tripWithUser.passengers).not.toContainEqual(mockUser);
-    expect(tripWithUser.save).toHaveBeenCalled();
-    expect(mockUser.profile!.cancelledTrips).toBe(1);
-    expect(mockUser.save).toHaveBeenCalled();
-    expect(User.findOne).toHaveBeenCalledWith({ 
+    expect(Booking.remove).toHaveBeenCalledWith(mockBooking);
+    expect(userWithProfile.profile.cancelledTrips).toBe(1);
+    expect(userWithProfile.save).toHaveBeenCalled();
+    
+    // Vérifier les appels aux méthodes findOne
+    expect(User.findOne).toHaveBeenCalledWith({
       where: { id: mockUser.id },
       relations: ["profile"]
     });
     expect(Trip.findOne).toHaveBeenCalledWith({
-      where: { id: tripWithUser.id },
-      relations: { passengers: true }
+      where: { id: mockTrip.id },
+      relations: { 
+        bookings: { 
+          passenger: true 
+        } 
+      }
     });
   });
 
-  it("devrait échouer si l'utilisateur n'a pas réservé", async () => {
-    const tripWithoutUser = {
-      ...mockTrip,
-      passengers: [{ id: faker.string.uuid() }],
+  it("devrait échouer si le trajet n'existe pas", async () => {
+    (Trip.findOne as jest.Mock).mockResolvedValue(null);
+
+    const cancelData: CancelTripBookingInput = {
+      tripId: mockTrip.id!,
+      userId: mockUser.id!,
     };
 
-    (Trip.findOne as jest.Mock).mockResolvedValue(tripWithoutUser);
+    await expect(tripResolver.cancelTripBooking(cancelData)).rejects.toThrow(
+      "Le trajet n'existe pas"
+    );
+  });
+
+  it("devrait échouer si l'utilisateur n'existe pas", async () => {
+    const tripWithBooking = {
+      ...mockTrip,
+      bookings: [mockBooking],
+    };
+
+    (Trip.findOne as jest.Mock).mockResolvedValue(tripWithBooking);
+    (User.findOne as jest.Mock).mockResolvedValue(null);
+
+    const cancelData: CancelTripBookingInput = {
+      tripId: mockTrip.id!,
+      userId: mockUser.id!,
+    };
+
+    await expect(tripResolver.cancelTripBooking(cancelData)).rejects.toThrow(
+      "L'utilisateur n'existe pas"
+    );
+  });
+
+  it("devrait échouer si l'utilisateur n'a pas de profil", async () => {
+    const tripWithBooking = {
+      ...mockTrip,
+      bookings: [mockBooking],
+    };
+
+    const userWithoutProfile = {
+      ...mockUser,
+      profile: null
+    };
+
+    (Trip.findOne as jest.Mock).mockResolvedValue(tripWithBooking);
+    (User.findOne as jest.Mock).mockResolvedValue(userWithoutProfile);
+
+    const cancelData: CancelTripBookingInput = {
+      tripId: mockTrip.id!,
+      userId: mockUser.id!,
+    };
+
+    await expect(tripResolver.cancelTripBooking(cancelData)).rejects.toThrow(
+      "L'utilisateur n'a pas de profil"
+    );
+  });
+
+  it("devrait échouer si le trajet n'a pas de réservations", async () => {
+    const tripWithoutBookings = {
+      ...mockTrip,
+      bookings: [],
+    };
+
+    (Trip.findOne as jest.Mock).mockResolvedValue(tripWithoutBookings);
     (User.findOne as jest.Mock).mockResolvedValue(mockUser);
 
     const cancelData: CancelTripBookingInput = {
-      tripId: tripWithoutUser.id!,
+      tripId: mockTrip.id!,
+      userId: mockUser.id!,
+    };
+
+    await expect(tripResolver.cancelTripBooking(cancelData)).rejects.toThrow(
+      "Ce trajet n'a pas de réservations"
+    );
+  });
+
+  it("devrait échouer si l'utilisateur n'a pas réservé", async () => {
+    const otherUser = { id: faker.string.uuid() };
+    const otherBooking = {
+      id: faker.string.uuid(),
+      passenger: otherUser,
+      trip: mockTrip,
+      seatsCount: 1,
+      bookingDate: new Date(),
+    };
+
+    const tripWithOtherBooking = {
+      ...mockTrip,
+      bookings: [otherBooking],
+    };
+
+    (Trip.findOne as jest.Mock).mockResolvedValue(tripWithOtherBooking);
+    (User.findOne as jest.Mock).mockResolvedValue(mockUser);
+
+    const cancelData: CancelTripBookingInput = {
+      tripId: mockTrip.id!,
       userId: mockUser.id!,
     };
 
@@ -75,16 +192,25 @@ describe("cancelTrip",  () => {
     const fullTrip = {
       ...mockTrip,
       status: TripStatus.FULL,
-      capacity: 1,
-      passengers: [mockUser],
+      bookings: [mockBooking],
+      save: jest.fn().mockResolvedValue(true),
+    };
+
+    const userWithProfile = {
+      ...mockUser,
+      profile: {
+        ...mockUser.profile,
+        cancelledTrips: 0
+      },
       save: jest.fn().mockResolvedValue(true),
     };
 
     (Trip.findOne as jest.Mock).mockResolvedValue(fullTrip);
-    (User.findOne as jest.Mock).mockResolvedValue(mockUser);
+    (User.findOne as jest.Mock).mockResolvedValue(userWithProfile);
+    (Booking.remove as jest.Mock).mockResolvedValue(true);
 
     const cancelData: CancelTripBookingInput = {
-      tripId: fullTrip.id!,
+      tripId: mockTrip.id!,
       userId: mockUser.id!,
     };
 
@@ -95,16 +221,15 @@ describe("cancelTrip",  () => {
   });
 
   it("devrait incrémenter le total d'annulations de l'user après annulation", async () => {
-
     if (!mockUser.profile) {
       throw new Error("L'utilisateur doit avoir un profil pour ce test");
     }
 
     const initialCancelledTrips = mockUser.profile.cancelledTrips || 0;
 
-    const fullTrip = {
+    const tripWithBooking = {
       ...mockTrip,
-      passengers: [mockUser],
+      bookings: [mockBooking],
       save: jest.fn().mockResolvedValue(true),
     };
 
@@ -117,11 +242,12 @@ describe("cancelTrip",  () => {
       save: jest.fn().mockResolvedValue(true),
     };
 
-    (Trip.findOne as jest.Mock).mockResolvedValue(fullTrip);
+    (Trip.findOne as jest.Mock).mockResolvedValue(tripWithBooking);
     (User.findOne as jest.Mock).mockResolvedValue(mockUserWithCancelledTrips);
+    (Booking.remove as jest.Mock).mockResolvedValue(true);
 
     const cancelData: CancelTripBookingInput = {
-      tripId: fullTrip.id!,
+      tripId: mockTrip.id!,
       userId: mockUser.id!,
     };
 
@@ -129,7 +255,6 @@ describe("cancelTrip",  () => {
 
     expect(mockUserWithCancelledTrips.profile.cancelledTrips).toBe(initialCancelledTrips + 1);
     expect(mockUserWithCancelledTrips.save).toHaveBeenCalled();
-    expect(fullTrip.save).toHaveBeenCalled();
   });
 
 });

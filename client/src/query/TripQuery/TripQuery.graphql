@@ -11,10 +11,14 @@ query GetTrip($data: FilterTripInput!) {
       lastname
     }
     price
-    passengers {
+    bookings {
       id
-      firstname
-      lastname
+      seatsCount
+      passenger {
+        id
+        firstname
+        lastname
+      }
     }
   }
 }

@@ -9,11 +9,15 @@ query GetTripById($tripId: String!) {
     arrival_address
     capacity
     status
-    passengers {
-      firstname
+    bookings {
       id
-      profile {
-        image
+      seatsCount
+      passenger {
+        firstname
+        id
+        profile {
+          image
+        }
       }
     }
     driver {
