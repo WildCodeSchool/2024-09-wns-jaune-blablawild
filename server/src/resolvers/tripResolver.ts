@@ -150,7 +150,14 @@ export class TripResolver {
   async getTripById(@Arg("tripId") tripId: string) {
     const trip = await Trip.findOne({
       where: { id: tripId },
-      relations: { passengers: true, driver: true },
+      relations: {
+        passengers: {
+          profile: true,
+        },
+        driver: {
+          profile: true,
+        },
+      },
     });
 
     if (!trip) {
@@ -265,8 +272,8 @@ export class TripResolver {
         relations: ["profile"],
       });
 
-      console.log(user)
-      
+      console.log(user);
+
       if (!user) {
         throw new Error("L'utilisateur n'existe pas");
       }
@@ -292,8 +299,10 @@ export class TripResolver {
 
       await trip.save();
 
-      user.profile.cancelledTrips = user.profile.cancelledTrips ? user.profile.cancelledTrips += 1 : 1
-      await user.save()
+      user.profile.cancelledTrips = user.profile.cancelledTrips
+        ? (user.profile.cancelledTrips += 1)
+        : 1;
+      await user.save();
 
       return "Votre réservation a bien été annulée";
     } catch (error) {
