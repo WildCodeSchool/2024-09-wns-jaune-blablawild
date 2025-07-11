@@ -1,6 +1,7 @@
 import { Trip } from "../../../entities/trip";
 import { User } from "../../../entities/user";
 import { Booking } from "../../../entities/booking";
+import { TripStatus } from "../../../type/tripType";
 
 export class TripFactory {
   private trip: Partial<Trip>;
@@ -9,16 +10,22 @@ export class TripFactory {
     this.trip = {
       id: "1",
       departure_city: "Paris",
+      departure_address: "123 Rue de Paris", 
       arrival_city: "Lyon",
+      arrival_address: "456 Rue de Lyon", 
       departure_time: new Date("2025-04-10T10:00:00Z"),
       price: 25,
       capacity: 4,
+      reservedSeats: 0, 
+      status: TripStatus.OPEN, 
       driver: {
         id: "driver1",
         firstname: "John",
         lastname: "Doe",
       } as User,
       bookings: [],
+      reviews: [],
+      transactions: [], 
     };
   }
 
@@ -34,7 +41,10 @@ export class TripFactory {
     return this.withOverride({ bookings });
   }
 
-  // Méthode de compatibilité pour les anciens tests
+  withStatus(status: TripStatus): TripFactory {
+    return this.withOverride({ status });
+  }
+
   withPassengers(passengers: User[]): TripFactory {
     const bookings = passengers.map((passenger, index) => ({
       id: `booking-${index}`,
@@ -42,7 +52,7 @@ export class TripFactory {
       seatsCount: 1,
       bookingDate: new Date(),
     })) as Booking[];
-    
+        
     return this.withOverride({ bookings });
   }
 

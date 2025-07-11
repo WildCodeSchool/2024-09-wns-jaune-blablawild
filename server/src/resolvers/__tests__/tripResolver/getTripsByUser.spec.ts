@@ -19,6 +19,19 @@ describe("get trips by user", () => {
     jest.clearAllMocks();
   });
 
+  it("DEBUG: should show actual call to Trip.find", async () => {
+    const mockDriver = { id: "3", firstname: "Driver3" } as User;
+    const mockTrip = tripFactory.withDriver(mockDriver).build();
+    
+    (Trip.find as jest.Mock).mockResolvedValueOnce([mockTrip]);
+
+    await tripResolver.getTripByUser("3", TripStatusFilter.PUBLISHED, false);
+
+    console.log("Actual call to Trip.find:", (Trip.find as jest.Mock).mock.calls[0]);
+    
+    expect(Trip.find).toHaveBeenCalledTimes(1);
+  });
+
   it.each([
     {
       name: "Get trips for given driverId",
@@ -90,6 +103,9 @@ describe("get trips by user", () => {
       expect(Trip.find).toHaveBeenCalledWith({
         where: expectedWhere,
         relations: {
+          bookings: {
+            passenger: true,
+          },
           driver: true,
           reviews: {
             receiver: true,
@@ -103,49 +119,108 @@ describe("get trips by user", () => {
   );
 
   it("should get trips where user is passenger", async () => {
-    const mockUser = { id: "user1" } as User;
-    const mockTrip1 = { id: "trip1", driver: { id: "driver1" } } as Trip;
-    const mockTrip2 = { id: "trip2", driver: { id: "driver2" } } as Trip;
+    const mockUser = { id: "user1", firstname: "John", lastname: "Doe" } as User;
+    const mockDriver1 = { id: "driver1", firstname: "Driver1" } as User;
+    const mockDriver2 = { id: "driver2", firstname: "Driver2" } as User;
     
-    const mockBookings = [
-      {
-        id: "booking1",
-        passenger: mockUser,
-        trip: mockTrip1,
-        seatsCount: 1,
-      },
-      {
-        id: "booking2",
-        passenger: mockUser,
-        trip: mockTrip2,
-        seatsCount: 2,
-      },
-    ] as Booking[];
+    const mockBooking1 = {
+      id: "booking1",
+      passenger: mockUser,
+      seatsCount: 1,
+      bookingDate: new Date(),
+    } as Booking;
+    
+    const mockBooking2 = {
+      id: "booking2",
+      passenger: mockUser,
+      seatsCount: 2,
+      bookingDate: new Date(),
+    } as Booking;
+    
+    const mockTrip1 = tripFactory
+      .withId("trip1")
+      .withDriver(mockDriver1)
+      .withBookings([mockBooking1])
+      .build();
+    
+    const mockTrip2 = tripFactory
+      .withId("trip2")
+      .withDriver(mockDriver2)
+      .withBookings([mockBooking2])
+      .build();
 
-    (Booking.find as jest.Mock).mockResolvedValue(mockBookings);
+    (Trip.find as jest.Mock).mockResolvedValue([mockTrip1, mockTrip2]);
 
     const result = await tripResolver.getTripByUser(
       "user1",
       TripStatusFilter.PUBLISHED,
-      true // asPassenger = true
+      true 
     );
 
-    expect(Booking.find).toHaveBeenCalledWith({
+    expect(Trip.find).toHaveBeenCalledWith({
       where: {
-        passenger: { id: "user1" },
+        bookings: {
+          passenger: {
+            id: "user1",
+          },
+        },
       },
       relations: {
-        trip: {
-          driver: true,
-          reviews: {
-            sender: true,
-            receiver: true,
-          },
+        bookings: {
+          passenger: true,
+        },
+        driver: true,
+        reviews: {
+          sender: true,
+          receiver: true,
         },
       },
     });
 
     expect(result).toHaveLength(2);
     expect(result).toEqual([mockTrip1, mockTrip2]);
+    expect(result[0].driver.id).toBe("driver1");
+    expect(result[1].driver.id).toBe("driver2");
+  });
+
+  it("should handle case when user has no trips as passenger", async () => {
+    (Trip.find as jest.Mock).mockResolvedValue([]);
+
+    const result = await tripResolver.getTripByUser(
+      "user-with-no-trips",
+      TripStatusFilter.PUBLISHED,
+      true 
+    );
+
+    expect(Trip.find).toHaveBeenCalledWith({
+      where: {
+        bookings: {
+          passenger: {
+            id: "user-with-no-trips",
+          },
+        },
+      },
+      relations: {
+        bookings: {
+          passenger: true,
+        },
+        driver: true,
+        reviews: {
+          sender: true,
+          receiver: true,
+        },
+      },
+    });
+
+    expect(result).toHaveLength(0);
+    expect(result).toEqual([]);
+  });
+
+  it("should throw error when no trips found for driver", async () => {
+    (Trip.find as jest.Mock).mockResolvedValue(null);
+
+    await expect(
+      tripResolver.getTripByUser("driver-id", TripStatusFilter.PUBLISHED, false)
+    ).rejects.toThrow("No trips found for this user");
   });
 });
