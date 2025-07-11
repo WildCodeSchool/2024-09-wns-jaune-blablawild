@@ -10,7 +10,7 @@ import TripSummary from "@/components/tripForm/TripSummary";
 import { Button } from "@/components/ui/button";
 import { useCreateTripMutation } from "@/graphql/hooks";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { addMinutes, getHours, getMinutes, isAfter, set, setHours, setMinutes } from "date-fns";
+import { addMinutes, getHours, getMinutes, isAfter, set } from "date-fns";
 import { useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -139,14 +139,14 @@ export default function TripForm() {
   const departureDate = form.watch('departureDate');
 
   const selectedDateTime = useMemo(() => {
-  const selectedDate = new Date(departureDate);
-  return set(selectedDate, {
-    hours: departureHour,
-    minutes: departureMinutes,
-    seconds: 0,
-    milliseconds: 0
-  });
-}, [departureDate, departureHour, departureMinutes]);
+    const selectedDate = new Date(departureDate);
+    return set(selectedDate, {
+      hours: departureHour,
+      minutes: departureMinutes,
+      seconds: 0,
+      milliseconds: 0
+    });
+  }, [departureDate, departureHour, departureMinutes]);
 
   useEffect(() => {
     const updatedDate = set(departureDate, {
