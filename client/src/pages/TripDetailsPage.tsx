@@ -28,10 +28,6 @@ export const TripDetailsPage = () => {
     navigate(`/reservation/${id}`);
   };
 
-  console.log(trip?.driver?.id);
-  
-  console.log(user?.id);
-
   return (
     <div className="pt-6 md:pt-10 pb-6 md:pb-10 bg-white px-4 md:px-30 flex flex-col items-center">
       <div className="w-11/12 md:max-w-[1100px] md:w-full">
@@ -48,11 +44,9 @@ export const TripDetailsPage = () => {
               <TripLine
                 departureTime={trip?.departure_time || ""}
                 departureCity={trip?.departure_city || ""}
-                departureAddress="91 rue de charenton"
-                arrivalTime={"2023-05-14T19:20:00Z"}
+                departureAddress={trip?.departure_address || ""}
                 arrivalCity={trip?.arrival_city || ""}
-                arrivalAddress="10 rue du bon"
-                tripDuration="7h20"
+                arrivalAddress={trip?.arrival_address || ""}
               />
             </div>
 
@@ -61,8 +55,6 @@ export const TripDetailsPage = () => {
             </h2>
             <TripDetailsDriver
               driverName={trip?.driver?.firstname || ""}
-              driverRating={4.8}
-              driverReview="2 avis"
               profileImage={trip?.driver?.profile?.image || ""}
               driverId={trip?.driver?.id || ""}
             />
@@ -82,22 +74,22 @@ export const TripDetailsPage = () => {
               date={trip?.departure_time || ""}
               departureTime={trip?.departure_time || ""}
               departureCity={trip?.departure_city || ""}
-              departureAddress="91 rue de charenton"
-              arrivalTime={"2023-05-14T19:20:00Z"}
+              departureAddress={trip?.departure_address || ""}
               arrivalCity={trip?.arrival_city || ""}
-              arrivalAddress="10 rue du bon"
-              tripDuration={"7h20"}
+              arrivalAddress={trip?.arrival_address || ""}
               driverName={trip?.driver?.firstname || ""}
-              driverRating={4.8}
               driverImage={trip?.driver?.profile?.image || undefined}
               driverId={trip?.driver?.id || ""}
             />
-           {trip?.driver?.id !== user?.id.toString() && <Button
-              className="mt-4 bg-accent h-[50px] rounded-full"
-              onClick={handleClick}
-            >
-              Réserver
-            </Button>}
+
+            {trip?.driver?.id !== user?.id.toString() && (
+              <Button
+                className="mt-4 bg-accent h-[50px] rounded-full"
+                onClick={handleClick}
+              >
+                Réserver
+              </Button>
+            )}
           </div>
         </section>
       </div>

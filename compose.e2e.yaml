@@ -17,6 +17,7 @@ services:
       JWT_SECRET: ${JWT_SECRET}
       STRIPE_SECRET_KEY: ${STRIPE_SECRET_KEY}
       GATEWAY_PORT: ${GATEWAY_PORT}
+      
     depends_on:
       driveup-test-database:
         condition: service_healthy
@@ -32,6 +33,8 @@ services:
       VITE_GATEWAY_PORT: ${GATEWAY_PORT}
       VITE_SERVER_HOST: ${SERVER_HOST}
       VITE_CLIENT_HOST: ${CLIENT_HOST}
+      VITE_UNSPLASH_ACCESS_KEY: ${VITE_UNSPLASH_ACCESS_KEY}
+
     depends_on:
       - driveup-test-server
     networks:

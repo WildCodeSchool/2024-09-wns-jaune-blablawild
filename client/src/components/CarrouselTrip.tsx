@@ -35,10 +35,7 @@ export default function CarrouselTrip() {
   };
 
   if (loading) return <p>Loading ...</p>;
-  if (error) return <p>Error: {error.message}</p>;
-
-  console.log("data", data);
-  
+  if (error) return <p>Error: {error.message}</p>;  
 
   const handleClick = (trip: TripPopular) => {
     const params = new URLSearchParams(location.search);

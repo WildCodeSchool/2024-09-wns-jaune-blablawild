@@ -4,7 +4,9 @@ query GetTripById($tripId: String!) {
     departure_city
     arrival_city
     departure_time
+    departure_address
     price
+    arrival_address
     capacity
     status
     passengers {

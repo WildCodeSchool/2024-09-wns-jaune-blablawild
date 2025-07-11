@@ -39,7 +39,6 @@ const arrivalIcon = L.icon({
 export const DisplayMap = ({ departureCoordinates, arrivalCoordinates }: DisplayMapProps) => {
  
   const defaultCenter: [number, number] = [48.8566, 2.3522];
-  
 
   let center: [number, number] = defaultCenter;
   let zoom = 13;

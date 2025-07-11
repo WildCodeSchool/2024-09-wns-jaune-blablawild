@@ -4,8 +4,6 @@ import { PassengersList } from "./_components/PassengersList";
 import { PriceOverlay } from "./_components/PriceOverlay";
 import { TripCardProps } from "./_types/types";
 import {
-  calculateArrivalTime,
-  calculateTripDuration,
   formatHourFromTime,
 } from "./_utils/utils";
 import { useNavigate } from "react-router-dom";
@@ -37,7 +35,7 @@ export default function TripCard({
     };
 
     loadImages();
-  }, [trips]);
+  }, [trips]);  
 
   const handleNavigateTrip = (trip: Trip) => {
     if (trip.capacity > 0) {
@@ -49,8 +47,6 @@ export default function TripCard({
     <section className="w-full px-2 py-4 md:p-8">
       <div className="space-y-4">
         {trips.map((trip) => {
-          const arrivalTime = calculateArrivalTime(trip.departure_time);
-
           return (
             <article
               key={trip.id}
@@ -82,12 +78,13 @@ export default function TripCard({
                     <div className="text-base  capitalize text-gray-600 hidden md:block">
                       {trip.departure_city}
                     </div>
+                    <div className="text-sm text-gray-500 hidden md:block">
+                      {trip.departure_address}
+                    </div>
                   </div>
 
                   <div className="flex items-center flex-col flex-1 px-2">
-                    <div className="text-sm text-gray-500 mb-1">
-                      {calculateTripDuration(trip.departure_time, arrivalTime)}
-                    </div>
+             
                     <div className="flex items-center w-full">
                       <Circle size={10} className="text-gray-500 flex-shrink-0" />
                       <div className="border-t border-gray-500 flex-1 mx-1"></div>
@@ -96,9 +93,7 @@ export default function TripCard({
                   </div>
 
                   <div className="flex-1 text-right">
-                    <div className="text-lg font-medium text-gray-900">
-                      {formatHourFromTime(arrivalTime)}
-                    </div>
+                
                     <div className="text-lg font-medium capitalize text-gray-900 max-w-[100px] truncate md:max-w-none block md:hidden">
                       {trip.arrival_city.length > 5
                         ? `${trip.arrival_city.slice(0, 5)}…`
@@ -106,6 +101,9 @@ export default function TripCard({
                     </div>
                     <div className="text-base text-gray-600 capitalize hidden md:block">
                       {trip.arrival_city}
+                    </div>
+                    <div className="text-sm text-gray-500 hidden md:block">
+                      {trip.arrival_address}
                     </div>
                   </div>
                 </div>

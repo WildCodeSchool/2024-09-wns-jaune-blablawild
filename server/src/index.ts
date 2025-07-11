@@ -16,7 +16,7 @@ async function StartGraphQLServer() {
   await dataSource.initialize();
 
   const schema = await buildSchema({
-    resolvers: [TripResolver, UserResolver, ReviewResolver, ProfileResolver, TransactionResolver],
+    resolvers: [TripResolver, UserResolver, ReviewResolver, ProfileResolver],
     authChecker: ({ context }) => {
       if (!context.user) return false;
       return true;
