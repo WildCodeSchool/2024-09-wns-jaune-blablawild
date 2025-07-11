@@ -12,6 +12,9 @@ query GetTripByUser($userId: String!, $filter: String, $asPassenger: Boolean!) {
       passenger {
         firstname
         id
+        profile {
+          image
+        }
       }
     }
     driver {
