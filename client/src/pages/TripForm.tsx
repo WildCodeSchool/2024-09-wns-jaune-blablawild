@@ -292,7 +292,7 @@ export default function TripForm() {
         </div>
       </div>
 
-      <div className="flex-1 md:block hidden">
+      <div className="flex-1 md:flex hidden relative z-0">
         {shouldShowMap ? (
           <DisplayMap
             departureCoordinates={form.watch("departureCoordinates")}
