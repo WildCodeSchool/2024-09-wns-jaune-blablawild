@@ -13,7 +13,6 @@ describe("bookTrip", () => {
   beforeEach(() => {
     tripResolver = new TripResolver();
 
-    // Nettoyer tous les mocks
     jest.clearAllMocks();
     
     mockTrip = {
@@ -31,11 +30,9 @@ describe("bookTrip", () => {
       lastname: "Doe",
     } as User;
 
-    // Mock des méthodes statiques - uniquement celles utilisées dans bookTrip
     Trip.findOne = jest.fn().mockResolvedValue(mockTrip);
     User.findOneBy = jest.fn().mockResolvedValue(mockUser);
     
-    // Mock du constructeur et de la méthode save de Booking
     jest.spyOn(Booking.prototype, 'save').mockResolvedValue(undefined as any);
   });
 
@@ -54,7 +51,6 @@ describe("bookTrip", () => {
 
     expect(result).toBe("Votre réservation a bien été enregistrée");
     
-    // Vérifications des appels
     expect(Trip.findOne).toHaveBeenCalledWith({
       where: { id: "1" },
       relations: { 
@@ -67,22 +63,19 @@ describe("bookTrip", () => {
     
     expect(User.findOneBy).toHaveBeenCalledWith({ id: "user1" });
     
-    // Vérifier que le booking est sauvegardé
     expect(Booking.prototype.save).toHaveBeenCalled();
     
-    // Vérifier que le trip n'est pas sauvegardé (pas encore plein)
     expect(mockTrip.save).not.toHaveBeenCalled();
   });
 
   it("should throw error if user already has a booking", async () => {
     const existingBooking = {
       id: "existing-booking",
-      passenger: mockUser, // Même utilisateur
+      passenger: mockUser,
       trip: mockTrip,
       seatsCount: 1,
     };
 
-    // Modifier directement mockTrip
     mockTrip.bookings = [existingBooking] as any;
     
     Trip.findOne = jest.fn().mockResolvedValue(mockTrip);
@@ -97,7 +90,6 @@ describe("bookTrip", () => {
       "Vous avez déjà réservé ce trajet"
     );
     
-    // Vérifier que save n'a pas été appelé
     expect(Booking.prototype.save).not.toHaveBeenCalled();
   });
 
@@ -119,7 +111,6 @@ describe("bookTrip", () => {
       },
     ];
 
-    // Modifier directement mockTrip
     mockTrip.bookings = existingBookings as any;
     
     Trip.findOne = jest.fn().mockResolvedValue(mockTrip);
@@ -164,7 +155,6 @@ describe("bookTrip", () => {
   });
 
   it("should throw error if user tries to book their own trip", async () => {
-    // Modifier le mockTrip pour que le driver soit le même que l'utilisateur
     const mockTripWithSameDriver = {
       ...mockTrip,
       driver: { id: "user1" } as User
@@ -184,9 +174,20 @@ describe("bookTrip", () => {
   });
 
   it("should throw error if trip is already full", async () => {
+    const existingBookings = [
+      { 
+        id: "booking1",
+        seatsCount: 4,
+        passenger: { id: "other-user" },
+        trip: mockTrip,
+        bookingDate: new Date(),
+      },
+    ];
+
     const mockFullTrip = {
       ...mockTrip,
-      status: TripStatus.FULL
+      status: TripStatus.FULL,
+      bookings: existingBookings
     };
     
     Trip.findOne = jest.fn().mockResolvedValue(mockFullTrip);
@@ -198,7 +199,7 @@ describe("bookTrip", () => {
     };
 
     await expect(tripResolver.bookTrip(bookingInput)).rejects.toThrow(
-      "Ce trajet est déjà complet"
+      "Il ne reste pas assez de places disponibles"
     );
   });
 
@@ -232,7 +233,6 @@ describe("bookTrip", () => {
       },
     ];
 
-    // Modifier directement mockTrip au lieu de créer une copie
     mockTrip.bookings = existingBookings as any;
     
     Trip.findOne = jest.fn().mockResolvedValue(mockTrip);
@@ -240,17 +240,15 @@ describe("bookTrip", () => {
     const bookingInput: BookTripInput = {
       tripId: "1",
       userId: "user1",
-      seatsCount: 1, // 3 + 1 = 4 (capacité complète)
+      seatsCount: 1,
     };
 
     const result = await tripResolver.bookTrip(bookingInput);
 
     expect(result).toBe("Votre réservation a bien été enregistrée");
     
-    // Vérifier que le booking est créé
     expect(Booking.prototype.save).toHaveBeenCalled();
     
-    // Vérifier que le statut du trip est mis à jour et sauvegardé
     expect(mockTrip.status).toBe(TripStatus.FULL);
     expect(mockTrip.save).toHaveBeenCalled();
   });
@@ -259,14 +257,12 @@ describe("bookTrip", () => {
     const bookingInput: BookTripInput = {
       tripId: "1",
       userId: "user1",
-      // seatsCount non fourni
     };
 
     const result = await tripResolver.bookTrip(bookingInput);
 
     expect(result).toBe("Votre réservation a bien été enregistrée");
     
-    // Vérifier que le booking est créé
     expect(Booking.prototype.save).toHaveBeenCalled();
   });
 });
