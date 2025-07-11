@@ -7,7 +7,7 @@ import { ReviewInput } from '../../../type/reviewType';
 import { TripStatus } from '../../../type/tripType';
 import { isDriver, isPassenger } from '../../../services/ReviewServices';
 
-jest.mock('../../services/ReviewServices', () => ({
+jest.mock('../../../services/ReviewServices', () => ({
     isDriver: jest.fn(),
     isPassenger: jest.fn()
 }))
