@@ -1,6 +1,5 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { CircleUserRound, Users } from "lucide-react";
-import { PassengersListProps } from "../_types/types";
 
 interface Booking {
   id: string;
