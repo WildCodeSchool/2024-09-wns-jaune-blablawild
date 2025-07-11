@@ -165,6 +165,8 @@ export default function TripForm() {
     const departureCity = extractCityFromAddress(departureAddress)
     const arrivalCity = extractCityFromAddress(arrivalAddress)
 
+    const departureDateISO = data.departureDate.toISOString();
+
     createTrip({
       variables: {
         data: {
@@ -172,7 +174,7 @@ export default function TripForm() {
           departure_address: departureAddress,
           arrival_city: arrivalCity,
           arrival_address: arrivalAddress,
-          departure_time: data.departureDate,
+          departure_time: departureDateISO,
           price: data.price,
           capacity: data.passengers,
           driverId: String(user?.id),
@@ -290,7 +292,7 @@ export default function TripForm() {
         </div>
       </div>
 
-      <div className="flex-1 md:block hidden">
+      <div className="flex-1 md:flex hidden relative z-0">
         {shouldShowMap ? (
           <DisplayMap
             departureCoordinates={form.watch("departureCoordinates")}
