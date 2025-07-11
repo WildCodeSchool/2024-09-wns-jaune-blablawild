@@ -165,6 +165,8 @@ export default function TripForm() {
     const departureCity = extractCityFromAddress(departureAddress)
     const arrivalCity = extractCityFromAddress(arrivalAddress)
 
+    const departureDateISO = data.departureDate.toISOString();
+
     createTrip({
       variables: {
         data: {
@@ -172,7 +174,7 @@ export default function TripForm() {
           departure_address: departureAddress,
           arrival_city: arrivalCity,
           arrival_address: arrivalAddress,
-          departure_time: data.departureDate,
+          departure_time: departureDateISO,
           price: data.price,
           capacity: data.passengers,
           driverId: String(user?.id),
