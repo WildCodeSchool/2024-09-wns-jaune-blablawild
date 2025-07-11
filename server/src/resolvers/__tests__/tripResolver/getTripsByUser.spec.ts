@@ -1,27 +1,35 @@
 import { Trip } from "../../../entities/trip";
+import { User } from "../../../entities/user";
+import { Booking } from "../../../entities/booking";
 import { TripStatusFilter } from "../../../type/tripType";
 import { TripResolver } from "../../tripResolver";
-import { tripFactory } from "../../factories";
+import { TripFactory } from "../../factories/tripFactory/tripFactory";
 
 jest.mock("../../../entities/trip");
 jest.mock("../../../entities/user");
+jest.mock("../../../entities/booking");
 
 describe("get trips by user", () => {
   let tripResolver: TripResolver;
+  let tripFactory: TripFactory;
 
   beforeEach(() => {
     tripResolver = new TripResolver();
+    tripFactory = new TripFactory();
     jest.clearAllMocks();
   });
 
   it.each([
     {
       name: "Get trips for given driverId",
-      setupTrips: async () => {
+      setupTrips: () => {
+        const mockDriver3 = { id: "3", firstname: "Driver3" } as User;
+        const mockDriver1 = { id: "1", firstname: "Driver1" } as User;
+        
         return [
-          await tripFactory.withDriver("3").build(),
-          await tripFactory.withDriver("3").build(),
-          await tripFactory.withDriver("1").build(),
+          tripFactory.withDriver(mockDriver3).build(),
+          tripFactory.withDriver(mockDriver3).build(),
+          tripFactory.withDriver(mockDriver1).build(),
         ];
       },
       expectedLength: 2,
@@ -30,11 +38,14 @@ describe("get trips by user", () => {
     },
     {
       name: "Get no trip when no driverId",
-      setupTrips: async () => {
+      setupTrips: () => {
+        const mockDriver3 = { id: "3", firstname: "Driver3" } as User;
+        const mockDriver1 = { id: "1", firstname: "Driver1" } as User;
+        
         return [
-          await tripFactory.withDriver("3").build(),
-          await tripFactory.withDriver("3").build(),
-          await tripFactory.withDriver("1").build(),
+          tripFactory.withDriver(mockDriver3).build(),
+          tripFactory.withDriver(mockDriver3).build(),
+          tripFactory.withDriver(mockDriver1).build(),
         ];
       },
       expectedLength: 0,
@@ -44,10 +55,10 @@ describe("get trips by user", () => {
   ])(
     "$name",
     async ({ name, setupTrips, expectedLength, driverId, filter }) => {
-      const trips = await setupTrips();
+      const trips = setupTrips();
 
       const filteredTrips = trips?.filter(
-        (trip) => trip.driver?.id === driverId
+        (trip: Trip) => trip.driver?.id === driverId
       );
       (Trip.find as jest.Mock).mockResolvedValueOnce(filteredTrips);
 
@@ -79,7 +90,6 @@ describe("get trips by user", () => {
       expect(Trip.find).toHaveBeenCalledWith({
         where: expectedWhere,
         relations: {
-          passengers: true,
           driver: true,
           reviews: {
             receiver: true,
@@ -91,4 +101,51 @@ describe("get trips by user", () => {
       expect(result).toHaveLength(expectedLength);
     }
   );
+
+  it("should get trips where user is passenger", async () => {
+    const mockUser = { id: "user1" } as User;
+    const mockTrip1 = { id: "trip1", driver: { id: "driver1" } } as Trip;
+    const mockTrip2 = { id: "trip2", driver: { id: "driver2" } } as Trip;
+    
+    const mockBookings = [
+      {
+        id: "booking1",
+        passenger: mockUser,
+        trip: mockTrip1,
+        seatsCount: 1,
+      },
+      {
+        id: "booking2",
+        passenger: mockUser,
+        trip: mockTrip2,
+        seatsCount: 2,
+      },
+    ] as Booking[];
+
+    (Booking.find as jest.Mock).mockResolvedValue(mockBookings);
+
+    const result = await tripResolver.getTripByUser(
+      "user1",
+      TripStatusFilter.PUBLISHED,
+      true // asPassenger = true
+    );
+
+    expect(Booking.find).toHaveBeenCalledWith({
+      where: {
+        passenger: { id: "user1" },
+      },
+      relations: {
+        trip: {
+          driver: true,
+          reviews: {
+            sender: true,
+            receiver: true,
+          },
+        },
+      },
+    });
+
+    expect(result).toHaveLength(2);
+    expect(result).toEqual([mockTrip1, mockTrip2]);
+  });
 });

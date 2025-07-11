@@ -1,96 +1,70 @@
-import { BaseFactory, FactoryOptions } from "../baseFactory";
 import { Trip } from "../../../entities/trip";
-import { TripStatus } from "../../../type/tripType";
 import { User } from "../../../entities/user";
+import { Booking } from "../../../entities/booking";
 
-export class TripFactory extends BaseFactory<Trip> {
-  private overrides: Partial<Trip> = {};
+export class TripFactory {
+  private trip: Partial<Trip>;
 
-  protected defineEntity(): Trip {
-    return {
-      id: this.faker.string.uuid(),
-      departure_city: this.faker.location.city(),
-      departure_address: this.faker.location.streetAddress(),
-      arrival_city: this.faker.location.city(),
-      arrival_address: this.faker.location.streetAddress(),
-      departure_time: this.faker.date.future(),
-      price: this.faker.number.int({ min: 5, max: 100 }),
-      capacity: this.faker.number.int({ min: 1, max: 5 }),
-      status: TripStatus.OPEN,
-      driver: { id: this.faker.string.uuid() } as User,
-      passengers: [] as User[],
-      save: jest.fn().mockImplementation(function (this: any) {
-        return Promise.resolve(this);
-      }),
-    } as unknown as Trip;
+  constructor() {
+    this.trip = {
+      id: "1",
+      departure_city: "Paris",
+      arrival_city: "Lyon",
+      departure_time: new Date("2025-04-10T10:00:00Z"),
+      price: 25,
+      capacity: 4,
+      driver: {
+        id: "driver1",
+        firstname: "John",
+        lastname: "Doe",
+      } as User,
+      bookings: [],
+    };
   }
 
-  withDriver(driver: User | string): this {
-    // Si c'est un string, convertir en objet User avec id
-    if (typeof driver === "string") {
-      return this.withOverride({
-        driver: { id: driver } as User,
-      });
-    }
+  withId(id: string): TripFactory {
+    return this.withOverride({ id });
+  }
 
-    // Si c'est déjà un objet User, l'utiliser tel quel
+  withDriver(driver: User): TripFactory {
     return this.withOverride({ driver });
   }
 
-  withPassengers(passengers: any[]): this {
-    return this.withOverride({ passengers });
+  withBookings(bookings: Booking[]): TripFactory {
+    return this.withOverride({ bookings });
   }
 
-  withStatus(status: TripStatus): this {
-    return this.withOverride({ status });
+  // Méthode de compatibilité pour les anciens tests
+  withPassengers(passengers: User[]): TripFactory {
+    const bookings = passengers.map((passenger, index) => ({
+      id: `booking-${index}`,
+      passenger,
+      seatsCount: 1,
+      bookingDate: new Date(),
+    })) as Booking[];
+    
+    return this.withOverride({ bookings });
   }
 
-  withDepartureCity(city: string): this {
-    return this.withOverride({ departure_city: city });
-  }
-
-  withArrivalCity(city: string): this {
-    return this.withOverride({ arrival_city: city });
-  }
-
-  withPrice(price: number): this {
-    return this.withOverride({ price });
-  }
-
-  withCapacity(capacity: number): this {
+  withCapacity(capacity: number): TripFactory {
     return this.withOverride({ capacity });
   }
 
-  withOverride(override: Partial<Trip>): this {
-    this.overrides = { ...this.overrides, ...override };
-    return this;
+  withDepartureTime(departure_time: Date): TripFactory {
+    return this.withOverride({ departure_time });
   }
 
-  async build(options: FactoryOptions<Trip> = {}): Promise<Trip> {
-    const mergedOptions = {
-      ...options,
-      override: {
-        ...this.overrides,
-        ...options.override,
-      },
-    };
-
-    this.overrides = {};
-
-    return super.build(mergedOptions);
+  withPrice(price: number): TripFactory {
+    return this.withOverride({ price });
   }
 
-  protected async persist(entity: Trip): Promise<any | Trip> {
-    const mockedTrip = {
-      ...entity,
-    };
+  private withOverride(override: Partial<Trip>): TripFactory {
+    const factory = new TripFactory();
+    factory.trip = { ...this.trip, ...override };
+    return factory;
+  }
 
-    (Trip as unknown as jest.Mock).mockImplementationOnce(function () {
-      return mockedTrip;
-    });
-
-    return mockedTrip;
+  build(): Trip {
+    return this.trip as Trip;
   }
 }
-
-export const tripFactory = new TripFactory();
