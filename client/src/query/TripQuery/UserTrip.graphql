@@ -17,6 +17,9 @@ query GetTripByUser($userId: String!, $filter: String, $asPassenger: Boolean!) {
     driver {
       id
       firstname
+      profile {
+        image
+      }
     }
     capacity
     departure_time
