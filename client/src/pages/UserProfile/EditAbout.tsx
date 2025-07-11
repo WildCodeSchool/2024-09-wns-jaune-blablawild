@@ -128,7 +128,6 @@ export default function EditAbout({ user, onCancel }: Props) {
            </span>}
         </p>
       </div>
-
       <Separator className="bg-[#949393]" />
       
       <div className="flex flex-col w-full items-center md:items-start text-black lg:w-10/12">
