@@ -1,12 +1,11 @@
 import { faker } from '@faker-js/faker/locale/fr';
-import { Review } from '../../entities/review';
-import { Trip } from '../../entities/trip';
-import { User } from '../../entities/user';
-import { Booking } from '../../entities/booking';
-import { isDriver, isPassenger } from '../../services/ReviewServices'
-import { ReviewInput } from '../../type/reviewType';
-import { TripStatus } from '../../type/tripType';
-import { ReviewResolver } from '../reviewsResolver';
+import { ReviewResolver } from '../../reviewsResolver';
+import { Trip } from '../../../entities/trip';
+import { User } from '../../../entities/user';
+import { Review } from '../../../entities/review';
+import { ReviewInput } from '../../../type/reviewType';
+import { TripStatus } from '../../../type/tripType';
+import { isDriver, isPassenger } from '../../../services/ReviewServices';
 
 jest.mock('../../services/ReviewServices', () => ({
     isDriver: jest.fn(),
