@@ -31,7 +31,6 @@ export default function About({ user }: Props) {
     skip: !user.id
   });
 
-  // Calculer le nombre d'avis et la moyenne
   const reviews = reviewsData?.getReviewsByUser || [];
   const reviewsCount = reviews.length;
   const averageRating = calculateAverageRating(reviews);
@@ -72,7 +71,7 @@ export default function About({ user }: Props) {
           {reviewsCount === 0 ? 'Aucun avis' : 
            <span className="flex items-center">
              <span className="text-yellow-400 mr-1">★</span>
-             {`${averageRating}/5  (${reviewsCount} avis)`}
+             {`${averageRating.toFixed(1)}/5  (${reviewsCount} avis)`}
            </span>}
         </p>
       </div>
