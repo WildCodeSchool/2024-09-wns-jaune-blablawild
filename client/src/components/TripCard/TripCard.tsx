@@ -3,9 +3,6 @@ import { DriverInfo } from "./_components/DriverInfo";
 import { PassengersList } from "./_components/PassengersList";
 import { PriceOverlay } from "./_components/PriceOverlay";
 import { TripCardProps } from "./_types/types";
-import {
-  formatHourFromTime,
-} from "./_utils/utils";
 import { useNavigate } from "react-router-dom";
 import clsx from "clsx";
 import { Trip } from "@/graphql/hooks";

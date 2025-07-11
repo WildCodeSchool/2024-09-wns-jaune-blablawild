@@ -1,5 +1,4 @@
 import React from "react";
-import { formatUTCTime } from "@/utils/FormatUTC";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
 
