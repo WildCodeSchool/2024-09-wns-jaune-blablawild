@@ -1,6 +1,7 @@
 import { ChevronDown, ChevronUp } from "lucide-react";
 import { FormItem } from "../ui/form";
 import { useFormContext } from "react-hook-form";
+import { isAfter, set } from "date-fns";
 
 type departureHourProps = {
   departureHour: number;
@@ -25,9 +26,14 @@ export default function DepartureHour({
       return selectedDate > now;
     }
     
-    const selectedDateTime = new Date(selectedDate);
-    selectedDateTime.setHours(hour, minutes, 0, 0);
-    return selectedDateTime > now;
+    const selectedDateTime = set(selectedDate, {
+      hours: hour,
+      minutes: minutes,
+      seconds: 0,
+      milliseconds: 0
+    });
+    
+    return isAfter(selectedDateTime, now);
   };
 
   const changeHour = (increment: boolean) => {

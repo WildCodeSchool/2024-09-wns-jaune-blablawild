@@ -10,8 +10,8 @@ import TripSummary from "@/components/tripForm/TripSummary";
 import { Button } from "@/components/ui/button";
 import { useCreateTripMutation } from "@/graphql/hooks";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { addMinutes, getHours, getMinutes, setHours, setMinutes } from "date-fns";
-import { useEffect, useState } from "react";
+import { addMinutes, getHours, getMinutes, isAfter, set } from "date-fns";
+import { useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { Form } from "../components/ui/form";
@@ -130,17 +130,32 @@ export default function TripForm() {
       arrivalCity: "",
       departureAddress: "",
       arrivalAddress: "",
-      departureDate: new Date(),
+      departureDate: bookingHour,
       price: 0,
       passengers: 0,
     },
   });
 
+  const departureDate = form.watch('departureDate');
+
+  const selectedDateTime = useMemo(() => {
+    const selectedDate = new Date(departureDate);
+    return set(selectedDate, {
+      hours: departureHour,
+      minutes: departureMinutes,
+      seconds: 0,
+      milliseconds: 0
+    });
+  }, [departureDate, departureHour, departureMinutes]);
+
   useEffect(() => {
-    let date = new Date(form.getValues().departureDate);
-    date = setHours(date, departureHour);
-    date = setMinutes(date, departureMinutes);
-    form.setValue("departureDate", date);
+    const updatedDate = set(departureDate, {
+    hours: departureHour,
+    minutes: departureMinutes,
+    seconds: 0,
+    milliseconds: 0
+  });
+  form.setValue("departureDate", updatedDate);
   }, [departureHour, departureMinutes]);
 
   useEffect(() => {
@@ -197,12 +212,7 @@ export default function TripForm() {
         }
         break;
       case 3:
-        const selectedDate = new Date(form.getValues().departureDate);
-        const now = new Date();
-        const selectedDateTime = new Date(selectedDate);
-        selectedDateTime.setHours(departureHour, departureMinutes, 0, 0);
-
-        if (selectedDateTime <= now) {
+        if (!isAfter(selectedDateTime, new Date)) {
           toast.error("L'heure de départ doit être dans le futur");
           return;
         }
