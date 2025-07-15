@@ -12,8 +12,6 @@ export function DriverInfo({
 }: Readonly<{ driver: User | null | undefined }>) {
   if (!driver) return null;
 
-  console.log(driver)
-
   const driverInfo: DriverInfoProps = {
     firstname: driver.firstname,
     image: driver.profile?.image || "",

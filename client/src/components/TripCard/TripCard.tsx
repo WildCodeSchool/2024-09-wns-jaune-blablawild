@@ -6,11 +6,8 @@ import { TripCardProps } from "./_types/types";
 import { useNavigate } from "react-router-dom";
 import clsx from "clsx";
 import { Trip } from "@/graphql/hooks";
-import { useState, useEffect } from "react";
-import { getUnsplashImage } from "@/utils/UnsplashService";
-import { format } from "date-fns";
-import { fr } from "date-fns/locale";
 import { formatDate, formatLocalTime } from "@/utils/FormatDate";
+import { getStaticCityImage } from "@/utils/cityImages";
 
 
 export default function TripCard({
@@ -18,23 +15,7 @@ export default function TripCard({
   mode = "search",
 }: Readonly<TripCardProps>) {
   const navigate = useNavigate();
-  const [cityImages, setCityImages] = useState<Record<string, string>>({});
   
-  useEffect(() => {
-    const loadImages = async () => {
-      const images = await Promise.all(
-        trips.map(async trip => [
-          trip.arrival_city,
-          await getUnsplashImage(trip.arrival_city)
-        ])
-      );
-      
-      setCityImages(Object.fromEntries(images));
-    };
-
-    loadImages();
-  }, [trips]);  
-
   const handleNavigateTrip = (trip: Trip) => {
     const availableSeats = getAvailableSeats(trip);
     if (availableSeats > 0) {
@@ -47,12 +28,7 @@ export default function TripCard({
     return trip.capacity - totalBookedSeats;
   };
 
-  console.log('trips', trips[0].departure_time);
-
-  console.log('time', formatLocalTime(trips[0].departure_time));
-
-  
-  
+  console.log("trips",trips);
   
   return (
     <section className="w-full px-2 py-4 md:p-8">
@@ -140,7 +116,7 @@ export default function TripCard({
               </div>
               <div className="w-1/3 relative flex items-center justify-center">
                 <img
-                  src={cityImages[trip.arrival_city] || "/images/cities/default.jpg"}
+                  src={getStaticCityImage(trip.arrival_city)}
                   alt={trip.arrival_city}
                   className={clsx(
                     "absolute inset-0 w-full h-full object-cover transition-all duration-300",
