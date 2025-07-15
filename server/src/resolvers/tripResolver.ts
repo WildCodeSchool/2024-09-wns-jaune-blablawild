@@ -1,6 +1,8 @@
 import { Arg, Ctx, Mutation, Query, Resolver } from "type-graphql";
 import { Between, FindOptionsWhere, ILike, LessThan, MoreThan } from "typeorm";
+import { toZonedTime } from "date-fns-tz";
 import { Trip } from "../entities/trip";
+import { getHours, parseISO } from "date-fns";
 import { User } from "../entities/user";
 import { Booking } from "../entities/booking";
 import {
@@ -36,7 +38,7 @@ export class TripResolver {
     }
 
     try {
-      const trips = await Trip.find({
+      const trips = (await Trip.find({
         where,
         order: orderBy,
         relations: {
@@ -45,17 +47,23 @@ export class TripResolver {
             passenger: true,
           },
         },
-      }) as TripWithBookings[];
+      })) as TripWithBookings[];
 
       let filteredTrips = trips.filter((trip) => {
-        const totalBookedSeats = trip.bookings?.reduce((sum, booking) => sum + booking.seatsCount, 0) || 0;
+        const totalBookedSeats =
+          trip.bookings?.reduce(
+            (sum, booking) => sum + booking.seatsCount,
+            0
+          ) || 0;
         const availableSeats = trip.capacity - totalBookedSeats;
         return availableSeats >= data.passengers;
       });
 
-      if (data.timeOptions && data.timeOptions.length > 0) {
+     if (data.timeOptions && data.timeOptions.length > 0) {
         filteredTrips = filteredTrips.filter((trip) => {
-          const departureHour = new Date(trip.departure_time).getUTCHours();
+          const departureDate = parseISO(trip.departure_time.toISOString());
+          const zonedDate = toZonedTime(departureDate, 'Europe/Paris');
+          const departureHour = getHours(zonedDate);
 
           return data.timeOptions?.some((option) => {
             switch (option) {
@@ -164,12 +172,12 @@ export class TripResolver {
         bookings: {
           passenger: {
             profile: true,
-          }
+          },
         },
         driver: {
           profile: true,
-        }
-      }
+        },
+      },
     });
 
     if (!trip) {
@@ -198,15 +206,15 @@ export class TripResolver {
   @Mutation(() => String)
   async bookTrip(@Arg("data", () => BookTripInput) data: BookTripInput) {
     try {
-      const trip = await Trip.findOne({
+      const trip = (await Trip.findOne({
         where: { id: data.tripId },
-        relations: { 
-          bookings: { 
-            passenger: true 
-          }, 
-          driver: true 
+        relations: {
+          bookings: {
+            passenger: true,
+          },
+          driver: true,
         },
-      }) as TripWithBookings;
+      })) as TripWithBookings;
 
       if (!trip) throw new Error("Le trajet n'existe pas");
 
@@ -233,9 +241,11 @@ export class TripResolver {
       }
 
       const seatsToBook = data.seatsCount || 1;
-      const totalBookedSeats = trip.bookings?.reduce((sum, booking) => sum + booking.seatsCount, 0) || 0;
+      const totalBookedSeats =
+        trip.bookings?.reduce((sum, booking) => sum + booking.seatsCount, 0) ||
+        0;
       const availableSeats = trip.capacity - totalBookedSeats;
-      
+
       if (availableSeats < seatsToBook) {
         throw new Error(
           `Il ne reste pas assez de places disponibles. Places disponibles: ${availableSeats}`
@@ -249,20 +259,20 @@ export class TripResolver {
       booking.bookingDate = new Date();
 
       await booking.save();
-      console.log('Booking créé:', booking);
+      console.log("Booking créé:", booking);
 
       const newTotalBookedSeats = totalBookedSeats + seatsToBook;
-      console.log('New total booked seats:', newTotalBookedSeats);
-      
+      console.log("New total booked seats:", newTotalBookedSeats);
+
       if (newTotalBookedSeats >= trip.capacity) {
         trip.status = TripStatus.FULL;
         await trip.save();
-        console.log('Trip status updated to FULL');
+        console.log("Trip status updated to FULL");
       }
 
       return "Votre réservation a bien été enregistrée";
     } catch (error) {
-      console.error('Error in bookTrip:', error);
+      console.error("Error in bookTrip:", error);
       if (error instanceof Error) {
         throw new Error(error.message);
       }
@@ -275,14 +285,14 @@ export class TripResolver {
     @Arg("data", () => CancelTripBookingInput) data: CancelTripBookingInput
   ) {
     try {
-      const trip = await Trip.findOne({
+      const trip = (await Trip.findOne({
         where: { id: data.tripId },
-        relations: { 
-          bookings: { 
-            passenger: true 
-          } 
+        relations: {
+          bookings: {
+            passenger: true,
+          },
         },
-      }) as TripWithBookings;
+      })) as TripWithBookings;
 
       if (!trip) {
         throw new Error("Le trajet n'existe pas");
@@ -322,7 +332,9 @@ export class TripResolver {
         await trip.save();
       }
 
-      user.profile.cancelledTrips = user.profile.cancelledTrips ? user.profile.cancelledTrips + 1 : 1;
+      user.profile.cancelledTrips = user.profile.cancelledTrips
+        ? user.profile.cancelledTrips + 1
+        : 1;
       await user.save();
 
       return "Votre réservation a bien été annulée";

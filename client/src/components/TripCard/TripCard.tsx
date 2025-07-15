@@ -27,8 +27,6 @@ export default function TripCard({
     const totalBookedSeats = trip.bookings?.reduce((sum, booking) => sum + booking.seatsCount, 0) || 0;
     return trip.capacity - totalBookedSeats;
   };
-
-  console.log("trips",trips);
   
   return (
     <section className="w-full px-2 py-4 md:p-8">
@@ -53,7 +51,7 @@ export default function TripCard({
 
               <div className="flex-1 p-4 flex flex-col justify-between ">
                 <p className="text-base text-accent mb-2">
-                  {formatDate(trip.departure_time, "fr" )}
+                  {formatDate(trip.departure_time)}
                 </p>
                 <div className=" flex gap-2 items-center mb-4 lg:max-w-[500px]">
                   <div className="flex-1">

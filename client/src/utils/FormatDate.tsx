@@ -1,12 +1,14 @@
-export function formatDate(dateString: string, locale: string) {
-  const date = new Date(dateString).toLocaleString(locale, {
-    weekday: "long",
-    day: "numeric",
-    month: "long",
-    year: "numeric",
+import { format, parseISO } from 'date-fns';
+import { fr } from 'date-fns/locale';
+
+export function formatDate(dateString: string) {
+  const date = parseISO(dateString);
+  
+  const formattedDate = format(date, 'EEEE d MMMM yyyy', { 
+    locale: fr 
   });
- 
-  return date
+  
+  return formattedDate
     .replace(/^./, (str) => str.toUpperCase())
     .replace(/\b\w+\b/g, (word) => {
       if (word.length > 2) {
@@ -17,11 +19,9 @@ export function formatDate(dateString: string, locale: string) {
 }
 
 export function formatLocalTime(dateTimeString: string) {
-  const date = new Date(dateTimeString);
+  const date = parseISO(dateTimeString);
   
-  return date.toLocaleTimeString('fr-FR', { 
-    hour: '2-digit', 
-    minute: '2-digit',
-    timeZone: 'UTC' 
-  }).replace(':', 'h');
+  const formattedTime = format(date, 'HH:mm');
+  
+  return formattedTime.replace(':', 'h');
 }
