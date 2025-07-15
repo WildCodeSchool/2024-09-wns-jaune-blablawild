@@ -1,4 +1,6 @@
 import { faker } from "@faker-js/faker/locale/fr";
+import { getHours } from "date-fns";
+import { toZonedTime } from "date-fns-tz";
 import { Trip } from "../../../entities/trip";
 import { Booking } from "../../../entities/booking";
 import {
@@ -8,8 +10,6 @@ import {
   TripStatus,
 } from "../../../type/tripType";
 import { TripResolver } from "../../tripResolver";
-
-// Ne pas mocker les entités au niveau global
 describe("Filters trip tests", () => {
   let tripResolver: TripResolver;
   let filterInput: FilterTripInput;
@@ -46,6 +46,11 @@ describe("Filters trip tests", () => {
     transactions: [],
   });
 
+  const getFrenchHour = (date: Date): number => {
+    const zonedDate = toZonedTime(date, 'Europe/Paris');
+    return getHours(zonedDate);
+  };
+
   beforeEach(() => {
     tripResolver = new TripResolver();
 
@@ -62,7 +67,6 @@ describe("Filters trip tests", () => {
       sortBy: undefined,
     };
 
-    // Mock des méthodes statiques
     Trip.find = jest.fn();
     
     jest.clearAllMocks();
@@ -112,7 +116,6 @@ describe("Filters trip tests", () => {
 
     expect(result.length).toBeGreaterThan(0);
 
-    // Vérifier que les prix sont triés par ordre croissant
     const prices = result.map((trip) => trip.price as number);
     for (let i = 0; i < prices.length - 1; i++) {
       expect(prices[i]).toBeLessThanOrEqual(prices[i + 1]);
@@ -120,7 +123,6 @@ describe("Filters trip tests", () => {
   });
 
   it("should filter trips by earliest hours", async () => {
-    // Créer des trips avec des heures spécifiques pour le test
     const timeOrderedTrips = [
       createMockTrip(2, 50, 1),
       createMockTrip(4, 30, 0),
@@ -149,8 +151,7 @@ describe("Filters trip tests", () => {
       },
     });
 
-    // Vérifier que les heures sont triées par ordre croissant
-    const hours = result.map((trip) => trip.departure_time.getUTCHours());
+    const hours = result.map((trip) => getFrenchHour(trip.departure_time));
     for (let i = 0; i < hours.length - 1; i++) {
       expect(hours[i]).toBeLessThanOrEqual(hours[i + 1]);
     }
@@ -158,11 +159,11 @@ describe("Filters trip tests", () => {
 
   it("should filter by time range", async () => {
     const tripsWithVariousHours = [
-      createMockTrip(2, 50, 1),   // Before_6
-      createMockTrip(4, 30, 0),   // Before_6
-      createMockTrip(8, 45, 1),   // From_6To_12 (ne devrait pas être inclus)
-      createMockTrip(15, 32, 0),  // From_12To_18
-      createMockTrip(20, 40, 1),  // After_18 (ne devrait pas être inclus)
+      createMockTrip(2, 50, 1),   
+      createMockTrip(4, 30, 0),   
+      createMockTrip(8, 45, 1),   
+      createMockTrip(13, 32, 0),  
+      createMockTrip(18, 40, 1),  
     ];
 
     (Trip.find as jest.Mock).mockResolvedValue(tripsWithVariousHours);
@@ -186,22 +187,20 @@ describe("Filters trip tests", () => {
       },
     });
 
-    // Vérifier que seuls les trips avec les bonnes heures sont retournés
-    const hours = result.map((trip) => trip.departure_time.getUTCHours());
+    const hours = result.map((trip) => getFrenchHour(trip.departure_time));
     hours.forEach(hour => {
       expect(hour < 6 || (hour >= 12 && hour < 18)).toBe(true);
     });
   });
 
   it("should filter by time range and maintain price order", async () => {
-    // Données triées par prix (comme retournées par la base de données)
     const tripsWithVariousHours = [
-      createMockTrip(4, 25, 0),   // Before_6 - Prix: 25
-      createMockTrip(2, 30, 1),   // Before_6 - Prix: 30
-      createMockTrip(20, 35, 1),  // After_18 - Prix: 35 (sera filtré)
-      createMockTrip(15, 40, 1),  // From_12To_18 - Prix: 40
-      createMockTrip(8, 45, 1),   // From_6To_12 - Prix: 45 (sera filtré)
-      createMockTrip(16, 50, 1),  // From_12To_18 - Prix: 50
+      createMockTrip(2, 25, 0),   
+      createMockTrip(4, 30, 1),   
+      createMockTrip(0, 35, 1),   
+      createMockTrip(13, 40, 1),  
+      createMockTrip(8, 45, 1),   
+      createMockTrip(14, 50, 1),  
     ];
 
     (Trip.find as jest.Mock).mockResolvedValue(tripsWithVariousHours);
@@ -226,37 +225,32 @@ describe("Filters trip tests", () => {
       },
     });
 
-    // Vérifier que les trips sont filtrés par heure
-    const hours = result.map((trip) => trip.departure_time.getUTCHours());
+    const hours = result.map((trip) => getFrenchHour(trip.departure_time));
     hours.forEach(hour => {
       expect(hour < 6 || (hour >= 12 && hour < 18)).toBe(true);
     });
 
-    // Vérifier que nous avons les bons trips
-    expect(result.length).toBe(4); // 2 Before_6 + 2 From_12To_18
+    expect(result.length).toBe(4); 
     
-    // Vérifier que l'ordre des prix est maintenu après filtrage
-    // L'ordre devrait être: 25, 30, 40, 50 (trips filtrés mais ordre préservé)
     const prices = result.map((trip) => trip.price as number);
-    expect(prices).toEqual([25, 30, 40, 50]);
+    expect(prices).toEqual([25, 35, 40, 50]);
   });
 
   it("should filter trips by available seats", async () => {
     const tripsWithDifferentCapacity = [
-      { ...createMockTrip(10, 50, 1), capacity: 4 }, // 3 places disponibles
-      { ...createMockTrip(11, 30, 3), capacity: 4 }, // 1 place disponible
-      { ...createMockTrip(12, 45, 4), capacity: 4 }, // 0 places disponibles
-      { ...createMockTrip(13, 32, 0), capacity: 4 }, // 4 places disponibles
+      { ...createMockTrip(10, 50, 1), capacity: 4 }, 
+      { ...createMockTrip(11, 30, 3), capacity: 4 }, 
+      { ...createMockTrip(12, 45, 4), capacity: 4 }, 
+      { ...createMockTrip(13, 32, 0), capacity: 4 }, 
     ];
 
     (Trip.find as jest.Mock).mockResolvedValue(tripsWithDifferentCapacity);
 
-    filterInput.passengers = 2; // Besoin de 2 places
+    filterInput.passengers = 2; 
 
     const result = await tripResolver.getTrip(filterInput);
 
-    // Seuls les trips avec au moins 2 places disponibles devraient être retournés
-    expect(result.length).toBe(2); // trips avec 3 et 4 places disponibles
+    expect(result.length).toBe(2); 
     
     result.forEach(trip => {
       const totalBookedSeats = trip.bookings?.reduce((sum, booking) => sum + booking.seatsCount, 0) || 0;
@@ -277,7 +271,6 @@ describe("Filters trip tests", () => {
 
     const result = await tripResolver.getTrip(filterInput);
 
-    // Quand timeOptions est vide, tous les trips devraient être retournés (sans filtre d'heure)
     expect(result.length).toBe(2);
   });
 
@@ -293,14 +286,13 @@ describe("Filters trip tests", () => {
 
     const result = await tripResolver.getTrip(filterInput);
 
-    // Quand timeOptions est undefined, tous les trips devraient être retournés
     expect(result.length).toBe(2);
   });
 
   it("should handle no available seats", async () => {
     const tripsWithNoAvailableSeats = [
-      { ...createMockTrip(10, 50, 4), capacity: 4 }, // 0 places disponibles
-      { ...createMockTrip(11, 30, 5), capacity: 4 }, // -1 places disponibles (surréservé)
+      { ...createMockTrip(10, 50, 4), capacity: 4 }, 
+      { ...createMockTrip(11, 30, 5), capacity: 4 }, 
     ];
 
     (Trip.find as jest.Mock).mockResolvedValue(tripsWithNoAvailableSeats);
@@ -309,7 +301,6 @@ describe("Filters trip tests", () => {
 
     const result = await tripResolver.getTrip(filterInput);
 
-    // Aucun trip ne devrait être retourné car aucune place disponible
     expect(result.length).toBe(0);
   });
 });
