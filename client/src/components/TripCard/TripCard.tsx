@@ -10,7 +10,7 @@ import { useState, useEffect } from "react";
 import { getUnsplashImage } from "@/utils/UnsplashService";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
-import { formatDate } from "@/utils/FormatDate";
+import { formatDate, formatLocalTime } from "@/utils/FormatDate";
 
 
 export default function TripCard({
@@ -47,6 +47,13 @@ export default function TripCard({
     return trip.capacity - totalBookedSeats;
   };
 
+  console.log('trips', trips[0].departure_time);
+
+  console.log('time', formatLocalTime(trips[0].departure_time));
+
+  
+  
+  
   return (
     <section className="w-full px-2 py-4 md:p-8">
       <div className="space-y-4">
@@ -75,7 +82,7 @@ export default function TripCard({
                 <div className=" flex gap-2 items-center mb-4 lg:max-w-[500px]">
                   <div className="flex-1">
                     <div className="text-lg font-medium text-gray-900">
-                      {format(new Date(trip.departure_time), "HH'h'mm", { locale: fr })}
+                      {formatLocalTime(trip.departure_time)}
                     </div>
                     <div className="text-lg  capitalize font-medium text-gray-900 max-w-[100px] truncate md:max-w-none block md:hidden">
                       {trip.departure_city.length > 5

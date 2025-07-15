@@ -2,8 +2,6 @@ import React from "react";
 import { Car, ChevronRight } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { TripLine } from "./ui/tripLine";
-import { format } from "date-fns";
-import { fr } from "date-fns/locale";
 import { useGetReviewsByUserQuery } from "@/graphql/hooks";
 import { calculateAverageRating } from "@/utils/AverageRating";
 import { formatDate } from "@/utils/FormatDate";
