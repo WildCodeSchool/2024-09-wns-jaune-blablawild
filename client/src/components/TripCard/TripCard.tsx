@@ -10,6 +10,7 @@ import { useState, useEffect } from "react";
 import { getUnsplashImage } from "@/utils/UnsplashService";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
+import { formatDate } from "@/utils/FormatDate";
 
 
 export default function TripCard({
@@ -41,7 +42,6 @@ export default function TripCard({
     }
   };
 
-  // Fonction pour calculer les sièges disponibles
   const getAvailableSeats = (trip: Trip) => {
     const totalBookedSeats = trip.bookings?.reduce((sum, booking) => sum + booking.seatsCount, 0) || 0;
     return trip.capacity - totalBookedSeats;
@@ -70,7 +70,7 @@ export default function TripCard({
 
               <div className="flex-1 p-4 flex flex-col justify-between ">
                 <p className="text-base text-accent mb-2">
-                  {format(new Date(trip.departure_time), "HH'h'mm", { locale: fr })}
+                  {formatDate(trip.departure_time, "fr" )}
                 </p>
                 <div className=" flex gap-2 items-center mb-4 lg:max-w-[500px]">
                   <div className="flex-1">
