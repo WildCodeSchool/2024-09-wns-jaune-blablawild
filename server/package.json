@@ -8,6 +8,7 @@
     "build": "npx tsc --outDir ./build",
     "dev": "ts-node-dev ./src/index.ts",
     "seed": "ts-node ./src/config/seed/init.ts",
+    "seed:test": "ts-node-dev ./src/config/seed/initTest.ts",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
