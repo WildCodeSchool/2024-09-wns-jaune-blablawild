@@ -1,3 +1,4 @@
+import * as argon from "argon2";
 import { faker } from "@faker-js/faker/locale/fr";
 import { setDataSource } from "typeorm-extension";
 import { Profile } from "../../entities/profile";
@@ -25,7 +26,8 @@ const seedDatabase = async () => {
       user.firstname = faker.person.firstName();
       user.lastname = faker.person.lastName();
       user.email = faker.internet.email({firstName: user.firstname, lastName: user.lastname});
-      user.password = faker.internet.password();
+      const hashedPassword = await argon.hash("UserTest2025!");
+      user.password = hashedPassword
       user.pot = 0;
 
       const profile = new Profile();
