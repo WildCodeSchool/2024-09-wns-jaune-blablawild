@@ -6,7 +6,7 @@ export const cityImages: Record<string, string> = {
   "nantes": "/cities/nantes.webp",
   "strasbourg": "/cities/strasbourg.webp",
   "bordeaux": "/cities/bordeaux.webp",
-"angers": "/cities/angers.webp"
+  "angers": "/cities/angers.webp"
 };
 
 export const getStaticCityImage = (cityName: string): string => {

@@ -7,7 +7,7 @@ import { Trip } from "../../entities/trip";
 import { User } from "../../entities/user";
 import { dataSource } from "../db";
 import { Booking } from "../../entities/booking";
-import { getRandomReview, getRandomRoute, routes } from "./seedDate";
+import { getRandomReview, getRandomRoute, routes } from "./seedData";
 
 const seedDatabase = async () => {
   await dataSource.initialize();
@@ -24,7 +24,7 @@ const seedDatabase = async () => {
       const user = new User();
       user.firstname = faker.person.firstName();
       user.lastname = faker.person.lastName();
-      user.email = faker.internet.email();
+      user.email = faker.internet.email({firstName: user.firstname, lastName: user.lastname});
       user.password = faker.internet.password();
       user.pot = 0;
 

@@ -1,19 +1,62 @@
 export const routes = [
-    { departure: 'Paris', arrival: 'Lyon' },
-    { departure: 'Lyon', arrival: 'Paris' },
-    { departure: 'Paris', arrival: 'Marseille' },
-    { departure: 'Marseille', arrival: 'Paris' },
-    { departure: 'Lyon', arrival: 'Marseille' },
-    { departure: 'Marseille', arrival: 'Lyon' },
-    { departure: 'Paris', arrival: 'Toulouse' },
-    { departure: 'Toulouse', arrival: 'Paris' },
-    { departure: 'Nice', arrival: 'Marseille' },
-    { departure: 'Marseille', arrival: 'Nice' },
-    { departure: 'Bordeaux', arrival: 'Toulouse' },
-    { departure: 'Toulouse', arrival: 'Bordeaux' },
-    { departure: 'Caen', arrival: 'Toulon' },
-    { departure: 'Toulon', arrival: 'Caen' },
-  ];
+  // Routes depuis/vers Paris (hub principal)
+  { departure: 'Paris', arrival: 'Lyon' },
+  { departure: 'Lyon', arrival: 'Paris' },
+  { departure: 'Paris', arrival: 'Marseille' },
+  { departure: 'Marseille', arrival: 'Paris' },
+  { departure: 'Paris', arrival: 'Toulouse' },
+  { departure: 'Toulouse', arrival: 'Paris' },
+  { departure: 'Paris', arrival: 'Bordeaux' },
+  { departure: 'Bordeaux', arrival: 'Paris' },
+  { departure: 'Paris', arrival: 'Nantes' },
+  { departure: 'Nantes', arrival: 'Paris' },
+  { departure: 'Paris', arrival: 'Strasbourg' },
+  { departure: 'Strasbourg', arrival: 'Paris' },
+  { departure: 'Paris', arrival: 'Angers' },
+  { departure: 'Angers', arrival: 'Paris' },
+
+  // Routes Lyon - autres villes
+  { departure: 'Lyon', arrival: 'Marseille' },
+  { departure: 'Marseille', arrival: 'Lyon' },
+  { departure: 'Lyon', arrival: 'Toulouse' },
+  { departure: 'Toulouse', arrival: 'Lyon' },
+  { departure: 'Lyon', arrival: 'Strasbourg' },
+  { departure: 'Strasbourg', arrival: 'Lyon' },
+
+  // Routes Marseille - autres villes
+  { departure: 'Marseille', arrival: 'Toulouse' },
+  { departure: 'Toulouse', arrival: 'Marseille' },
+  { departure: 'Marseille', arrival: 'Bordeaux' },
+  { departure: 'Bordeaux', arrival: 'Marseille' },
+
+  // Routes Toulouse - autres villes
+  { departure: 'Toulouse', arrival: 'Bordeaux' },
+  { departure: 'Bordeaux', arrival: 'Toulouse' },
+
+  // Routes Bordeaux - autres villes
+  { departure: 'Bordeaux', arrival: 'Nantes' },
+  { departure: 'Nantes', arrival: 'Bordeaux' },
+  { departure: 'Bordeaux', arrival: 'Angers' },
+  { departure: 'Angers', arrival: 'Bordeaux' },
+
+  // Routes Nantes - autres villes
+  { departure: 'Nantes', arrival: 'Angers' },
+  { departure: 'Angers', arrival: 'Nantes' },
+  { departure: 'Nantes', arrival: 'Lyon' },
+  { departure: 'Lyon', arrival: 'Nantes' },
+
+  // Routes régionales supplémentaires
+  { departure: 'Angers', arrival: 'Lyon' },
+  { departure: 'Lyon', arrival: 'Angers' },
+  { departure: 'Strasbourg', arrival: 'Marseille' },
+  { departure: 'Marseille', arrival: 'Strasbourg' },
+  { departure: 'Strasbourg', arrival: 'Toulouse' },
+  { departure: 'Toulouse', arrival: 'Strasbourg' },
+  { departure: 'Angers', arrival: 'Toulouse' },
+  { departure: 'Toulouse', arrival: 'Angers' },
+  { departure: 'Nantes', arrival: 'Strasbourg' },
+  { departure: 'Strasbourg', arrival: 'Nantes' },
+];
 
   export const getRandomRoute = () => {
     return routes[Math.floor(Math.random() * routes.length)];
