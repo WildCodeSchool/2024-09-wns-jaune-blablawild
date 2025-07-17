@@ -7,7 +7,7 @@ import { Trip } from "../../entities/trip";
 import { User } from "../../entities/user";
 import { dataSource } from "../db";
 import { Booking } from "../../entities/booking";
-import { getRandomReview, getRandomRoute, routes } from "./seedData";
+import { getRandomReview, getRandomRoute } from "./seedData";
 
 const seedDatabase = async () => {
   await dataSource.initialize();

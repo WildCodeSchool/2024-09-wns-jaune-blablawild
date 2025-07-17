@@ -10,6 +10,8 @@ interface TripDetailsSummaryProps {
   departureCity: string;
   arrivalCity: string;
   availableSeats: number;
+  arrivalAddress: string;
+  departureAddress: string;
 }
 
 export default function SeatSelection({
@@ -17,6 +19,8 @@ export default function SeatSelection({
   departureCity,
   arrivalCity,
   availableSeats,
+  arrivalAddress,
+  departureAddress
 }: TripDetailsSummaryProps) {
   const { register, setValue, watch } = useFormContext();
 
@@ -38,7 +42,8 @@ export default function SeatSelection({
           departureTime={departureTime || ""}
           departureCity={departureCity || ""}
           arrivalCity={arrivalCity || ""}
-
+          arrivalAddress={arrivalAddress || ""}
+          departureAddress={departureAddress || ""}
         />
       </div>
       <FormItem className="w-full sm:w-11/12 md:w-full lg:w-[480px] xl:w-[583px]">

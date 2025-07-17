@@ -2,12 +2,13 @@ import { useNavigate } from "react-router-dom";
 
 type SenderProfile = {
   image?: string | null;
+
 };
 
 type ReviewSender = {
   firstname: string;
   id: string;
-  profile?: SenderProfile;
+  profile?: SenderProfile | null;
 };
 
 type ReviewReceiver = {
@@ -17,7 +18,7 @@ type ReviewReceiver = {
 export type ReviewType = {
   id: string;
   comment: string;
-  date: any;
+  date: Date;
   notation: number;
   sender: ReviewSender;
   receiver: ReviewReceiver;
