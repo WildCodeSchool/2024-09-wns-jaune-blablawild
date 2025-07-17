@@ -35,10 +35,6 @@ export const TripDetailsPage = () => {
 
   const userHasBooking = trip?.bookings?.some(booking => booking.passenger.id === user?.id.toString());
 
-  console.log('bookings', trip?.bookings);
-  console.log('available seats', availableSeats);
-  console.log('user has booking', userHasBooking);
-
   return (
     <div className="pt-6 md:pt-10 pb-6 md:pb-10 bg-white px-4 md:px-30 flex flex-col items-center">
       <div className="w-11/12 md:max-w-[1100px] md:w-full">

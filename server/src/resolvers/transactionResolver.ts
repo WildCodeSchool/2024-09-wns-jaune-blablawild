@@ -145,7 +145,6 @@ export class TransactionResolver {
                 sessionConfig.customer_email = customerEmail;
             }
             
-            console.log()
             const session = await stripe.checkout.sessions.create(sessionConfig);
 
             transaction.stripe_session_id = session.id;
