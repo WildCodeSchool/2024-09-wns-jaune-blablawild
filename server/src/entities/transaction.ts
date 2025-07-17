@@ -23,9 +23,9 @@ export class Transaction extends BaseEntity {
   @Column()
   status!: string;
 
-@Field()
-@CreateDateColumn({ nullable: true })
-createdAt!: Date;
+  @Field()
+  @CreateDateColumn({ nullable: true })
+  createdAt!: Date;
 
   @Field()
   @Column()

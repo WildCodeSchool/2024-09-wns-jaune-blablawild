@@ -11,7 +11,7 @@ import { getRandomReview, getRandomRoute } from "./seedData";
 
 const seedDatabase = async () => {
   await dataSource.initialize();
-  console.log("Connected to database. Seeding data...");
+  console.info("Connected to database. Seeding data...");
   setDataSource(dataSource);
 
   try {
@@ -39,7 +39,7 @@ const seedDatabase = async () => {
       users.push(await dataSource.getRepository(User).save(user));
     }
 
-    console.log("💪 Users seeded !");
+    console.info("💪 Users seeded !");
 
     // create trips
     const trips: Trip[] = [];
@@ -62,7 +62,7 @@ const seedDatabase = async () => {
         trips.push(await dataSource.getRepository(Trip).save(trip));
       }
     }
-    console.log("💪 Trips seeded !");
+    console.info("💪 Trips seeded !");
     
     const futureTrips = trips.filter(trip => new Date(trip.departure_time) > new Date())
     const pastTrips = trips.filter(trip => !(futureTrips.includes(trip)))
@@ -90,7 +90,7 @@ const seedDatabase = async () => {
         pastBookings.push(await dataSource.getRepository(Booking).save(booking));
       }
     }
-    console.log("💪 Past bookings seeded !");
+    console.info("💪 Past bookings seeded !");
 
     const futureBookings: Booking[] = [];
     for (let currentTrip of futureTrips) {
@@ -107,7 +107,7 @@ const seedDatabase = async () => {
         futureBookings.push(await dataSource.getRepository(Booking).save(booking));
       }
     }
-    console.log("💪 Future bookings seeded !");
+    console.info("💪 Future bookings seeded !");
 
     // create transactions
     const transactions: Transaction[] = [];
@@ -129,7 +129,7 @@ const seedDatabase = async () => {
         await dataSource.getRepository(User).save(driver)
       }
     }
-    console.log("💪 Transactions seeded !");
+    console.info("💪 Transactions seeded !");
 
     // create reviews
     const reviews: Review[] = [];
@@ -143,19 +143,11 @@ const seedDatabase = async () => {
       review.sender = booking.passenger;
       reviews.push(await dataSource.getRepository(Review).save(review));
     }
-    console.log("💪 Reviews seeded !");
+    console.info("💪 Reviews seeded !");
 
-    console.log("🚀 Database seeding complete !");
+    console.info("🚀 Database seeding complete !");
   } catch (error: any) {
     console.error("💩 Error seeding database:", error);
-
-    if (error.code === 'ECONNREFUSED') {
-      console.error("Database connection refused. Is your database running?");
-    } else if (error.code === 'ENOTFOUND') {
-      console.error("Database host not found. Check your connection settings.");
-    }
-
-    throw error;
   } finally {
     // Ensure connection is closed
     if (dataSource.isInitialized) {
