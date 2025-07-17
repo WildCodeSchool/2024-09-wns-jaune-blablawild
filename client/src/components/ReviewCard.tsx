@@ -7,7 +7,7 @@ type SenderProfile = {
 type ReviewSender = {
   firstname: string;
   id: string;
-  profil?: SenderProfile;
+  profile?: SenderProfile;
 };
 
 type ReviewReceiver = {
@@ -45,7 +45,7 @@ export const ReviewCard = ({ review }: ReviewCardProps) => {
           <div className="relative w-5 h-5 md:w-8 md:h-8 rounded-full overflow-hidden mr-3">
             {
               <img
-              src={review.sender?.profil?.image || "/placeholder-portrait.png"}
+              src={review.sender?.profile?.image || "/placeholder-portrait.png"}
               alt="Profile"
                 className="w-full h-full rounded-full object-cover"
               />
