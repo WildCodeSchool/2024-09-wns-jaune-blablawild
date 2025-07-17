@@ -365,7 +365,7 @@ export type GetTripQueryVariables = Exact<{
 }>;
 
 
-export type GetTripQuery = { __typename?: 'Query', getTrip: Array<{ __typename?: 'Trip', id: string, departure_time: any, departure_city: string, capacity: number, arrival_city: string, price: number, driver?: { __typename?: 'User', id: string, firstname: string, lastname: string } | null, bookings?: Array<{ __typename?: 'Booking', id: string, seatsCount: number, passenger: { __typename?: 'User', id: string, firstname: string, lastname: string } }> | null }> };
+export type GetTripQuery = { __typename?: 'Query', getTrip: Array<{ __typename?: 'Trip', id: string, departure_time: any, departure_city: string, arrival_city: string, departure_address?: string | null, arrival_address?: string | null, capacity: number, price: number, driver?: { __typename?: 'User', id: string, firstname: string, lastname: string, profile?: { __typename?: 'Profile', image?: string | null } | null } | null, bookings?: Array<{ __typename?: 'Booking', id: string, seatsCount: number, passenger: { __typename?: 'User', id: string, firstname: string, lastname: string } }> | null }> };
 
 export type GetTripByUserQueryVariables = Exact<{
   userId: Scalars['String']['input'];
@@ -374,7 +374,7 @@ export type GetTripByUserQueryVariables = Exact<{
 }>;
 
 
-export type GetTripByUserQuery = { __typename?: 'Query', getTripByUser: Array<{ __typename?: 'Trip', id: string, departure_city: string, arrival_city: string, departure_address?: string | null, arrival_address?: string | null, price: number, capacity: number, departure_time: any, status: TripStatus, bookings?: Array<{ __typename?: 'Booking', id: string, seatsCount: number, passenger: { __typename?: 'User', firstname: string, id: string } }> | null, driver?: { __typename?: 'User', id: string, firstname: string } | null, reviews?: Array<{ __typename?: 'Review', comment: string, reviewRequested: boolean, id: string, notation: number, date: any, sender: { __typename?: 'User', firstname: string, id: string }, receiver: { __typename?: 'User', firstname: string, id: string } }> | null }> };
+export type GetTripByUserQuery = { __typename?: 'Query', getTripByUser: Array<{ __typename?: 'Trip', id: string, departure_city: string, arrival_city: string, departure_address?: string | null, arrival_address?: string | null, price: number, capacity: number, departure_time: any, status: TripStatus, bookings?: Array<{ __typename?: 'Booking', id: string, seatsCount: number, passenger: { __typename?: 'User', firstname: string, id: string, profile?: { __typename?: 'Profile', image?: string | null } | null } }> | null, driver?: { __typename?: 'User', id: string, firstname: string, profile?: { __typename?: 'Profile', image?: string | null } | null } | null, reviews?: Array<{ __typename?: 'Review', comment: string, reviewRequested: boolean, id: string, notation: number, date: any, sender: { __typename?: 'User', firstname: string, id: string }, receiver: { __typename?: 'User', firstname: string, id: string } }> | null }> };
 
 export type GetCancelationRateQueryVariables = Exact<{
   userId: Scalars['String']['input'];
@@ -741,12 +741,17 @@ export const GetTripDocument = gql`
     id
     departure_time
     departure_city
-    capacity
     arrival_city
+    departure_address
+    arrival_address
+    capacity
     driver {
       id
       firstname
       lastname
+      profile {
+        image
+      }
     }
     price
     bookings {
@@ -809,11 +814,17 @@ export const GetTripByUserDocument = gql`
       passenger {
         firstname
         id
+        profile {
+          image
+        }
       }
     }
     driver {
       id
       firstname
+      profile {
+        image
+      }
     }
     capacity
     departure_time

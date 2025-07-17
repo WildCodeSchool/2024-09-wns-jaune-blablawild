@@ -6,10 +6,8 @@ import { TripCardProps } from "./_types/types";
 import { useNavigate } from "react-router-dom";
 import clsx from "clsx";
 import { Trip } from "@/graphql/hooks";
-import { useState, useEffect } from "react";
-import { getUnsplashImage } from "@/utils/UnsplashService";
-import { format } from "date-fns";
-import { fr } from "date-fns/locale";
+import { formatDate, formatLocalTime } from "@/utils/FormatDate";
+import { getStaticCityImage } from "@/utils/cityImages";
 
 
 export default function TripCard({
@@ -17,23 +15,7 @@ export default function TripCard({
   mode = "search",
 }: Readonly<TripCardProps>) {
   const navigate = useNavigate();
-  const [cityImages, setCityImages] = useState<Record<string, string>>({});
   
-  useEffect(() => {
-    const loadImages = async () => {
-      const images = await Promise.all(
-        trips.map(async trip => [
-          trip.arrival_city,
-          await getUnsplashImage(trip.arrival_city)
-        ])
-      );
-      
-      setCityImages(Object.fromEntries(images));
-    };
-
-    loadImages();
-  }, [trips]);  
-
   const handleNavigateTrip = (trip: Trip) => {
     const availableSeats = getAvailableSeats(trip);
     if (availableSeats > 0) {
@@ -41,12 +23,11 @@ export default function TripCard({
     }
   };
 
-  // Fonction pour calculer les sièges disponibles
   const getAvailableSeats = (trip: Trip) => {
     const totalBookedSeats = trip.bookings?.reduce((sum, booking) => sum + booking.seatsCount, 0) || 0;
     return trip.capacity - totalBookedSeats;
   };
-
+  
   return (
     <section className="w-full px-2 py-4 md:p-8">
       <div className="space-y-4">
@@ -70,12 +51,12 @@ export default function TripCard({
 
               <div className="flex-1 p-4 flex flex-col justify-between ">
                 <p className="text-base text-accent mb-2">
-                  {format(new Date(trip.departure_time), "HH'h'mm", { locale: fr })}
+                  {formatDate(trip.departure_time)}
                 </p>
                 <div className=" flex gap-2 items-center mb-4 lg:max-w-[500px]">
                   <div className="flex-1">
                     <div className="text-lg font-medium text-gray-900">
-                      {format(new Date(trip.departure_time), "HH'h'mm", { locale: fr })}
+                      {formatLocalTime(trip.departure_time)}
                     </div>
                     <div className="text-lg  capitalize font-medium text-gray-900 max-w-[100px] truncate md:max-w-none block md:hidden">
                       {trip.departure_city.length > 5
@@ -133,7 +114,7 @@ export default function TripCard({
               </div>
               <div className="w-1/3 relative flex items-center justify-center">
                 <img
-                  src={cityImages[trip.arrival_city] || "/images/cities/default.jpg"}
+                  src={getStaticCityImage(trip.arrival_city)}
                   alt={trip.arrival_city}
                   className={clsx(
                     "absolute inset-0 w-full h-full object-cover transition-all duration-300",

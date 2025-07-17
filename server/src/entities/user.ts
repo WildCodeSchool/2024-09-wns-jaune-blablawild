@@ -66,7 +66,10 @@ export class User extends BaseEntity {
   transaction_sent?: Transaction[];
 
   @Field(() => Profile, { nullable: true })
-  @OneToOne(() => Profile, (profile) => profile.user, { cascade: true })
+  @OneToOne(() => Profile, (profile) => profile.user, {
+    cascade: true,
+    eager: true,
+  })
   @JoinColumn()
   profile?: Profile;
 }
