@@ -25,6 +25,30 @@ services:
     networks:
       - staging
 
+  driveup-staging-seeder:
+    container_name: driveup-staging-seeder
+    build: 
+      context: ./server
+      dockerfile: Dockerfile.seeder
+    volumes:
+      - ./server/src:/app/src
+    environment:
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_SCHEMA: ${DB_SCHEMA}
+      DB_USER: ${DB_USER}
+      DB_HOST: ${DB_HOST}
+      APP_SECRET: ${APP_SECRET}
+      JWT_SECRET: ${JWT_SECRET}
+      STRIPE_SECRET_KEY: ${STRIPE_SECRET_KEY}
+      GATEWAY_PORT: ${GATEWAY_PORT}
+    depends_on:
+      driveup-staging-database :
+        condition: service_healthy
+    command: sh -c "echo '⏳ Waiting for database...' && sleep 5 && echo '🌱 Starting seed...' && npm run seed && echo '✅ Seed completed!'"
+    profiles: ["seed"]
+    networks:
+      - staging
+
   driveup-staging-client:
     container_name: driveup-staging-client
     image: yannlahellec1025/driveupstagingclient
