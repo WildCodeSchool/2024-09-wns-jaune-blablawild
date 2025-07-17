@@ -11,6 +11,16 @@ config();
 
 const { DB_HOST, DB_PASSWORD, DB_SCHEMA, DB_USER } = process.env;
 
+// Validate required environment variables
+if (!DB_HOST || !DB_USER || !DB_PASSWORD || !DB_SCHEMA) {
+  console.error("Missing required environment variables:");
+  console.error("DB_HOST:", DB_HOST);
+  console.error("DB_USER:", DB_USER);
+  console.error("DB_SCHEMA:", DB_SCHEMA);
+  console.error("DB_PASSWORD:", DB_PASSWORD ? "***" : "undefined");
+  process.exit(1);
+}
+
 export const dataSource = new DataSource({
   type: "postgres",
   host: DB_HOST,
