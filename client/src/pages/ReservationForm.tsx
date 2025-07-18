@@ -61,6 +61,8 @@ export default function ReservationForm() {
           departureTime={trip?.departure_time || ""}
           departureCity={trip?.departure_city || ""}
           arrivalCity={trip?.arrival_city || ""}
+          departureAddress={trip?.departure_address || ""}
+          arrivalAddress={trip?.arrival_address || ""}
           availableSeats={trip?.capacity || 0}
         />
       ),

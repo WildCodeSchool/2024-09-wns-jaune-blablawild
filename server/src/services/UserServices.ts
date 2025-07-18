@@ -34,7 +34,6 @@ export const checkToken = async ({ req, res }: { req: Request, res: Response }) 
       
       const token = req.headers.cookie?.split("token=")[1]?.split(";")[0];
       if (!token) {
-        console.log("no token")
         return { res }
       };
       

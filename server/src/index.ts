@@ -10,7 +10,6 @@ import { ProfileResolver } from "./resolvers/userProfileResolver";
 import { expressMiddleware } from "@apollo/server/express4";
 import { createServer } from "http";
 import { checkToken } from "./services/UserServices";
-import { TransactionResolver } from "./resolvers/transactionResolver";
 
 async function StartGraphQLServer() {
   await dataSource.initialize();

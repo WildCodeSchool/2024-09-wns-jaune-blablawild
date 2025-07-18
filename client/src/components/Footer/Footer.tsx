@@ -24,7 +24,7 @@ const Footer = () => {
   const generateSearchUrl = (departure:string, arrival: string) => {
     const today = new Date();
     const formattedDate = today.toISOString();
-    return `/search-result?departure=${encodeURIComponent(departure)}&arrival=${encodeURIComponent(arrival)}&date=${encodeURIComponent(formattedDate)}`;
+    return `/search-result?departure=${encodeURIComponent(departure)}&arrival=${encodeURIComponent(arrival)}&date=${encodeURIComponent(formattedDate)}&passengers=1`;
   };
 
   return (

@@ -47,7 +47,7 @@ export const TripDetailsSummary: React.FC<TripDetailsSummaryProps> = ({
     <div className="w-full sm:w-11/12 md:w-full lg:w-[345px] xl:w-[395px] bg-background rounded-lg border-1 border-[#E5E5E5] overflow-hidden mb-6">
       <div className="p-4 md:p-5">
         <h2 className="text-accent text-lg md:text-xl font-medium">
-         {formatDate(date, "fr")}
+         {formatDate(date)}
         </h2>
       </div>
 

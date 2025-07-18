@@ -9,7 +9,7 @@ export default function Confirmation() {
       <h1 className="text-3xl text-accent mb-10">Trajet révervé !</h1>
       <Link to="/">
         <Button variant="outline" className="rounded-full px-6 py-5">
-          Retour à l'acceuil
+          Retour à l'accueil
         </Button>
       </Link>
     </section>

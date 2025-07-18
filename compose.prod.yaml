@@ -26,6 +26,30 @@ services:
     networks:
       - production
 
+  driveup-prod-seeder:
+    container_name: driveup-prod-seeder
+    build: 
+      context: ./server
+      dockerfile: Dockerfile.prod
+    volumes:
+      - ./server/src:/app/src
+    environment:
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_SCHEMA: ${DB_SCHEMA}
+      DB_USER: ${DB_USER}
+      DB_HOST: ${DB_HOST}
+      APP_SECRET: ${APP_SECRET}
+      JWT_SECRET: ${JWT_SECRET}
+      STRIPE_SECRET_KEY: ${STRIPE_SECRET_KEY}
+      GATEWAY_PORT: ${GATEWAY_PORT}
+    depends_on:
+      driveup-prod-database :
+        condition: service_healthy
+    command: sh -c "echo '⏳ Waiting for database...' && sleep 5 && echo '🌱 Starting seed...' && npm run seed && echo '✅ Seed completed!'"
+    profiles: ["seed"]
+    networks:
+      - production
+
   driveup-prod-client:
     container_name: driveup-prod-client
     build: 

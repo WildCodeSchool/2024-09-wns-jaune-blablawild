@@ -42,6 +42,7 @@ export default function CarrouselTrip() {
     params.set("departure", trip.departure_city);
     params.set("arrival", trip.arrival_city);
     params.set("date", formatISO(new Date()));
+    params.set("passengers", "1");
     navigate(`/search-result?${params.toString()}`);
   };
 

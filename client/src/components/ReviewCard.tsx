@@ -2,12 +2,13 @@ import { useNavigate } from "react-router-dom";
 
 type SenderProfile = {
   image?: string | null;
+
 };
 
 type ReviewSender = {
   firstname: string;
   id: string;
-  profil?: SenderProfile;
+  profile?: SenderProfile | null;
 };
 
 type ReviewReceiver = {
@@ -17,7 +18,7 @@ type ReviewReceiver = {
 export type ReviewType = {
   id: string;
   comment: string;
-  date: any;
+  date: Date;
   notation: number;
   sender: ReviewSender;
   receiver: ReviewReceiver;
@@ -45,7 +46,7 @@ export const ReviewCard = ({ review }: ReviewCardProps) => {
           <div className="relative w-5 h-5 md:w-8 md:h-8 rounded-full overflow-hidden mr-3">
             {
               <img
-              src={review.sender?.profil?.image || "/placeholder-portrait.png"}
+              src={review.sender?.profile?.image || "/placeholder-portrait.png"}
               alt="Profile"
                 className="w-full h-full rounded-full object-cover"
               />

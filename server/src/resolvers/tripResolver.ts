@@ -259,15 +259,12 @@ export class TripResolver {
       booking.bookingDate = new Date();
 
       await booking.save();
-      console.log("Booking créé:", booking);
 
       const newTotalBookedSeats = totalBookedSeats + seatsToBook;
-      console.log("New total booked seats:", newTotalBookedSeats);
 
       if (newTotalBookedSeats >= trip.capacity) {
         trip.status = TripStatus.FULL;
         await trip.save();
-        console.log("Trip status updated to FULL");
       }
 
       return "Votre réservation a bien été enregistrée";
@@ -306,8 +303,6 @@ export class TripResolver {
         where: { id: data.userId },
         relations: ["profile"],
       });
-
-      console.log(user);
 
       if (!user) {
         throw new Error("L'utilisateur n'existe pas");

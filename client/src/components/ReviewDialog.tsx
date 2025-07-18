@@ -136,7 +136,7 @@ export const ReviewDialog = ({
         </div>
         <p className="text-base text-black">
           Votre trajet {trip?.departure_city} - {trip?.arrival_city} du{" "}
-          {formatDate(trip?.departure_time, "fr")}
+          {formatDate(trip?.departure_time)}
         </p>
 
         <form onSubmit={handleSubmit(onSubmit)}>
