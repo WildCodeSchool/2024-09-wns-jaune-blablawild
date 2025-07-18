@@ -27,9 +27,7 @@ services:
 
   driveup-staging-seeder:
     container_name: driveup-staging-seeder
-    build: 
-      context: ./server
-      dockerfile: Dockerfile.seeder
+    image: yannlahellec1025/driveupseeder
     volumes:
       - ./server/src:/app/src
     environment:
@@ -51,8 +49,9 @@ services:
 
   driveup-staging-client:
     container_name: driveup-staging-client
-    image: yannlahellec1025/driveupstagingclient
-    command: sh -c "npm run start"
+    build: 
+      context: ./client
+      dockerfile: Dockerfile.prod
     volumes:
       - ./client/src/:/app/src/
     environment:
@@ -60,7 +59,6 @@ services:
       VITE_SERVER_HOST: ${SERVER_HOST}
       VITE_CLIENT_HOST: ${CLIENT_HOST}
       VITE_UNSPLASH_ACCESS_KEY: ${VITE_UNSPLASH_ACCESS_KEY}
-
     depends_on:
       - driveup-staging-server
     networks:
