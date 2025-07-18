@@ -4,6 +4,7 @@ COPY package*.json ./
 COPY tsconfig*.json ./
 RUN npm i
 COPY src/config/seed ./src/config/seed
-COPY src/entities ./src/entities  
+COPY src/entities ./src/entities
+COPY src/type ./src/type
 COPY src/config/db.ts ./src/config/
 CMD ["npm", "run", "seed"]
