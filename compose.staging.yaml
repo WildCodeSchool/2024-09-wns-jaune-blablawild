@@ -68,7 +68,7 @@ services:
     container_name: driveup-staging-database
     image: postgres
     volumes:
-      - ./persist/staging-data:/var/lib/postgresql/data
+      - ./persist/staging-data:/var/lib/postgresql
     environment:
       POSTGRES_PASSWORD: ${DB_PASSWORD}
       POSTGRES_DB: ${DB_SCHEMA}
