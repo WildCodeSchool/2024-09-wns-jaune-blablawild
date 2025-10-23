@@ -72,7 +72,7 @@ services:
     container_name: driveup-prod-database
     image: postgres
     volumes:
-      - ./persist/prod-data:/var/lib/postgresql/data
+      - ./persist/prod-data:/var/lib/postgresql
     environment:
       POSTGRES_PASSWORD: ${DB_PASSWORD}
       POSTGRES_DB: ${DB_SCHEMA}
